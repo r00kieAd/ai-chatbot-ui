@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import send from './assets/send.png'
 import './app.css'
 
 function App() {
@@ -9,6 +8,7 @@ function App() {
   return (
     <>
       <div id="parent">
+        {/* <img src={send} alt="File Transfer" id="fileTransferGif" /> */}
         <div id="mainContainer">
           <div id="innerContainer">
             <div id="chatContainer">
