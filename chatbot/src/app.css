@@ -1,3 +1,106 @@
 :root {
-  background-color: black;
+  background-color: white;
+}
+
+#parent #mainContainer {
+  width: 40rem;
+  height: auto;
+  border: 1px solid black;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#parent #mainContainer #innerContainer #inputContainer #inputBox {
+  position: relative;
+}
+#parent #mainContainer #innerContainer #inputContainer #inputBox #inputChild {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+#parent #mainContainer #innerContainer #inputContainer #inputBox #inputChild textarea {
+  margin-right: 21px;
+  width: 95%;
+  height: 32px;
+  min-height: 24px;
+  max-height: 100px;
+  padding: 7px;
+  outline: none;
+  overflow: hidden;
+  overflow-y: auto;
+  resize: none;
+  background: transparent;
+  font-size: 16px;
+  line-height: 20px;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid black;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox {
+  position: relative;
+  margin: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 35%;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 4px;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 20%;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer {
+  display: flex;
+  align-items: center;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer label .attach-img img {
+  margin-top: 3px;
+  width: 20px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .attach-count {
+  font-size: 12.5px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer #attachment {
+  display: none;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer button {
+  width: 70px;
+  height: 25px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text {
+  color: black;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-img img {
+  margin-top: 2px;
+  width: 20px;
 }/*# sourceMappingURL=app.css.map */

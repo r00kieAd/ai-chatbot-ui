@@ -1,3 +1,163 @@
-:root{
-    background-color: black;
+$parentContainerWidth: 100%;
+$parentContainerHeight: auto;
+$mainContainerWidth: 40rem;
+$mainContainerHeight: auto;
+$mainContainerBorderRadius: 10px;
+$textAreaWidth: 95%;
+$textAreaHeight: 32px;
+$textAreaMinHeight: 24px;
+$textAreaMaxHeight: 100px;
+$textAreaPadding: 7px;
+$textAreaFontSize: 16px;
+$textAreaLineHeight: 20px;
+$sendButtonWidth: 70px;
+$sendButtonHeight: 25px;
+
+:root {
+    background-color: white;
+}
+
+;
+
+@mixin centerElement() {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin flex-space-between ($flex-width) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: $flex-width;
+}
+
+@mixin button($border-color) {
+    width: $sendButtonWidth;
+    height: $sendButtonHeight;
+    outline: none;
+    border: 1px solid $border-color;
+    border-radius: $mainContainerBorderRadius;
+    background: transparent;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#parent {
+
+    #mainContainer {
+
+        width: $mainContainerWidth;
+        height: $mainContainerHeight;
+        border: 1px solid black;
+        border-radius: $mainContainerBorderRadius;
+        transition: all 0.2s ease;
+        @include centerElement();
+
+        #innerContainer {
+            #inputContainer {
+                #inputBox {
+
+                    position: relative;
+
+                    #inputChild {
+                        width: 100%;
+                        display: flex;
+                        justify-content: center;
+                        padding: 10px;
+
+                        textarea {
+                            margin-right: 21px;
+                            width: $textAreaWidth;
+                            height: $textAreaHeight;
+                            min-height: $textAreaMinHeight;
+                            max-height: $textAreaMaxHeight;
+                            padding: 7px;
+                            outline: none;
+                            overflow: hidden;
+                            overflow-y: auto;
+                            resize: none;
+                            background: transparent;
+                            font-size: $textAreaFontSize;
+                            line-height: $textAreaLineHeight;
+                            box-sizing: border-box;
+                            border: none;
+                            border-bottom: 1px solid black;
+                        }
+                    }
+                }
+
+                #toolBox {
+                    position: relative;
+                    margin: 15px;
+                    @include flex-space-between(auto);
+
+                    #leftCompartment {
+                        @include flex-space-between(35%);
+
+                        .dropContainer {
+                            select {
+                                border: 1px solid black;
+                                border-radius: $mainContainerBorderRadius;
+                                padding: 4px;
+                                outline: none;
+                                background: transparent;
+                                font-size: 14px;
+                                // -webkit-appearance: none;
+                            }
+                        }
+                    }
+
+                    #rightCompartment {
+
+                        @include flex-space-between(20%);
+
+                        #fileContainer {
+
+                            display: flex;
+                            align-items: center;
+
+                            label {
+                                .attach-img {
+                                    img {
+                                        margin-top: 3px;
+                                        width: 20px;
+                                    }
+                                }
+                            }
+
+                            .attach-count {
+                                font-size: 12.5px;
+                            }
+
+                            #attachment {
+                                display: none;
+                            }
+                        }
+
+                        #sendContainer {
+                            button {
+                                @include button(black);
+                            }
+
+                            .button-text {
+                                color: black;
+                            }
+
+                            .button-img {
+                                img {
+                                    margin-top: 2px;
+                                    width: 20px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
