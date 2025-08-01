@@ -1,3 +1,4 @@
+
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
 $mainContainerWidth: 40rem;
@@ -7,9 +8,11 @@ $textAreaWidth: 95%;
 $textAreaHeight: 32px;
 $textAreaMinHeight: 24px;
 $textAreaMaxHeight: 100px;
-$textAreaPadding: 7px;
-$textAreaFontSize: 16px;
+$textAreaPadding: 3px;
+$textAreaFontSize: 15px;
 $textAreaLineHeight: 20px;
+$dropdownMinWidth: 75px;
+$dropDownMaxWidth: 100px;
 $sendButtonWidth: 70px;
 $sendButtonHeight: 25px;
 
@@ -76,7 +79,7 @@ $sendButtonHeight: 25px;
                             height: $textAreaHeight;
                             min-height: $textAreaMinHeight;
                             max-height: $textAreaMaxHeight;
-                            padding: 7px;
+                            padding: $textAreaPadding;
                             outline: none;
                             overflow: hidden;
                             overflow-y: auto;
@@ -96,11 +99,18 @@ $sendButtonHeight: 25px;
                     margin: 15px;
                     @include flex-space-between(auto);
 
+                    .pointer {
+                        cursor: pointer;
+                    }
+
                     #leftCompartment {
                         @include flex-space-between(35%);
 
                         .dropContainer {
                             select {
+                                min-width: $dropdownMinWidth;
+                                max-width: $dropDownMaxWidth;
+                                overflow: hidden;
                                 border: 1px solid black;
                                 border-radius: $mainContainerBorderRadius;
                                 padding: 4px;
@@ -131,6 +141,7 @@ $sendButtonHeight: 25px;
                             }
 
                             .attach-count {
+                                cursor:default;
                                 font-size: 12.5px;
                             }
 
@@ -150,7 +161,7 @@ $sendButtonHeight: 25px;
 
                             .button-img {
                                 img {
-                                    margin-top: 2px;
+                                    margin-top: 4px;
                                     width: 20px;
                                 }
                             }

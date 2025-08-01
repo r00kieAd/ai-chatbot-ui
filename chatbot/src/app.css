@@ -28,13 +28,13 @@
   height: 32px;
   min-height: 24px;
   max-height: 100px;
-  padding: 7px;
+  padding: 3px;
   outline: none;
   overflow: hidden;
   overflow-y: auto;
   resize: none;
   background: transparent;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 20px;
   box-sizing: border-box;
   border: none;
@@ -49,6 +49,9 @@
   align-items: center;
   width: auto;
 }
+#parent #mainContainer #innerContainer #inputContainer #toolBox .pointer {
+  cursor: pointer;
+}
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment {
   display: flex;
   flex-direction: row;
@@ -57,6 +60,9 @@
   width: 35%;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
+  min-width: 75px;
+  max-width: 100px;
+  overflow: hidden;
   border: 1px solid black;
   border-radius: 10px;
   padding: 4px;
@@ -80,6 +86,7 @@
   width: 20px;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .attach-count {
+  cursor: default;
   font-size: 12.5px;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer #attachment {
@@ -101,6 +108,6 @@
   color: black;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-img img {
-  margin-top: 2px;
+  margin-top: 4px;
   width: 20px;
 }/*# sourceMappingURL=app.css.map */
