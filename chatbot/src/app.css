@@ -3,7 +3,93 @@
   --textAreaMaxHeight: 100px;
 }
 
+#parent #loginContainer #loginParent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16rem;
+  border: 1px solid black;
+  padding: 20px;
+}
+#parent #loginContainer #loginParent #containerOne {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+#parent #loginContainer #loginParent #containerOne #policeDiv {
+  position: relative;
+}
+#parent #loginContainer #loginParent #containerOne #policeDiv #police {
+  width: inherit;
+}
+#parent #loginContainer #loginParent #containerOne #policeDiv #police img {
+  width: 16rem;
+}
+#parent #loginContainer #loginParent #containerOne #loginHeaders {
+  line-height: 1px;
+  margin-bottom: 10px;
+}
+#parent #loginContainer #loginParent #containerOne #loginHeaders span {
+  font-size: 14px;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput {
+  width: 96.5%;
+  height: 25px;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+  font-size: 15px;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input[type=submit] {
+  width: 90%;
+  height: 30px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  justify-self: center;
+  margin: 15px 0;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err {
+  font-size: 14px;
+  visibility: hidden;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #guestOptions button {
+  margin: 10px 0;
+  width: 100%;
+  height: 30px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  padding: 10px;
+}
 #parent #mainContainer {
+  display: none;
   width: 40rem;
   height: auto;
   border: 1px solid black;
@@ -95,7 +181,7 @@
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer button {
   width: 70px;
-  height: 25px;
+  height: sendButtonHeight;
   outline: none;
   border: 1px solid black;
   border-radius: 10px;
@@ -104,6 +190,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-around;
+  cursor: pointer;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text {
   color: black;
