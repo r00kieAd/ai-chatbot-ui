@@ -1,5 +1,6 @@
 :root {
-  background-color: white;
+  --textAreaHeight: 32px;
+  --textAreaMaxHeight: 100px;
 }
 
 #parent #mainContainer {
@@ -25,9 +26,9 @@
 #parent #mainContainer #innerContainer #inputContainer #inputBox #inputChild textarea {
   margin-right: 21px;
   width: 95%;
-  height: 32px;
+  height: var(--textAreaHeight);
   min-height: 24px;
-  max-height: 100px;
+  max-height: var(--textAreaMaxHeight);
   padding: 3px;
   outline: none;
   overflow: hidden;

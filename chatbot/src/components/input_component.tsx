@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
 import LLMs from '../configs/available_llm_models.json';
-
+import TextAreaHeight from '../utils/textarea_css_data';
 
 const InputBox: React.FC = () => {
 
@@ -13,14 +13,16 @@ const InputBox: React.FC = () => {
     const textareaEle = document.querySelector('textarea') as HTMLTextAreaElement | undefined;
     const [llms, setLlms] = useState<string[]>([]);
     const [models, setModels] = useState<string[]>([]);
+    const txtHeightStyle = new TextAreaHeight();
+    const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
 
     useEffect(() => {
         if (asked) {
             setAsked(false);
-            setInputVal("");
+            setInputVal(undefined);
             if (textareaEle) {
                 textareaEle.value = "";
-                textareaEle.style.height = '32px';
+                textareaEle.style.height = textareaHeight;
             }
         }
     }, [asked]);
@@ -32,33 +34,33 @@ const InputBox: React.FC = () => {
     }, [llmID]);
 
     const getInput = (event: React.FormEvent<HTMLTextAreaElement>) => {
+
         const textarea = event.currentTarget;
-        textarea.style.height = '32px';
+        textarea.style.height = textareaHeight;
         const scrollHeight = textarea.scrollHeight;
-        textarea.style.height = Math.min(scrollHeight, 100) + 'px';
+        const maxHeight = Number(textareaMaxHeight.split('px')[0]);
+        textarea.style.height = Math.min(scrollHeight + 1, maxHeight) + 'px';
         const val = textarea.value;
         setInputVal(val);
+
     };
 
     const fetchModels = () => {
 
         let allModels: string[] = [];
-        console.log(llmID);
-        console.log(typeof(llmID));
         switch (llmID) {
             case "1":
-                allModels =  LLMs.M1.MODELS.map(e => e.model);
+                allModels = LLMs.M1.MODELS.map(e => e.model);
                 break;
             case "2":
-                allModels =  LLMs.M2.MODELS.map(e => e.model);
+                allModels = LLMs.M2.MODELS.map(e => e.model);
                 break;
             default:
-                allModels =  ["none"];
+                allModels = ["none"];
                 break;
         }
 
         setModels(allModels);
-        console.log(allModels);
     }
 
     const changeModel = (event: React.FormEvent<HTMLSelectElement>) => {

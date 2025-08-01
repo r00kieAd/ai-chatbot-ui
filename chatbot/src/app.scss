@@ -1,3 +1,8 @@
+:root {
+    --textAreaHeight: 32px;
+    --textAreaMaxHeight: 100px;
+};
+
 
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
@@ -5,9 +10,9 @@ $mainContainerWidth: 40rem;
 $mainContainerHeight: auto;
 $mainContainerBorderRadius: 10px;
 $textAreaWidth: 95%;
-$textAreaHeight: 32px;
+$textAreaHeight: var(--textAreaHeight);
 $textAreaMinHeight: 24px;
-$textAreaMaxHeight: 100px;
+$textAreaMaxHeight: var(--textAreaMaxHeight);
 $textAreaPadding: 3px;
 $textAreaFontSize: 15px;
 $textAreaLineHeight: 20px;
@@ -15,12 +20,6 @@ $dropdownMinWidth: 75px;
 $dropDownMaxWidth: 100px;
 $sendButtonWidth: 70px;
 $sendButtonHeight: 25px;
-
-:root {
-    background-color: white;
-}
-
-;
 
 @mixin centerElement() {
     position: absolute;
