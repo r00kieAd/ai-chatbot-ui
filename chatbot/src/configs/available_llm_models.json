@@ -1,0 +1,20 @@
+{
+    "ALL": [
+        {"id": "M1", "name": "OpenAI"},
+        {"id":"M2", "name": "Gemini"}
+    ],
+    "M1": {
+        "FOR": "OpenAI",
+        "MODELS": [
+            {"model": "gpt-4.1-mini"},
+            {"model": "gpt-4.1"}
+        ]
+    },
+    "M2": {
+        "FOR": "Gemini",
+        "MODELS": [
+            {"model": "gemini-2.5-flash"},
+            {"model": "gemini-2.5-pro"}
+        ]
+    }
+}
