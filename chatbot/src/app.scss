@@ -13,7 +13,7 @@ $loginContainerPadding: 20px;
 
 $mainContainerWidth: 40rem;
 $mainContainerHeight: auto;
-$mainContainerBorderRadius: 10px;
+$mainBorderRadius: 10px;
 $textAreaWidth: 95%;
 $textAreaHeight: var(--textAreaHeight);
 $textAreaMinHeight: 24px;
@@ -46,7 +46,7 @@ $sendButtonHeight: 25px;
     height: $height;
     outline: none;
     border: 1px solid $border-color;
-    border-radius: $mainContainerBorderRadius;
+    border-radius: $mainBorderRadius;
     background: transparent;
     display: flex;
     flex-direction: row;
@@ -70,20 +70,32 @@ $sendButtonHeight: 25px;
     #loginContainer {
         #loginParent {
             @include centerElement();
-            width: 16rem;
+            width: auto;
             border: 1px solid black;
+            border-radius: $mainBorderRadius;
             padding: $loginContainerPadding;
 
             #containerOne {
-                @include flex-space-between(100%, column);
+                @include flex-space-between(100%, row);
+
+                .compartment {
+                    margin: 5px 50px;
+                }
 
                 #policeDiv {
                     position: relative;
-                    #police {
-                        width: inherit;
-                        img {
-                            width: 16rem;
+
+                    .intro-img-div {
+                        .police {
+                            width: inherit;
+                            img {
+                                width: 16rem;
+                            }
                         }
+                    }
+
+                    .error-img-div {
+                        display: none;
                     }
                 }
 
@@ -103,7 +115,7 @@ $sendButtonHeight: 25px;
 
                     @include flex-space-between(100%, column);
                     justify-content: center;
-                    
+
                     #formContainer {
                         input.keyinput {
                             @include loginInputStyle();
@@ -141,7 +153,7 @@ $sendButtonHeight: 25px;
         width: $mainContainerWidth;
         height: $mainContainerHeight;
         border: 1px solid black;
-        border-radius: $mainContainerBorderRadius;
+        border-radius: $mainBorderRadius;
         transition: all 0.2s ease;
         @include centerElement();
 
@@ -196,7 +208,7 @@ $sendButtonHeight: 25px;
                                 max-width: $dropDownMaxWidth;
                                 overflow: hidden;
                                 border: 1px solid black;
-                                border-radius: $mainContainerBorderRadius;
+                                border-radius: $mainBorderRadius;
                                 padding: 4px;
                                 outline: none;
                                 background: transparent;

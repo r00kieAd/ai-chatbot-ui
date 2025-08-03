@@ -5,3 +5,5 @@
 <a href="https://www.flaticon.com/free-icons/do" title="do icons">Do icons created by panjiulum.id - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/error" title="error icons">Error icons created by Flat Icons - Flaticon</a>
 <div> Icons made by <a href="" title="Iconjam"> Iconjam </a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com'</a></div>
+<a href="https://www.flaticon.com/free-icons/anime" title="anime icons">Anime icons created by Laura Reen - Flaticon</a>
+<a href="https://www.flaticon.com/free-stickers/police" title="police stickers">Police stickers created by SoulGIE - Flaticon</a>

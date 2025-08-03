@@ -8,25 +8,32 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 16rem;
+  width: auto;
   border: 1px solid black;
+  border-radius: 10px;
   padding: 20px;
 }
 #parent #loginContainer #loginParent #containerOne {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 }
+#parent #loginContainer #loginParent #containerOne .compartment {
+  margin: 5px 50px;
+}
 #parent #loginContainer #loginParent #containerOne #policeDiv {
   position: relative;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv #police {
+#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police {
   width: inherit;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv #police img {
+#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police img {
   width: 16rem;
+}
+#parent #loginContainer #loginParent #containerOne #policeDiv .error-img-div {
+  display: none;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
   line-height: 1px;
