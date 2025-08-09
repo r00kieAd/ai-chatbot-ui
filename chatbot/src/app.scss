@@ -109,9 +109,8 @@ $sendButtonHeight: 25px;
                         transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 
                         .police {
-                            display: none;
                             width: inherit;
-
+                            display: none;
                             img {
                                 width: 12rem;
                             }
@@ -122,11 +121,6 @@ $sendButtonHeight: 25px;
                         opacity: 1;
                         visibility: visible;
                         transition: opacity 0.5s ease-in-out;
-                    }
-
-                    .error-img-div,
-                    .ok-img-div {
-                        display: none;
                     }
                 }
 
