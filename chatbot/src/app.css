@@ -14,6 +14,13 @@
   border-radius: 10px;
   padding: 20px;
   transition: all 0.5s ease-in;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s ease-in;
+}
+#parent #loginContainer #loginParent.show {
+  opacity: 1;
+  visibility: visible;
 }
 @media screen and (max-width: 500px) {
   #parent #loginContainer #loginParent {
@@ -54,7 +61,7 @@
 #parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div {
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 #parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police {
   width: inherit;
@@ -63,10 +70,9 @@
 #parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police img {
   width: 12rem;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div.show {
+#parent #loginContainer #loginParent #containerOne #policeDiv .show {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.5s ease-in-out;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
   text-align: center;
