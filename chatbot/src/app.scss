@@ -1,14 +1,16 @@
 :root {
     --textAreaHeight: 32px;
     --textAreaMaxHeight: 100px;
-};
-
+}
 
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
+
+$loginContainerPadding: 20px;
+
 $mainContainerWidth: 40rem;
 $mainContainerHeight: auto;
-$mainContainerBorderRadius: 10px;
+$mainBorderRadius: 10px;
 $textAreaWidth: 95%;
 $textAreaHeight: var(--textAreaHeight);
 $textAreaMinHeight: 24px;
@@ -28,35 +30,177 @@ $sendButtonHeight: 25px;
     transform: translate(-50%, -50%);
 }
 
-@mixin flex-space-between ($flex-width) {
+@mixin de-centerElement() {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+}
+
+@mixin flex-space-between ($flex-width, $flex-dir: row) {
     display: flex;
-    flex-direction: row;
+    flex-direction: $flex-dir;
     justify-content: space-between;
     align-items: center;
     width: $flex-width;
 }
 
-@mixin button($border-color) {
-    width: $sendButtonWidth;
-    height: $sendButtonHeight;
+@mixin button($border-color, $width: $sendButtonWidth, $height: sendButtonHeight) {
+    width: $width;
+    height: $height;
     outline: none;
     border: 1px solid $border-color;
-    border-radius: $mainContainerBorderRadius;
+    border-radius: $mainBorderRadius;
     background: transparent;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+    cursor: pointer;
 }
 
+@mixin loginInputStyle() {
+    width: 96.5%;
+    height: 25px;
+    padding: 5px;
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    font-size: 15px;
+}
+
+
 #parent {
+    #loginContainer {
+        #loginParent {
+            @include centerElement();
+            width: auto;
+            border: 1px solid black;
+            border-radius: $mainBorderRadius;
+            padding: $loginContainerPadding;
+            transition: all 0.5s ease-in;
+
+            @media screen and (max-width: 500px) {
+                @include de-centerElement();
+            }
+
+            #containerOne {
+                @include flex-space-between(100%, row);
+
+                @media screen and (max-width: 1100px) {
+                    @include flex-space-between(100%, column);
+                }
+
+                .compartment {
+                    margin: 5px 40px;
+
+                    @media screen and (max-width: 1200px) {
+                        margin: 10px;
+                    }
+                }
+
+                #policeDiv {
+                    position: relative;
+
+                    .intro-img-div {
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+
+                        .police {
+                            display: none;
+                            width: inherit;
+
+                            img {
+                                width: 12rem;
+                            }
+                        }
+                    }
+
+                    .intro-img-div.show {
+                        opacity: 1;
+                        visibility: visible;
+                        transition: opacity 0.5s ease-in-out;
+                    }
+
+                    .error-img-div,
+                    .ok-img-div {
+                        display: none;
+                    }
+                }
+
+                #loginHeaders {
+
+                    text-align: center;
+                    line-height: 1px;
+
+                    h2 {
+                        width: 100%;
+                    }
+
+                    span {
+                        font-size: 14px;
+                    }
+
+                    margin-bottom: 10px;
+
+                    @media screen and (max-width: 500px) {
+                        h2 {
+                            font-size: 21px;
+                        }
+
+                        span {
+                            font-size: 12px;
+                        }
+                    }
+
+                }
+
+                #loginForm {
+                    width: 100%;
+                    position: relative;
+
+                    @include flex-space-between(100%, column);
+                    justify-content: center;
+
+                    #formContainer {
+                        input.keyinput {
+                            @include loginInputStyle();
+                        }
+
+                        input[type=submit] {
+                            @include button(black, 90%, 30px);
+                            justify-self: center;
+                            margin: 15px 0;
+                        }
+
+                        .err {
+                            font-size: 14px;
+                            visibility: hidden;
+                        }
+                    }
+
+                    #guestOptions {
+                        button {
+                            margin: 10px 0;
+                            @include button(black, 100%, 30px);
+                            padding: 10px;
+                        }
+                    }
+                }
+            }
+        }
+
+        ;
+    }
 
     #mainContainer {
+        display: none;
 
         width: $mainContainerWidth;
         height: $mainContainerHeight;
         border: 1px solid black;
-        border-radius: $mainContainerBorderRadius;
+        border-radius: $mainBorderRadius;
         transition: all 0.2s ease;
         @include centerElement();
 
@@ -111,7 +255,7 @@ $sendButtonHeight: 25px;
                                 max-width: $dropDownMaxWidth;
                                 overflow: hidden;
                                 border: 1px solid black;
-                                border-radius: $mainContainerBorderRadius;
+                                border-radius: $mainBorderRadius;
                                 padding: 4px;
                                 outline: none;
                                 background: transparent;
@@ -140,7 +284,7 @@ $sendButtonHeight: 25px;
                             }
 
                             .attach-count {
-                                cursor:default;
+                                cursor: default;
                                 font-size: 12.5px;
                             }
 
