@@ -74,13 +74,15 @@ $sendButtonHeight: 25px;
     #loginContainer {
         #loginParent {
             @include centerElement();
-            width: auto;
+            width: 300px;
+            height: auto;
             border: 1px solid black;
             border-radius: $mainBorderRadius;
             padding: $loginContainerPadding;
             transition: all 0.5s ease-in;
 
             @media screen and (max-width: 500px) {
+                width: auto;
                 @include de-centerElement();
             }
 
@@ -101,7 +103,6 @@ $sendButtonHeight: 25px;
 
                 #policeDiv {
                     position: relative;
-
                     .intro-img-div {
                         opacity: 0;
                         visibility: hidden;
