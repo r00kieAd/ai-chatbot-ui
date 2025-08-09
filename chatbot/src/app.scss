@@ -69,6 +69,11 @@ $sendButtonHeight: 25px;
     font-size: 15px;
 }
 
+@mixin reveal() {
+    opacity: 1;
+    visibility: visible;
+}
+
 
 #parent {
     #loginContainer {
@@ -80,6 +85,11 @@ $sendButtonHeight: 25px;
             border-radius: $mainBorderRadius;
             padding: $loginContainerPadding;
             transition: all 0.5s ease-in;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.5s ease-in;
+
+            &.show {@include reveal()};
 
             @media screen and (max-width: 500px) {
                 width: auto;
@@ -103,25 +113,23 @@ $sendButtonHeight: 25px;
 
                 #policeDiv {
                     position: relative;
+
                     .intro-img-div {
                         opacity: 0;
                         visibility: hidden;
-                        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+                        transition: all 0.5s ease-in-out;
 
                         .police {
                             width: inherit;
                             display: none;
+
                             img {
                                 width: 12rem;
                             }
                         }
                     }
 
-                    .intro-img-div.show {
-                        opacity: 1;
-                        visibility: visible;
-                        transition: opacity 0.5s ease-in-out;
-                    }
+                    .show {@include reveal()}
                 }
 
                 #loginHeaders {
@@ -185,8 +193,6 @@ $sendButtonHeight: 25px;
                 }
             }
         }
-
-        ;
     }
 
     #mainContainer {
