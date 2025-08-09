@@ -3,9 +3,6 @@
     --textAreaMaxHeight: 100px;
 }
 
-;
-
-
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
 
@@ -31,6 +28,13 @@ $sendButtonHeight: 25px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+@mixin de-centerElement() {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
 }
 
 @mixin flex-space-between ($flex-width, $flex-dir: row) {
@@ -65,8 +69,8 @@ $sendButtonHeight: 25px;
     font-size: 15px;
 }
 
-#parent {
 
+#parent {
     #loginContainer {
         #loginParent {
             @include centerElement();
@@ -74,39 +78,82 @@ $sendButtonHeight: 25px;
             border: 1px solid black;
             border-radius: $mainBorderRadius;
             padding: $loginContainerPadding;
+            transition: all 0.5s ease-in;
+
+            @media screen and (max-width: 500px) {
+                @include de-centerElement();
+            }
 
             #containerOne {
                 @include flex-space-between(100%, row);
 
+                @media screen and (max-width: 1100px) {
+                    @include flex-space-between(100%, column);
+                }
+
                 .compartment {
-                    margin: 5px 50px;
+                    margin: 5px 40px;
+
+                    @media screen and (max-width: 1200px) {
+                        margin: 10px;
+                    }
                 }
 
                 #policeDiv {
                     position: relative;
 
                     .intro-img-div {
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+
                         .police {
+                            display: none;
                             width: inherit;
+
                             img {
-                                width: 16rem;
+                                width: 12rem;
                             }
                         }
                     }
 
-                    .error-img-div {
+                    .intro-img-div.show {
+                        opacity: 1;
+                        visibility: visible;
+                        transition: opacity 0.5s ease-in-out;
+                    }
+
+                    .error-img-div,
+                    .ok-img-div {
                         display: none;
                     }
                 }
 
                 #loginHeaders {
+
+                    text-align: center;
                     line-height: 1px;
+
+                    h2 {
+                        width: 100%;
+                    }
 
                     span {
                         font-size: 14px;
                     }
 
                     margin-bottom: 10px;
+
+                    @media screen and (max-width: 500px) {
+                        h2 {
+                            font-size: 21px;
+                        }
+
+                        span {
+                            font-size: 12px;
+                        }
+                    }
+
                 }
 
                 #loginForm {

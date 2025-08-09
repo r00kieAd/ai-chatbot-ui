@@ -12,6 +12,15 @@
   border: 1px solid black;
   border-radius: 10px;
   padding: 20px;
+  transition: all 0.5s ease-in;
+}
+@media screen and (max-width: 500px) {
+  #parent #loginContainer #loginParent {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
 }
 #parent #loginContainer #loginParent #containerOne {
   display: flex;
@@ -20,27 +29,65 @@
   align-items: center;
   width: 100%;
 }
+@media screen and (max-width: 1100px) {
+  #parent #loginContainer #loginParent #containerOne {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}
 #parent #loginContainer #loginParent #containerOne .compartment {
-  margin: 5px 50px;
+  margin: 5px 40px;
+}
+@media screen and (max-width: 1200px) {
+  #parent #loginContainer #loginParent #containerOne .compartment {
+    margin: 10px;
+  }
 }
 #parent #loginContainer #loginParent #containerOne #policeDiv {
   position: relative;
 }
+#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
 #parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police {
+  display: none;
   width: inherit;
 }
 #parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police img {
-  width: 16rem;
+  width: 12rem;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .error-img-div {
+#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div.show {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease-in-out;
+}
+#parent #loginContainer #loginParent #containerOne #policeDiv .error-img-div,
+#parent #loginContainer #loginParent #containerOne #policeDiv .ok-img-div {
   display: none;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
+  text-align: center;
   line-height: 1px;
   margin-bottom: 10px;
 }
+#parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
+  width: 100%;
+}
 #parent #loginContainer #loginParent #containerOne #loginHeaders span {
   font-size: 14px;
+}
+@media screen and (max-width: 500px) {
+  #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
+    font-size: 21px;
+  }
+  #parent #loginContainer #loginParent #containerOne #loginHeaders span {
+    font-size: 12px;
+  }
 }
 #parent #loginContainer #loginParent #containerOne #loginForm {
   width: 100%;
