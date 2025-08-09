@@ -17,6 +17,8 @@ const LoginComp: React.FC = () => {
     const calmPoliceDiv = useRef<HTMLDivElement>(null);
     const angryPoliceDiv = useRef<HTMLDivElement>(null);
     const happyPoliceDiv = useRef<HTMLDivElement>(null);
+    const userinput = useRef<HTMLInputElement>(null);
+    const passinput = useRef<HTMLInputElement>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [imgNum, setImageNum] = useState<number>(5);
 
@@ -32,10 +34,10 @@ const LoginComp: React.FC = () => {
 
     useEffect(() => {
         if (!loggedIn) {
-
             const timeout = setTimeout(() => {
                 slider();
-            }, imgNum == 5? 100:5000);
+                if (imgNum == 5 && loginContainer.current && window.screen.width > 500) loginContainer.current.style.width = "504px";
+            }, imgNum == 5 ? 10 : 5000);
 
             return () => clearTimeout(timeout);
         }
@@ -72,6 +74,22 @@ const LoginComp: React.FC = () => {
         }, 1000);
     }
 
+    const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const username = userinput.current?.value;
+        const password = passinput.current?.value;
+        if (username && password && calmPoliceDiv.current && happyPoliceDiv.current && okPoliceImage.current) {
+            setLoggedIn(true);
+            calmPoliceDiv.current.classList.remove("show");
+            calmPoliceDiv.current.style.display = "none";
+            happyPoliceDiv.current.style.display = "block";
+            okPoliceImage.current.style.display = "block";
+            setTimeout(() => {
+                happyPoliceDiv.current?.classList.add("show");
+            }, 200);
+        }
+    }
+
     return (
         <>
             <div id="loginParent" ref={loginContainer}>
@@ -100,11 +118,13 @@ const LoginComp: React.FC = () => {
                         <div id="loginForm">
                             <br />
                             <div id="formContainer">
-                                <span className='err user-err'>invalid username...</span><br />
-                                <input className='keyinput' type="text" name="username" id="username" placeholder='username' /><br /><br />
-                                <span className='err pass-err'>invalid password...</span>
-                                <input className='keyinput' type="password" name="password" id="password" placeholder='password' /><br /><br />
-                                <input type="submit" value="Login" />
+                                <form onSubmit={checkCredentials}>
+                                    <span className='err user-err'>invalid username...</span><br />
+                                    <input className='keyinput' type="text" name="username" id="username" placeholder='username' ref={userinput} /><br /><br />
+                                    <span className='err pass-err'>invalid password...</span>
+                                    <input className='keyinput' type="password" name="password" id="password" placeholder='password' ref={passinput} /><br /><br />
+                                    <input type="submit" value="Login" />
+                                </form>
                             </div>
                             <span className='or'>or</span>
                             <div id="guestOptions">
