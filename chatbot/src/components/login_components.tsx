@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useGlobal } from '../utils/global_context';
 import hello from '../assets/hello.png';
 import angry from '../assets/angry.png';
 import no from '../assets/no.png';
@@ -7,6 +8,7 @@ import eat from '../assets/eat.png';
 import full from '../assets/full.png';
 
 const LoginComp: React.FC = () => {
+    const { setAuthorized } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const eatPoliceImage = useRef<HTMLSpanElement>(null);
     const fullPoliceImage = useRef<HTMLSpanElement>(null);
@@ -121,6 +123,7 @@ const LoginComp: React.FC = () => {
             setTimeout(() => {
                 happyPoliceDiv.current?.classList.add("show");
             }, 200);
+            setAuthorized(true);
         } else {
             let policeState = 0;
             if (!username || !password) {
