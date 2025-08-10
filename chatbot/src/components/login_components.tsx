@@ -25,6 +25,7 @@ const LoginComp: React.FC = () => {
     const passSpan = useRef<HTMLSpanElement>(null);
     const h2Header = useRef<HTMLHeadingElement>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
+    const [enableInput, setEnableInput] = useState<boolean>(false);
     const [imgNum, setImageNum] = useState<number>(5);
     const [error, setError] = useState<string | undefined>(undefined);
     const [nameError, setNameError] = useState<string | undefined>("What's your NAME!!??");
@@ -52,7 +53,7 @@ const LoginComp: React.FC = () => {
                 slider();
                 if (imgNum == 5 && loginParent.current && window.screen.width > 500) loginParent.current.style.width = "504px";
             }, imgNum == 5 ? 1000 : 5000);
-
+            if (!enableInput) setTimeout(() => setEnableInput(true), 1700);
             return () => clearTimeout(timeout);
         }
     }, [imgNum, loggedIn]);
@@ -128,7 +129,7 @@ const LoginComp: React.FC = () => {
             setTimeout(() => {
                 setAuthorized(true);
                 fadeOut(loginParent.current);
-            }, 1000);
+            }, 2000);
         } else {
             let policeState = 0;
             if (!username || !password) {
@@ -190,10 +191,10 @@ const LoginComp: React.FC = () => {
                             <div id="formContainer">
                                 <form onSubmit={checkCredentials}>
                                     <span className='err user-err' ref={userSpan}>invalid username...</span><br />
-                                    <input className='keyinput' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} /><br /><br />
+                                    <input className='keyinput' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} disabled={!enableInput}/><br /><br />
                                     <span className='err pass-err' ref={passSpan}>invalid password...</span>
-                                    <input className='keyinput' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} /><br /><br />
-                                    <input type="submit" value="Login" />
+                                    <input className='keyinput' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput}/><br /><br />
+                                    <input type="submit" value="Login" disabled={!enableInput}/>
                                 </form>
                             </div>
                             <span className='or'>or</span>
