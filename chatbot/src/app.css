@@ -147,16 +147,20 @@
   padding: 10px;
 }
 #parent #mainContainer {
-  display: none;
+  visibility: hidden;
+  opacity: 0;
   width: 40rem;
   height: auto;
   border: 1px solid black;
   border-radius: 10px;
-  transition: all 0.2s ease;
+  transition: all 1s ease-in-out;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+#parent #mainContainer #innerContainer {
+  display: none;
 }
 #parent #mainContainer #innerContainer #inputContainer #inputBox {
   position: relative;
@@ -256,4 +260,8 @@
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-img img {
   margin-top: 4px;
   width: 20px;
+}
+#parent #mainContainer.show {
+  opacity: 1;
+  visibility: visible;
 }/*# sourceMappingURL=app.css.map */

@@ -196,16 +196,17 @@ $sendButtonHeight: 25px;
     }
 
     #mainContainer {
-        display: none;
-
+        visibility: hidden;
+        opacity: 0;
         width: $mainContainerWidth;
         height: $mainContainerHeight;
         border: 1px solid black;
         border-radius: $mainBorderRadius;
-        transition: all 0.2s ease;
+        transition: all 1s ease-in-out;
         @include centerElement();
 
         #innerContainer {
+            display: none;
             #inputContainer {
                 #inputBox {
 
@@ -314,5 +315,8 @@ $sendButtonHeight: 25px;
                 }
             }
         }
+
+        &.show {@include reveal()}
     }
+
 }
