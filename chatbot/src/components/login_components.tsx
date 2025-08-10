@@ -8,7 +8,7 @@ import eat from '../assets/eat.png';
 import full from '../assets/full.png';
 
 const LoginComp: React.FC = () => {
-    const { setAuthorized } = useGlobal();
+    const { authorized, setAuthorized } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const eatPoliceImage = useRef<HTMLSpanElement>(null);
     const fullPoliceImage = useRef<HTMLSpanElement>(null);
@@ -23,6 +23,7 @@ const LoginComp: React.FC = () => {
     const passinput = useRef<HTMLInputElement>(null);
     const userSpan = useRef<HTMLSpanElement>(null);
     const passSpan = useRef<HTMLSpanElement>(null);
+    const h2Header = useRef<HTMLHeadingElement>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [imgNum, setImageNum] = useState<number>(5);
     const [error, setError] = useState<string | undefined>(undefined);
@@ -93,10 +94,10 @@ const LoginComp: React.FC = () => {
         if (calmPoliceDiv.current) {
             calmPoliceDiv.current.style.display = "block";
             setTimeout(() => {
-                calmPoliceDiv.current?.classList.add("show");
+                fadeIn(calmPoliceDiv.current);
             }, 200);
         }
-        if (angryPoliceDiv.current) angryPoliceDiv.current.classList.remove("show");
+        fadeIn(angryPoliceDiv.current);
         if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
         if (userinput.current && passinput.current) {
             if (userinput.current.value.length > 0) {
@@ -113,7 +114,7 @@ const LoginComp: React.FC = () => {
     const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoggedIn(true);
-        if (calmPoliceDiv.current) calmPoliceDiv.current.classList.remove("show");
+        fadeOut(calmPoliceDiv.current)
         if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
         const username = userinput.current?.value;
         const password = passinput.current?.value;
@@ -121,9 +122,13 @@ const LoginComp: React.FC = () => {
             happyPoliceDiv.current.style.display = "block";
             okPoliceImage.current.style.display = "block";
             setTimeout(() => {
-                happyPoliceDiv.current?.classList.add("show");
+                if (h2Header.current) h2Header.current.innerText = "Logging in...";
+                fadeIn(happyPoliceDiv.current);
             }, 200);
-            setAuthorized(true);
+            setTimeout(() => {
+                setAuthorized(true);
+                fadeOut(loginParent.current);
+            }, 1000);
         } else {
             let policeState = 0;
             if (!username || !password) {
@@ -148,7 +153,7 @@ const LoginComp: React.FC = () => {
                     denyPoliceImage.current.style.display = "block";
                 }
                 setTimeout(() => {
-                    angryPoliceDiv.current?.classList.add("show");
+                    fadeIn(angryPoliceDiv.current);
                 }, 200);
             }
         }
@@ -176,7 +181,8 @@ const LoginComp: React.FC = () => {
                     </div>
                     <div className="compartment-2 compartment">
                         <div id="loginHeaders">
-                            <h2>{error ? error : "Confirm your identity"}</h2>
+                            <h2 ref={h2Header}>{error ? error : "Confirm your identity"}</h2>
+                            <br />
                             <span>&nbsp;&nbsp;Enter your account details below...</span>
                         </div>
                         <div id="loginForm">

@@ -10,11 +10,15 @@ function App() {
   const { authorized } = useGlobal();
   const loginContainer = useRef<HTMLDivElement>(null);
   const mainContainer = useRef<HTMLDivElement>(null);
+  const innerContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (authorized) {
       if (loginContainer.current) loginContainer.current.style.display = "none";
-      if (mainContainer.current) mainContainer.current.style.display = "block";
+      if (innerContainer.current) innerContainer.current.style.display = "block";
+      setTimeout(() => {
+        if (mainContainer.current) mainContainer.current.classList.add("show");
+      }, 200);
     }
   }, [authorized])
 
@@ -25,7 +29,7 @@ function App() {
           <LoginComp />
         </div>
         <div id="mainContainer" ref={mainContainer}>
-          <div id="innerContainer">
+          <div id="innerContainer" ref={innerContainer}>
             <div id="chatContainer">
               <ChatBox />
             </div>
