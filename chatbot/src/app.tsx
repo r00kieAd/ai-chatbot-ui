@@ -14,11 +14,13 @@ function App() {
 
   useEffect(() => {
     if (authorized) {
-      if (loginContainer.current) loginContainer.current.style.display = "none";
-      if (innerContainer.current) innerContainer.current.style.display = "block";
+      setTimeout(() => {
+        if (innerContainer.current) innerContainer.current.style.display = "block";
+        if (loginContainer.current) loginContainer.current.style.display = "none";
+      }, 200);
       setTimeout(() => {
         if (mainContainer.current) mainContainer.current.classList.add("show");
-      }, 200);
+      }, 300);
     }
   }, [authorized])
 
