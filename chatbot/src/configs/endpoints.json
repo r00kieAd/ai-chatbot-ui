@@ -1,5 +1,7 @@
 {
-    "BASE": "",
-    "UPLOAD": "",
-    "ASK": ""
+    "UPLOAD": "/upload",
+    "ASK": "/ask",
+    "LOGIN": "/authenticate",
+    "LOGOUT": "/logout",
+    "CLEAR-DATA": "/clear-data"
 }

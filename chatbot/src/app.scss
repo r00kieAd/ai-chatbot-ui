@@ -134,11 +134,14 @@ $sendButtonHeight: 25px;
 
                 #loginHeaders {
 
-                    text-align: center;
+                    // text-align: center;
                     line-height: 1px;
 
                     h2 {
-                        width: 100%;
+                        width: fit-content;
+                        font-size: clamp(16px, 3vw, 24px);
+                        line-height: 1.0;
+                        word-wrap: break-word;
                     }
 
                     span {

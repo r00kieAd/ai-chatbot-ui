@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
+import authorizationProcess from '../services/authorization_service';
 import hello from '../assets/hello.png';
 import angry from '../assets/angry.png';
 import no from '../assets/no.png';
 import ok from '../assets/ok.png';
 import eat from '../assets/eat.png';
 import full from '../assets/full.png';
+import shocked from '../assets/shocked.png';
 
 const LoginComp: React.FC = () => {
     const { authorized, setAuthorized } = useGlobal();
@@ -19,6 +21,8 @@ const LoginComp: React.FC = () => {
     const calmPoliceDiv = useRef<HTMLDivElement>(null);
     const angryPoliceDiv = useRef<HTMLDivElement>(null);
     const happyPoliceDiv = useRef<HTMLDivElement>(null);
+    const shockedPoliceDiv = useRef<HTMLDivElement>(null);
+    const shockedPoliceImage = useRef<HTMLDivElement>(null);
     const userinput = useRef<HTMLInputElement>(null);
     const passinput = useRef<HTMLInputElement>(null);
     const userSpan = useRef<HTMLSpanElement>(null);
@@ -90,72 +94,114 @@ const LoginComp: React.FC = () => {
     }
 
     function checkInput() {
+        if (userinput.current && userinput.current.value.length > 0) {
+            if (userSpan.current) userSpan.current.style.visibility = "hidden";
+        }
+        if (passinput.current && passinput.current.value.length > 0) {
+            if (passSpan.current) passSpan.current.style.visibility = "hidden";
+        }
+
         if (!error) return;
-        setLoggedIn(false);
-        if (calmPoliceDiv.current) {
-            calmPoliceDiv.current.style.display = "block";
+        
+        setError(undefined);
+        if (h2Header.current) h2Header.current.innerText = "Confirm your identity";
+        
+        fadeOut(angryPoliceDiv.current);
+        fadeOut(shockedPoliceDiv.current);
+        fadeOut(happyPoliceDiv.current);
+        
+        setTimeout(() => {
+            if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
+            if (shockedPoliceDiv.current) shockedPoliceDiv.current.style.display = "none";
+            if (angryPoliceImage.current) angryPoliceImage.current.style.display = "none";
+            if (shockedPoliceImage.current) shockedPoliceImage.current.style.display = "none";
+            
+            if (calmPoliceDiv.current) {
+                calmPoliceDiv.current.style.display = "block";
+                setTimeout(() => {
+                    fadeIn(calmPoliceDiv.current);
+                }, 100);
+            }
+        }, 500);
+    }
+
+    const showPoliceDiv = (div: HTMLDivElement | null, image: HTMLSpanElement | null | HTMLDivElement | null, message: string) => {
+        if (div && image) {
+            div.style.display = "block";
+            (image as HTMLElement).style.display = "block";
             setTimeout(() => {
-                fadeIn(calmPoliceDiv.current);
+                fadeIn(div);
+                setError(message);
             }, 200);
         }
-        fadeIn(angryPoliceDiv.current);
-        if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
-        if (userinput.current && passinput.current) {
-            if (userinput.current.value.length > 0) {
-                if (userSpan.current) userSpan.current.style.visibility = "hidden";
-                setError(undefined);
-            }
-            if (passinput.current.value.length > 0) {
-                if (passSpan.current) passSpan.current.style.visibility = "hidden";
-                setError(undefined);
-            }
-        }
-    }
+    };
 
     const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setLoggedIn(true);
-        fadeOut(calmPoliceDiv.current)
-        if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
+        if (h2Header.current) h2Header.current.innerText = "Validating...";
+        
         const username = userinput.current?.value;
         const password = passinput.current?.value;
-        if (username && password && happyPoliceDiv.current && okPoliceImage.current) {
-            happyPoliceDiv.current.style.display = "block";
-            okPoliceImage.current.style.display = "block";
-            setTimeout(() => {
-                if (h2Header.current) h2Header.current.innerText = "Logging in...";
-                fadeIn(happyPoliceDiv.current);
-            }, 200);
-            setTimeout(() => {
-                setAuthorized(true);
-                fadeOut(loginParent.current);
-            }, 2000);
-        } else {
-            let policeState = 0;
-            if (!username || !password) {
-                if (!username && !password) {
-                    setError("Identify yourself !!");
-                } else if (!username) {
-                    if (userSpan.current) userSpan.current.style.visibility = "visible";
-                    policeState = 1;
-                } else if (!password) {
-                    if (passSpan.current) passSpan.current.style.visibility = "visible";
-                    policeState = 1;
-                }
-                if (!error) setError("You shall not pass!");
+
+        if (!username || !password) {
+            setError("You shall not pass!");
+            fadeOut(calmPoliceDiv.current);
+            if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
+            showPoliceDiv(angryPoliceDiv.current, angryPoliceImage.current, "You shall not pass!");
+            
+            if (!username && userSpan.current) userSpan.current.style.visibility = "visible";
+            if (!password && passSpan.current) passSpan.current.style.visibility = "visible";
+            return;
+        }
+
+        fadeIn(happyPoliceDiv.current);
+        fadeOut(calmPoliceDiv.current);
+        if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
+
+        const response = await authorizationProcess({ 
+            username: username, 
+            password: password, 
+            is_user: true, 
+            ip_value: "" 
+        });
+
+        console.log(response);
+
+        if (response && response.status) {
+            if (!response.resp.verification_passed) {
+                displayErrResp();
+                return;
             }
-            if (angryPoliceDiv.current && denyPoliceImage.current && angryPoliceImage.current) {
-                angryPoliceDiv.current.style.display = "block";
-                if (policeState == 1) {
-                    angryPoliceImage.current.style.display = "block";
-                    denyPoliceImage.current.style.display = "none";
-                } else {
-                    angryPoliceImage.current.style.display = "none";
-                    denyPoliceImage.current.style.display = "block";
-                }
+            if (happyPoliceDiv.current && okPoliceImage.current) {
+                happyPoliceDiv.current.style.display = "block";
+                okPoliceImage.current.style.display = "block";
                 setTimeout(() => {
-                    fadeIn(angryPoliceDiv.current);
+                    if (h2Header.current) h2Header.current.innerText = "Logging in...";
+                    fadeIn(happyPoliceDiv.current);
                 }, 200);
+                setTimeout(() => {
+                    setAuthorized(true);
+                    fadeOut(loginParent.current);
+                }, 2000);
+                setLoggedIn(true);
+            }
+        } else {
+            displayErrResp();
+        }
+
+        function displayErrResp () {
+            const statusCode = response?.statusCode ?? 0;
+            let errorMessage = "";
+            if (statusCode >= 200 && statusCode < 300) {
+                errorMessage = response?.resp.msg || "Authentication failed";
+            } else {
+                errorMessage = response?.resp.msg || response?.resp || "Authentication failed";
+            }
+            
+            if (statusCode >= 500) {
+                showPoliceDiv(shockedPoliceDiv.current, shockedPoliceImage.current, errorMessage);
+            } else {
+                showPoliceDiv(angryPoliceDiv.current, denyPoliceImage.current, errorMessage);
             }
         }
     }
@@ -178,6 +224,9 @@ const LoginComp: React.FC = () => {
                             <div className="intro-img-div ok-img-div" ref={happyPoliceDiv}>
                                 <span className="police police-ok" ref={okPoliceImage}><img src={ok} alt="police" /></span>
                             </div>
+                            <div className="intro-img-div shocked-img-div" ref={shockedPoliceDiv}>
+                                <span className="police police-shocked" ref={shockedPoliceImage}><img src={shocked} alt="police" /></span>
+                            </div>
                         </div>
                     </div>
                     <div className="compartment-2 compartment">
@@ -191,10 +240,10 @@ const LoginComp: React.FC = () => {
                             <div id="formContainer">
                                 <form onSubmit={checkCredentials}>
                                     <span className='err user-err' ref={userSpan}>invalid username...</span><br />
-                                    <input className='keyinput' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} disabled={!enableInput}/><br /><br />
+                                    <input className='keyinput' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} disabled={!enableInput} /><br /><br />
                                     <span className='err pass-err' ref={passSpan}>invalid password...</span>
-                                    <input className='keyinput' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput}/><br /><br />
-                                    <input type="submit" value="Login" disabled={!enableInput}/>
+                                    <input className='keyinput' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput} /><br /><br />
+                                    <input type="submit" value="Login" disabled={!enableInput} />
                                 </form>
                             </div>
                             <span className='or'>or</span>

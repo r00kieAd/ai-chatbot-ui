@@ -75,12 +75,15 @@
   visibility: visible;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
-  text-align: center;
   line-height: 1px;
   margin-bottom: 10px;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
-  width: 100%;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: clamp(16px, 3vw, 24px);
+  line-height: 1;
+  word-wrap: break-word;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders span {
   font-size: 14px;
