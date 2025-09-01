@@ -3,6 +3,23 @@
   --textAreaMaxHeight: 100px;
 }
 
+.slideDownInputBox {
+  animation: slideDown 0.4s ease-in-out both;
+  will-change: transform, positionm bottom, left;
+}
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(38vh);
+  }
+}
+
+#parent {
+  max-height: 50vh;
+  overflow: hidden;
+}
 #parent #loginContainer #loginParent {
   position: absolute;
   top: 50%;
@@ -160,7 +177,6 @@
   opacity: 0;
   width: 40rem;
   height: auto;
-  border: 1px solid black;
   border-radius: 10px;
   transition: all 0.5s ease-in-out;
   position: absolute;
@@ -175,6 +191,11 @@
 }
 #parent #mainContainer #innerContainer {
   display: none;
+}
+#parent #mainContainer #innerContainer #inputContainer {
+  border: 1px solid black;
+  border-radius: 10px;
+  transform: translateY(0);
 }
 #parent #mainContainer #innerContainer #inputContainer #inputBox {
   position: relative;
@@ -225,10 +246,12 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 35%;
+  width: 12rem;
+  max-width: 12rem;
 }
 @media screen and (max-width: 500px) {
   #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment {
+    width: 10rem;
     flex-wrap: wrap;
   }
 }
@@ -246,6 +269,7 @@
 @media screen and (max-width: 500px) {
   #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
     margin: 5px 0;
+    max-width: 70px;
   }
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
@@ -253,11 +277,12 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 20%;
+  width: 8rem;
+  max-width: 8rem;
 }
 @media screen and (max-width: 500px) {
   #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
-    min-width: 30%;
+    width: 7rem;
     flex-wrap: wrap;
   }
 }

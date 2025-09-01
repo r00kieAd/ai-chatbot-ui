@@ -37,7 +37,7 @@ const InputBox: React.FC = () => {
                     currentTextarea.style.height = textareaHeight;
                 };
                 if (curr_prompt_value && curr_client && curr_model) {
-                    alert('sending request');
+                    // alert('sending request');
                     getAnswer(curr_prompt_value, curr_client, curr_model);
                 }
             }
@@ -53,8 +53,8 @@ const InputBox: React.FC = () => {
     }, [llmID]);
 
     const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_top_k = 3, curr_use_rag = false) => {
-        alert(`curr user: ${currUser}`);
-        alert(`curr prompt: ${curr_prompt}`);
+        // alert(`curr user: ${currUser}`);
+        // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
         const response = await initiateAsk({
             username: currUser,
