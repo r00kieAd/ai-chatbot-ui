@@ -8,7 +8,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
+  width: 30rem;
   height: auto;
   border: 1px solid black;
   border-radius: 10px;
@@ -36,9 +36,9 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: inherit;
 }
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 700px) {
   #parent #loginContainer #loginParent #containerOne {
     display: flex;
     flex-direction: column;
@@ -68,7 +68,7 @@
   display: none;
 }
 #parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police img {
-  width: 12rem;
+  width: 15rem;
 }
 #parent #loginContainer #loginParent #containerOne #policeDiv .show {
   opacity: 1;
@@ -76,6 +76,7 @@
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
   line-height: 1px;
+  position: relative;
   margin-bottom: 10px;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
@@ -213,7 +214,7 @@
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
   min-width: 75px;
-  max-width: 100px;
+  max-width: 120px;
   overflow: hidden;
   border: 1px solid black;
   border-radius: 10px;

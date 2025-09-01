@@ -5,7 +5,7 @@
 
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
-
+$loginContainerWidth: 30rem;
 $loginContainerPadding: 20px;
 
 $mainContainerWidth: 40rem;
@@ -19,7 +19,7 @@ $textAreaPadding: 3px;
 $textAreaFontSize: 15px;
 $textAreaLineHeight: 20px;
 $dropdownMinWidth: 75px;
-$dropDownMaxWidth: 100px;
+$dropDownMaxWidth: 120px;
 $sendButtonWidth: 70px;
 $sendButtonHeight: 25px;
 
@@ -79,7 +79,7 @@ $sendButtonHeight: 25px;
     #loginContainer {
         #loginParent {
             @include centerElement();
-            width: 300px;
+            width: $loginContainerWidth;
             height: auto;
             border: 1px solid black;
             border-radius: $mainBorderRadius;
@@ -88,7 +88,7 @@ $sendButtonHeight: 25px;
             visibility: hidden;
             opacity: 0;
             transition: all 0.5s ease-in;
-
+            
             &.show {@include reveal()};
 
             @media screen and (max-width: 500px) {
@@ -97,9 +97,9 @@ $sendButtonHeight: 25px;
             }
 
             #containerOne {
-                @include flex-space-between(100%, row);
+                @include flex-space-between(inherit, row);
 
-                @media screen and (max-width: 1100px) {
+                @media screen and (max-width: 700px) {
                     @include flex-space-between(100%, column);
                 }
 
@@ -124,7 +124,7 @@ $sendButtonHeight: 25px;
                             display: none;
 
                             img {
-                                width: 12rem;
+                                width: 15rem;
                             }
                         }
                     }
@@ -133,10 +133,8 @@ $sendButtonHeight: 25px;
                 }
 
                 #loginHeaders {
-
-                    // text-align: center;
                     line-height: 1px;
-
+                    position: relative;
                     h2 {
                         width: fit-content;
                         font-size: clamp(16px, 3vw, 24px);
