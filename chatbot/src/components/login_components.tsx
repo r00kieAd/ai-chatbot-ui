@@ -10,7 +10,7 @@ import full from '../assets/full.png';
 import shocked from '../assets/shocked.png';
 
 const LoginComp: React.FC = () => {
-    const { authorized, setAuthorized } = useGlobal();
+    const { setAuthorized, setAuthToken, setCurrUser } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const eatPoliceImage = useRef<HTMLSpanElement>(null);
     const fullPoliceImage = useRef<HTMLSpanElement>(null);
@@ -47,7 +47,7 @@ const LoginComp: React.FC = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            fadeIn(loginParent.current);
+            if (sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) !== "true") fadeIn(loginParent.current);
         }, 10);
     }, [])
 
@@ -57,8 +57,11 @@ const LoginComp: React.FC = () => {
                 slider();
                 if (imgNum == 5 && loginParent.current) {
                     switch (true) {
-                        case window.screen.width >= 768:
-                            loginParent.current.style.width = "45rem";
+                        case window.screen.width >= 900:
+                            loginParent.current.style.width = "40rem";
+                            break;
+                        case window.screen.width >= 768 && window.screen.width <= 900:
+                            loginParent.current.style.width = "auto";
                             break;
                         case window.screen.width < 768:
                             loginParent.current.style.width = "auto";
@@ -189,6 +192,9 @@ const LoginComp: React.FC = () => {
                 }, 200);
                 setTimeout(() => {
                     setAuthorized(true);
+                    sessionStorage.setItem(import.meta.env.VITE_SESSION_AUTH_VAR, "true");
+                    setAuthToken(response.resp.token);
+                    setCurrUser(username);
                     fadeOut(loginParent.current);
                 }, 2000);
                 setLoggedIn(true);

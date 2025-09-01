@@ -7,12 +7,13 @@ import './app.css'
 
 function App() {
 
-  const { authorized } = useGlobal();
+  const { authorized, setAuthorized, chatInitiated } = useGlobal();
   const loginContainer = useRef<HTMLDivElement>(null);
   const mainContainer = useRef<HTMLDivElement>(null);
   const innerContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setAuthorized(sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) === "true")
     if (authorized) {
       setTimeout(() => {
         if (innerContainer.current) innerContainer.current.style.display = "block";
@@ -22,7 +23,11 @@ function App() {
         if (mainContainer.current) mainContainer.current.classList.add("show");
       }, 300);
     }
-  }, [authorized])
+  }, [authorized]);
+
+  useEffect(() => {
+    if (chatInitiated) alert('chat initiated');
+  }, [chatInitiated]);
 
   return (
     <>

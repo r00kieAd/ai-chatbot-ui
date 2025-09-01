@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useGlobal } from '../utils/global_context';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
 import LLMs from '../configs/available_llm_models.json';
 import TextAreaHeight from '../utils/textarea_css_data';
+import initiateAsk from '../services/ask_service';
 
 const InputBox: React.FC = () => {
 
+    const { setChatInitiated, currUser, authToken } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [attachCount, setAttachCount] = useState<number>(0);
@@ -15,16 +18,32 @@ const InputBox: React.FC = () => {
     const [models, setModels] = useState<string[]>([]);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
+    const clientOption = useRef<HTMLSelectElement>(null);
+    const modelOption = useRef<HTMLSelectElement>(null);
 
     useEffect(() => {
-        if (asked) {
-            setAsked(false);
-            setInputVal(undefined);
-            if (textareaEle) {
-                textareaEle.value = "";
-                textareaEle.style.height = textareaHeight;
+        const handleAsk = async () => {
+            if (asked) {
+                setChatInitiated(true);
+                setAsked(false);
+                setInputVal(undefined);
+                const curr_client = clientOption.current ? clientOption.current.value : undefined;
+                const curr_model = modelOption.current ? modelOption.current?.value : undefined;
+                const currentTextarea = document.querySelector('textarea') as HTMLTextAreaElement | null;
+                let curr_prompt_value = undefined;
+                if (currentTextarea) {
+                    curr_prompt_value = currentTextarea.value;
+                    currentTextarea.value = "";
+                    currentTextarea.style.height = textareaHeight;
+                };
+                if (curr_prompt_value && curr_client && curr_model) {
+                    alert('sending request');
+                    getAnswer(curr_prompt_value, curr_client, curr_model);
+                }
             }
-        }
+        };
+
+        handleAsk();
     }, [asked]);
 
     useEffect(() => {
@@ -32,6 +51,32 @@ const InputBox: React.FC = () => {
         setLlms(allLLMs);
         fetchModels();
     }, [llmID]);
+
+    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_top_k = 3, curr_use_rag = false) => {
+        alert(`curr user: ${currUser}`);
+        alert(`curr prompt: ${curr_prompt}`);
+        if (!currUser) return;
+        const response = await initiateAsk({
+            username: currUser,
+            prompt: curr_prompt,
+            client: curr_client.toLowerCase(),
+            model: curr_model.toLowerCase(),
+            top_k: curr_top_k,
+            use_rag: curr_use_rag,
+            token: authToken ? authToken : 'null'
+        });
+
+        if (response && response.status) {
+            alert(response.resp.response);
+        } else if (response && response.statusCode < 500) {
+            alert(response.statusCode);
+            alert(response.resp);
+        } else {
+            alert(response.statusCode);
+            alert(response.resp);
+        }
+    }
+
 
     const getInput = (event: React.FormEvent<HTMLTextAreaElement>) => {
 
@@ -89,16 +134,16 @@ const InputBox: React.FC = () => {
             <div id="toolBox">
                 <div id="leftCompartment">
                     <div id="llmDropContainer" className='dropContainer'>
-                        <select name="llmDrop" id="llmDrop" onChange={changeModel} className='pointer'>
+                        <select name="llmDrop" id="llmDrop" onChange={changeModel} className='pointer' ref={clientOption}>
                             {llms.map((e, i) => (
                                 <option id={(i + 1).toString()} value={e}>{e}</option>
                             ))}
                         </select>
                     </div>
                     <div id="modelDropContainer" className='dropContainer'>
-                        <select name="modelDrop" id="modelDrop" className='pointer'>
-                            {models.map((e) => (
-                                <option value={e}>{e}</option>
+                        <select name="modelDrop" id="modelDrop" className='pointer' ref={modelOption}>
+                            {models.map((e, i) => (
+                                <option key={i} value={e}>{e}</option>
                             ))}
                         </select>
                     </div>

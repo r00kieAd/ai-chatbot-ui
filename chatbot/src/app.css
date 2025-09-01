@@ -22,6 +22,11 @@
   opacity: 1;
   visibility: visible;
 }
+@media screen and (max-width: 700px) {
+  #parent #loginContainer #loginParent {
+    min-width: 90%;
+  }
+}
 @media screen and (max-width: 500px) {
   #parent #loginContainer #loginParent {
     width: auto;
@@ -163,6 +168,11 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+@media screen and (max-width: 700px) {
+  #parent #mainContainer {
+    width: 90%;
+  }
+}
 #parent #mainContainer #innerContainer {
   display: none;
 }
@@ -202,6 +212,11 @@
   align-items: center;
   width: auto;
 }
+@media screen and (max-width: 500px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox {
+    max-width: inherit;
+  }
+}
 #parent #mainContainer #innerContainer #inputContainer #toolBox .pointer {
   cursor: pointer;
 }
@@ -211,6 +226,11 @@
   justify-content: space-between;
   align-items: center;
   width: 35%;
+}
+@media screen and (max-width: 500px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment {
+    flex-wrap: wrap;
+  }
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
   min-width: 75px;
@@ -223,12 +243,23 @@
   background: transparent;
   font-size: 14px;
 }
+@media screen and (max-width: 500px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
+    margin: 5px 0;
+  }
+}
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 20%;
+}
+@media screen and (max-width: 500px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
+    min-width: 30%;
+    flex-wrap: wrap;
+  }
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer {
   display: flex;
