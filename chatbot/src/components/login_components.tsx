@@ -55,7 +55,17 @@ const LoginComp: React.FC = () => {
         if (!loggedIn) {
             const timeout = setTimeout(() => {
                 slider();
-                if (imgNum == 5 && loginParent.current && window.screen.width > 500) loginParent.current.style.width = "504px";
+                if (imgNum == 5 && loginParent.current) {
+                    switch (true) {
+                        case window.screen.width >= 768:
+                            loginParent.current.style.width = "45rem";
+                            break;
+                        case window.screen.width < 768:
+                            loginParent.current.style.width = "auto";
+                            // loginParent.current.style.height = `${window.screen.height}px`;
+                            break;
+                    }
+                }
             }, imgNum == 5 ? 1000 : 5000);
             if (!enableInput) setTimeout(() => setEnableInput(true), 1700);
             return () => clearTimeout(timeout);
@@ -165,8 +175,6 @@ const LoginComp: React.FC = () => {
             ip_value: "" 
         });
 
-        console.log(response);
-
         if (response && response.status) {
             if (!response.resp.verification_passed) {
                 displayErrResp();
@@ -204,6 +212,10 @@ const LoginComp: React.FC = () => {
                 showPoliceDiv(angryPoliceDiv.current, denyPoliceImage.current, errorMessage);
             }
         }
+    };
+
+    const checkGuestUser = async () => {
+        alert("Guest logins setup under development");
     }
 
     return (
@@ -248,7 +260,7 @@ const LoginComp: React.FC = () => {
                             </div>
                             <span className='or'>or</span>
                             <div id="guestOptions">
-                                <button>Continue as Guest</button>
+                                <button onClick={checkGuestUser} disabled={!enableInput}>Continue as Guest</button>
                             </div>
                         </div>
                     </div>
