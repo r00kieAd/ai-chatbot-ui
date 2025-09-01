@@ -11,6 +11,8 @@ function App() {
   const loginContainer = useRef<HTMLDivElement>(null);
   const mainContainer = useRef<HTMLDivElement>(null);
   const innerContainer = useRef<HTMLDivElement>(null);
+  const inputBoxDiv = useRef<HTMLDivElement>(null);
+  const chatBoxDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setAuthorized(sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) === "true")
@@ -26,7 +28,16 @@ function App() {
   }, [authorized]);
 
   useEffect(() => {
-    if (chatInitiated) alert('chat initiated');
+    if (chatInitiated) {
+      if (mainContainer.current && inputBoxDiv.current) {
+        if (window.screen.availWidth <= 500) {
+          mainContainer.current.style.width = "90%";
+        } else {
+          mainContainer.current.style.width = "80%";
+        }
+        inputBoxDiv.current.classList.add('slideDownInputBox');
+      }
+    }
   }, [chatInitiated]);
 
   return (
@@ -37,10 +48,10 @@ function App() {
         </div>
         <div id="mainContainer" ref={mainContainer}>
           <div id="innerContainer" ref={innerContainer}>
-            <div id="chatContainer">
+            <div id="chatContainer" ref={chatBoxDiv}>
               <ChatBox />
             </div>
-            <div id="inputContainer">
+            <div id="inputContainer" ref={inputBoxDiv}>
               <InputBox />
             </div>
           </div>

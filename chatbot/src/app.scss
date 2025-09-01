@@ -74,12 +74,30 @@ $sendButtonHeight: 25px;
     visibility: visible;
 }
 
-@mixin slideDownAnimation() {
+@mixin slideDownAnimation($duration: 0.4s, $timing: ease-out) {
+    animation: slideDown #{$duration} #{$timing} both;
+    will-change: transform, positionm bottom, left;
 
+    @keyframes slideDown {
+        from {
+            transform: translateY(0);
+        }
+
+        to {
+            transform: translateY(38vh);
+        }
+    }
+}
+
+.slideDownInputBox {
+    @include slideDownAnimation(0.4s, ease-in-out);
 }
 
 
 #parent {
+    max-height: 50vh;
+    overflow: hidden;
+
     #loginContainer {
         #loginParent {
             @include centerElement();
@@ -214,18 +232,22 @@ $sendButtonHeight: 25px;
         opacity: 0;
         width: $mainContainerWidth;
         height: $mainContainerHeight;
-        border: 1px solid black;
         border-radius: $mainBorderRadius;
         transition: all 0.5s ease-in-out;
         @include centerElement();
+
+
         @media screen and (max-width: 700px) {
             width: 90%;
         }
-        
+
         #innerContainer {
             display: none;
 
             #inputContainer {
+                border: 1px solid black;
+                border-radius: $mainBorderRadius;
+                transform: translateY(0);
                 #inputBox {
                     position: relative;
 
@@ -260,6 +282,7 @@ $sendButtonHeight: 25px;
                     position: relative;
                     margin: 15px;
                     @include flex-space-between(auto);
+
                     @media screen and (max-width: 500px) {
                         max-width: inherit;
                     }
@@ -269,9 +292,11 @@ $sendButtonHeight: 25px;
                     }
 
                     #leftCompartment {
-                        @include flex-space-between(35%);
+                        @include flex-space-between(12rem);
+                        max-width: 12rem;
 
                         @media screen and (max-width: 500px) {
+                            width: 10rem;
                             flex-wrap: wrap;
                         }
 
@@ -290,16 +315,18 @@ $sendButtonHeight: 25px;
 
                                 @media screen and (max-width: 500px) {
                                     margin: 5px 0;
+                                    max-width: 70px;
                                 }
                             }
                         }
                     }
 
                     #rightCompartment {
-                        @include flex-space-between(20%);
+                        @include flex-space-between(8rem);
+                        max-width: 8rem;
 
                         @media screen and (max-width: 500px) {
-                            min-width: 30%;
+                            width: 7rem;
                             flex-wrap: wrap;
                         }
 
