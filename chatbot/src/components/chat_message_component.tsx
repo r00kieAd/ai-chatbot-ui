@@ -61,7 +61,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                     <img src={face} alt="Face" />
                 </div>
                 <div className="message-content">
-                    <div className="message-bubble patrick-hand-regular " dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(userMessage) }}>
+                    <div className="message-bubble patrick-hand-regular user-bubble" dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(userMessage) }}>
                     </div>
                     <div className="message-time montserrat-msg">{userTime}</div>
                 </div>
@@ -74,7 +74,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                 <div className="message-content">
                     {botMessage ? (
                         <>
-                            <div className="message-bubble poppins-regular">
+                            <div className="message-bubble poppins-regular bot-bubble">
                                 {showTyping && !typingComplete ? (
                                     <TypingEffect 
                                         text={botMessage}

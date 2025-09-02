@@ -28,12 +28,14 @@ const LoginComp: React.FC = () => {
     const userSpan = useRef<HTMLSpanElement>(null);
     const passSpan = useRef<HTMLSpanElement>(null);
     const h2Header = useRef<HTMLHeadingElement>(null);
+    const loginHeaderDiv = useRef<HTMLDivElement>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [enableInput, setEnableInput] = useState<boolean>(false);
     const [imgNum, setImageNum] = useState<number>(5);
     const [error, setError] = useState<string | undefined>(undefined);
     const [nameError, setNameError] = useState<string | undefined>("What's your NAME!!??");
     const [passwordError, setPasswordError] = useState<string | undefined>("What's your PASS!!??");
+    const [loginHeaderVisible, setLoginHeaderVisible] = useState<boolean>(false);
 
     function fadeOut(el: HTMLElement | null) {
         if (!el) return;
@@ -52,6 +54,12 @@ const LoginComp: React.FC = () => {
     }, [])
 
     useEffect(() => {
+        setTimeout(() => {
+            if (!loginHeaderVisible) {
+                if (loginHeaderDiv.current) loginHeaderDiv.current.classList.add("show");
+                setLoginHeaderVisible(true);
+            };
+        }, 2000)
         if (!loggedIn) {
             const timeout = setTimeout(() => {
                 slider();
@@ -77,11 +85,11 @@ const LoginComp: React.FC = () => {
 
     useEffect(() => {
         if (loggedOut) {
-            setLoggedIn(false); 
+            setLoggedIn(false);
             setError(undefined);
             setEnableInput(false);
             setImageNum(5);
-            
+
             if (userinput.current) userinput.current.value = "";
             if (passinput.current) passinput.current.value = "";
             if (h2Header.current) h2Header.current.innerText = "Confirm your identity";
@@ -90,7 +98,7 @@ const LoginComp: React.FC = () => {
             fadeOut(angryPoliceDiv.current);
             fadeOut(shockedPoliceDiv.current);
             fadeOut(happyPoliceDiv.current);
-            
+
             setTimeout(() => {
                 if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
                 if (shockedPoliceDiv.current) shockedPoliceDiv.current.style.display = "none";
@@ -99,7 +107,7 @@ const LoginComp: React.FC = () => {
                 if (shockedPoliceImage.current) shockedPoliceImage.current.style.display = "none";
                 if (okPoliceImage.current) okPoliceImage.current.style.display = "none";
                 if (denyPoliceImage.current) denyPoliceImage.current.style.display = "none";
-                
+
                 if (calmPoliceDiv.current) {
                     calmPoliceDiv.current.style.display = "block";
                     setTimeout(() => {
@@ -152,20 +160,20 @@ const LoginComp: React.FC = () => {
         }
 
         if (!error) return;
-        
+
         setError(undefined);
         if (h2Header.current) h2Header.current.innerText = "Confirm your identity";
-        
+
         fadeOut(angryPoliceDiv.current);
         fadeOut(shockedPoliceDiv.current);
         fadeOut(happyPoliceDiv.current);
-        
+
         setTimeout(() => {
             if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
             if (shockedPoliceDiv.current) shockedPoliceDiv.current.style.display = "none";
             if (angryPoliceImage.current) angryPoliceImage.current.style.display = "none";
             if (shockedPoliceImage.current) shockedPoliceImage.current.style.display = "none";
-            
+
             if (calmPoliceDiv.current) {
                 calmPoliceDiv.current.style.display = "block";
                 setTimeout(() => {
@@ -195,16 +203,16 @@ const LoginComp: React.FC = () => {
         setError(undefined);
         event.preventDefault();
         if (h2Header.current) h2Header.current.innerText = "Validating...";
-        
+
         const username = userinput.current?.value;
         const password = passinput.current?.value;
-        
+
         if (!username || !password) {
             setError("You shall not pass!");
             fadeOut(calmPoliceDiv.current);
             if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
             showPoliceDiv(angryPoliceDiv.current, angryPoliceImage.current, "You shall not pass!");
-            
+
             if (!username && userSpan.current) userSpan.current.style.visibility = "visible";
             if (!password && passSpan.current) passSpan.current.style.visibility = "visible";
             return;
@@ -214,11 +222,11 @@ const LoginComp: React.FC = () => {
         fadeOut(calmPoliceDiv.current);
         if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
 
-        const response = await authorizationProcess({ 
-            username: username, 
-            password: password, 
-            is_user: true, 
-            ip_value: "" 
+        const response = await authorizationProcess({
+            username: username,
+            password: password,
+            is_user: true,
+            ip_value: ""
         });
         if (response && response.status) {
             if (!response.resp.verification_passed) {
@@ -245,7 +253,7 @@ const LoginComp: React.FC = () => {
             displayErrResp();
         }
 
-        function displayErrResp () {
+        function displayErrResp() {
             const statusCode = response?.statusCode ?? 0;
             let errorMessage = "";
             if (statusCode >= 200 && statusCode < 300) {
@@ -289,10 +297,10 @@ const LoginComp: React.FC = () => {
                         </div>
                     </div>
                     <div className="compartment-2 compartment">
-                        <div id="loginHeaders" className='poppins-regular'>
+                        <div id="loginHeaders" className='poppins-regular' ref={loginHeaderDiv}>
                             <h2 ref={h2Header}>{error ? error : "Confirm your identity"}</h2>
                             <br />
-                            <span>&nbsp;&nbsp;Enter your account details below...</span>
+                            <i className="fa-solid fa-user-ninja"></i><span>&nbsp;&nbsp;Enter your account details below...</span>
                         </div>
                         <div id="loginForm">
                             <br />
@@ -302,12 +310,14 @@ const LoginComp: React.FC = () => {
                                     <input className='keyinput poppins-regular' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} disabled={!enableInput} /><br /><br />
                                     <span className='err pass-err poppins-regular' ref={passSpan}>invalid password...</span>
                                     <input className='keyinput poppins-regular' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput} /><br /><br />
-                                    <input type="submit" value="Login" disabled={!enableInput} className='poppins-regular'/>
+                                    <button type="submit" disabled={!enableInput} className='poppins-regular'>
+                                        <i className="fa-solid fa-arrow-right-to-bracket"></i> Login
+                                    </button>
                                 </form>
                             </div>
                             <span className='or poppins-regular'>or</span>
                             <div id="guestOptions">
-                                <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest</button>
+                                <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest&nbsp;&nbsp;<i className="fa-solid fa-feather"></i></button>
                             </div>
                         </div>
                     </div>

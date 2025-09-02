@@ -3,11 +3,12 @@ import { useGlobal } from '../utils/global_context';
 import initiateLogout from '../services/logout_service';
 
 const NavbarComp: React.FC = () => {
-    const tickTock = useRef<HTMLParagraphElement>(null);
-    const { 
-        setAuthorized, authToken, currUser, setLoggedOut, setChatInitiated, setAuthToken, setCurrUser, setChatHistory 
+    const tickTock = useRef<HTMLSpanElement>(null);
+    const infoDiv = useRef<HTMLDivElement>(null);
+    const {
+        setAuthorized, authToken, currUser, setLoggedOut, setChatInitiated, setAuthToken, setCurrUser, setChatHistory
     } = useGlobal();
-    
+
     useEffect(() => {
         const updateTime = () => {
             if (tickTock.current) {
@@ -24,34 +25,44 @@ const NavbarComp: React.FC = () => {
 
     async function killSession() {
         sessionStorage.removeItem(import.meta.env.VITE_SESSION_AUTH_VAR);
+        let info = "not authorized";
         if (currUser && authToken) {
-            const response = await initiateLogout({username:currUser, token: authToken});
+            const response = await initiateLogout({ username: currUser, token: authToken });
             if (response.status && response.resp.logged_out) {
-                alert("you have been logged out and session has been cleared");
+                info = "session cleared";
             } else {
-                alert("there was an issue logging out but your session has been cleared")
+                info = "session cleared with error";
             }
         }
-        setAuthorized(false);
-        setLoggedOut(true);
-        setChatInitiated(false);
-        setAuthToken(undefined);
-        setCurrUser(undefined);
-        setChatHistory({});
+        if (infoDiv.current) {
+            infoDiv.current.innerText = info;
+        } else {
+            alert(info);
+        };
+
+        setTimeout(() => {
+            setAuthorized(false);
+            setLoggedOut(true);
+            setChatInitiated(false);
+            setAuthToken(undefined);
+            setCurrUser(undefined);
+            setChatHistory({});
+        }, 100);
 
         setTimeout(() => {
             window.location.reload();
-        }, 500);
+        }, 600);
     }
 
     return (
         <>
             <div id="innerNavbarContainer">
-                <div id="navbarclock" className="navbar-item poppins-regular" ref={tickTock}>
-                    NA:NA:NA
+                <div id="navbarclock" className="navbar-item poppins-regular">
+                    <span className='clock-icon'><i className="fa-solid fa-circle-check"></i></span>&nbsp;<span  ref={tickTock}></span>
                 </div>
+                <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>Chatbot UI</div>
                 <div id="navbarLogout" className="navbar-item">
-                    <button onClick={killSession} className='poppins-regular'>kill session</button>
+                    <button onClick={killSession} className='poppins-regular'><i className="fa-solid fa-skull"></i>&nbsp;session</button>
                 </div>
             </div>
         </>
