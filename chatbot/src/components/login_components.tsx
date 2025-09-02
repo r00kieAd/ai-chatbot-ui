@@ -146,16 +146,22 @@ const LoginComp: React.FC = () => {
                 fadeIn(div);
                 setError(message);
             }, 200);
+        } else {
+            setTimeout(() => {
+                fadeIn(div);
+                setError(message);
+            }, 200);
         }
     };
 
     const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
+        setError(undefined);
         event.preventDefault();
         if (h2Header.current) h2Header.current.innerText = "Validating...";
         
         const username = userinput.current?.value;
         const password = passinput.current?.value;
-
+        
         if (!username || !password) {
             setError("You shall not pass!");
             fadeOut(calmPoliceDiv.current);
@@ -177,7 +183,6 @@ const LoginComp: React.FC = () => {
             is_user: true, 
             ip_value: "" 
         });
-
         if (response && response.status) {
             if (!response.resp.verification_passed) {
                 displayErrResp();
@@ -211,7 +216,6 @@ const LoginComp: React.FC = () => {
             } else {
                 errorMessage = response?.resp.msg || response?.resp || "Authentication failed";
             }
-            
             if (statusCode >= 500) {
                 showPoliceDiv(shockedPoliceDiv.current, shockedPoliceImage.current, errorMessage);
             } else {

@@ -5,14 +5,14 @@
 
 .slideDownInputBox {
   animation: slideDown 0.4s ease-in-out both;
-  will-change: transform, positionm bottom, left;
+  will-change: transform;
 }
 @keyframes slideDown {
   from {
-    transform: translateY(0);
+    transform: translateY(-20px);
   }
   to {
-    transform: translateY(38vh);
+    transform: translateY(0);
   }
 }
 
@@ -176,7 +176,7 @@
   visibility: hidden;
   opacity: 0;
   width: 40rem;
-  height: auto;
+  height: 90vh;
   border-radius: 10px;
   transition: all 0.5s ease-in-out;
   position: absolute;
@@ -191,10 +191,162 @@
 }
 #parent #mainContainer #innerContainer {
   display: none;
+  height: 100%;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+#parent #mainContainer #innerContainer.show {
+  display: block;
+}
+#parent #mainContainer #innerContainer.chat-mode {
+  display: flex !important;
+}
+#parent #mainContainer #innerContainer #chatContainer {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+  display: none;
+  max-height: calc(100% - 120px);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+}
+#parent #mainContainer #innerContainer #chatContainer::-webkit-scrollbar {
+  display: none;
+}
+#parent #mainContainer #innerContainer #chatContainer.chat-visible {
+  display: block;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-box {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  min-height: calc(100% - 40px);
+  justify-content: flex-start;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-exchange {
+  margin-bottom: 20px;
+  width: 100%;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-exchange:last-child {
+  margin-bottom: 10px;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-exchange.new-message .chat-message.user-message {
+  animation: slideUpFromInput 0.6s ease-out forwards;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-exchange.new-message .chat-message.bot-message {
+  animation: slideUpFromInput 0.6s ease-out 0.3s both;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  width: 100%;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message:last-child {
+  margin-bottom: 0;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-avatar.loading {
+  animation: bounce 1.5s infinite;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content {
+  max-width: 70%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  display: inline-block;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time {
+  font-size: 11px;
+  color: #6b7280;
+  margin-left: 16px;
+  opacity: 0.8;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message {
+  justify-content: flex-end;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-avatar {
+  order: 2;
+  margin-right: 0;
+  margin-left: 12px;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content {
+  order: 1;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble {
+  background-color: #2563eb;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-time {
+  margin-left: 0;
+  margin-right: 16px;
+  text-align: right;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message {
+  justify-content: flex-start;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  border-bottom-left-radius: 4px;
 }
 #parent #mainContainer #innerContainer #inputContainer {
   border: 1px solid black;
   border-radius: 10px;
+  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 40px);
+  background: white;
+  z-index: 10;
+  transition: all 0.6s ease-in-out;
+}
+#parent #mainContainer #innerContainer #inputContainer.chat-initiated {
+  position: relative;
+  top: auto;
+  left: auto;
   transform: translateY(0);
 }
 #parent #mainContainer #innerContainer #inputContainer #inputBox {
@@ -324,4 +476,45 @@
 #parent #mainContainer.show {
   opacity: 1;
   visibility: visible;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slideUpFromInput {
+  from {
+    transform: translateY(150px);
+    opacity: 0;
+    scale: 0.8;
+  }
+  30% {
+    opacity: 0.3;
+    scale: 0.9;
+  }
+  70% {
+    opacity: 0.8;
+    scale: 0.98;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }/*# sourceMappingURL=app.css.map */

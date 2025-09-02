@@ -1,6 +1,13 @@
 import { createContext, useState, useContext } from "react";
 import type { ReactNode } from "react";
 
+interface ChatMessage {
+    userMessage: string;
+    userTime: string;
+    botMessage: string;
+    botTime: string;
+}
+
 interface GlobalState {
     authorized: boolean;
     setAuthorized: (value: boolean) => void;
@@ -10,6 +17,8 @@ interface GlobalState {
     setAuthToken: (value: string | undefined) => void;
     currUser: string | undefined;
     setCurrUser: (value: string | undefined) => void;
+    chatHistory: { [key: string]: ChatMessage };
+    setChatHistory: (value: { [key: string]: ChatMessage } | ((prev: { [key: string]: ChatMessage }) => { [key: string]: ChatMessage })) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -19,8 +28,15 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [chatInitiated, setChatInitiated] = useState(false);
     const [authToken, setAuthToken] = useState<string | undefined>(undefined);
     const [currUser, setCurrUser] = useState<string | undefined>(undefined);
+    const [chatHistory, setChatHistory] = useState<{ [key: string]: ChatMessage }>({});
 
-    return <GlobalContext.Provider value={{ authorized, setAuthorized, chatInitiated, setChatInitiated, authToken, setAuthToken, currUser, setCurrUser }}>
+    return <GlobalContext.Provider value={{ 
+        authorized, setAuthorized, 
+        chatInitiated, setChatInitiated, 
+        authToken, setAuthToken, 
+        currUser, setCurrUser,
+        chatHistory, setChatHistory
+    }}>
         {children}
     </GlobalContext.Provider>
 }
