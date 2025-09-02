@@ -6,17 +6,6 @@ const ChatBox: React.FC = () => {
     const { chatHistory } = useGlobal();
     const chatContainerRef = useRef<HTMLDivElement>(null);
 
-    // Disable auto-scrolling to keep bot messages focused
-    // useEffect(() => {
-    //     // Scroll to bottom when new messages are added
-    //     if (chatContainerRef.current) {
-    //         const container = chatContainerRef.current.parentElement; // Get the actual scrolling container
-    //         if (container) {
-    //             container.scrollTop = container.scrollHeight;
-    //         }
-    //     }
-    // }, [chatHistory]);
-
     return (
         <div className="chat-box" ref={chatContainerRef}>
             {Object.entries(chatHistory).map(([key, chat]) => (

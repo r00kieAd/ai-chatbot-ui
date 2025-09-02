@@ -59,11 +59,9 @@ const InputBox: React.FC = () => {
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
         
-        // Generate a unique key for this chat exchange
         const chatKey = Date.now().toString();
         const userTime = new Date().toLocaleTimeString();
         
-        // Store user message immediately
         setChatHistory(prev => ({
             ...prev,
             [chatKey]: {
@@ -87,7 +85,6 @@ const InputBox: React.FC = () => {
         const botTime = new Date().toLocaleTimeString();
 
         if (response && response.status) {
-            // Update with bot response
             setChatHistory(prev => ({
                 ...prev,
                 [chatKey]: {
@@ -97,7 +94,6 @@ const InputBox: React.FC = () => {
                 }
             }));
         } else if (response && response.statusCode < 500) {
-            // Handle error response
             setChatHistory(prev => ({
                 ...prev,
                 [chatKey]: {
@@ -107,7 +103,6 @@ const InputBox: React.FC = () => {
                 }
             }));
         } else {
-            // Handle server error
             setChatHistory(prev => ({
                 ...prev,
                 [chatKey]: {

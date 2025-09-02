@@ -10,7 +10,7 @@ import full from '../assets/full.png';
 import shocked from '../assets/shocked.png';
 
 const LoginComp: React.FC = () => {
-    const { setAuthorized, setAuthToken, setCurrUser } = useGlobal();
+    const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const eatPoliceImage = useRef<HTMLSpanElement>(null);
     const fullPoliceImage = useRef<HTMLSpanElement>(null);
@@ -74,6 +74,43 @@ const LoginComp: React.FC = () => {
             return () => clearTimeout(timeout);
         }
     }, [imgNum, loggedIn]);
+
+    useEffect(() => {
+        if (loggedOut) {
+            setLoggedIn(false); 
+            setError(undefined);
+            setEnableInput(false);
+            setImageNum(5);
+            
+            if (userinput.current) userinput.current.value = "";
+            if (passinput.current) passinput.current.value = "";
+            if (h2Header.current) h2Header.current.innerText = "Confirm your identity";
+            if (userSpan.current) userSpan.current.style.visibility = "hidden";
+            if (passSpan.current) passSpan.current.style.visibility = "hidden";
+            fadeOut(angryPoliceDiv.current);
+            fadeOut(shockedPoliceDiv.current);
+            fadeOut(happyPoliceDiv.current);
+            
+            setTimeout(() => {
+                if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
+                if (shockedPoliceDiv.current) shockedPoliceDiv.current.style.display = "none";
+                if (happyPoliceDiv.current) happyPoliceDiv.current.style.display = "none";
+                if (angryPoliceImage.current) angryPoliceImage.current.style.display = "none";
+                if (shockedPoliceImage.current) shockedPoliceImage.current.style.display = "none";
+                if (okPoliceImage.current) okPoliceImage.current.style.display = "none";
+                if (denyPoliceImage.current) denyPoliceImage.current.style.display = "none";
+                
+                if (calmPoliceDiv.current) {
+                    calmPoliceDiv.current.style.display = "block";
+                    setTimeout(() => {
+                        fadeIn(calmPoliceDiv.current);
+                        setTimeout(() => setEnableInput(true), 1700);
+                    }, 100);
+                }
+            }, 500);
+            setLoggedOut(false);
+        }
+    }, [loggedOut, setLoggedOut])
 
     function slider() {
         fadeOut(calmPoliceDiv.current);
