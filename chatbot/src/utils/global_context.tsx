@@ -11,6 +11,8 @@ interface ChatMessage {
 interface GlobalState {
     authorized: boolean;
     setAuthorized: (value: boolean) => void;
+    loggedOut: boolean;
+    setLoggedOut: (value: boolean) => void;
     chatInitiated: boolean;
     setChatInitiated: (value: boolean) => void;
     authToken: string | undefined;
@@ -25,13 +27,15 @@ const GlobalContext = createContext<GlobalState | undefined>(undefined);
 
 export function GlobalProvider({ children }: { children: ReactNode }) {
     const [authorized, setAuthorized] = useState(false);
+    const [loggedOut, setLoggedOut] = useState(false);
     const [chatInitiated, setChatInitiated] = useState(false);
     const [authToken, setAuthToken] = useState<string | undefined>(undefined);
     const [currUser, setCurrUser] = useState<string | undefined>(undefined);
     const [chatHistory, setChatHistory] = useState<{ [key: string]: ChatMessage }>({});
 
     return <GlobalContext.Provider value={{ 
-        authorized, setAuthorized, 
+        authorized, setAuthorized,
+        loggedOut, setLoggedOut,
         chatInitiated, setChatInitiated, 
         authToken, setAuthToken, 
         currUser, setCurrUser,

@@ -5,10 +5,9 @@ import bot from '../assets/bot.png';
 import face from '../assets/face.png';
 import aicloud from '../assets/ai-cloud.png';
 
-// Configure marked options
 marked.setOptions({
-    breaks: true, // Convert '\n' to <br>
-    gfm: true, // Enable GitHub flavored markdown
+    breaks: true,
+    gfm: true,
 });
 
 interface ChatMessageProps {
@@ -18,21 +17,18 @@ interface ChatMessageProps {
     botTime: string;
 }
 
-// Helper function to convert markdown to HTML
 const convertMarkdownToHTML = (text: string): string => {
-    // Return empty string if text is empty or null
     if (!text || text.trim() === '') {
         return '';
     }
     
     try {
-        // Use marked library to convert markdown to HTML
         const htmlOutput = marked(text) as string;
         console.log('Markdown conversion:', { input: text.substring(0, 100) + '...', output: htmlOutput.substring(0, 200) + '...' });
         return htmlOutput;
     } catch (error) {
         console.error('Markdown conversion failed:', error);
-        return `<p>${text}</p>`; // Fallback to wrapped plain text
+        return `<p>${text}</p>`; 
     }
 };
 
@@ -42,15 +38,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     const [typingComplete, setTypingComplete] = useState(false);
 
     useEffect(() => {
-        // Remove the new message class after animation completes
         const timer = setTimeout(() => {
             setIsNewMessage(false);
-        }, 1000); // Match animation duration
+        }, 1000);
 
-        // For bot messages, start with typing immediately if message exists
         if (botMessage) {
             setShowTyping(true);
-            setTypingComplete(false); // Reset typing state for new messages
+            setTypingComplete(false);
         }
 
         return () => clearTimeout(timer);
@@ -62,7 +56,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
 
     return (
         <div className={`chat-exchange ${isNewMessage ? 'new-message' : ''}`}>
-            {/* User Message */}
             <div className="chat-message user-message">
                 <div className="message-avatar">
                     <img src={face} alt="Face" />
@@ -74,7 +67,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                 </div>
             </div>
             
-            {/* Bot Message or Loading */}
             <div className="chat-message bot-message">
                 <div className={`message-avatar ${!botMessage ? 'loading' : ''}`}>
                     <img src={botMessage ? bot : aicloud} alt={botMessage ? "Bot" : "Loading"} />
@@ -86,7 +78,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                 {showTyping && !typingComplete ? (
                                     <TypingEffect 
                                         text={botMessage}
-                                        // Using default speed (100 WPS) - no need to specify
                                         onComplete={handleTypingComplete}
                                     />
                                 ) : typingComplete ? (
@@ -99,7 +90,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                         </>
                     ) : (
                         <div className="message-bubble">
-                            <em>Thinking...</em>
+                            <em>thinking...</em>
                         </div>
                     )}
                 </div>
