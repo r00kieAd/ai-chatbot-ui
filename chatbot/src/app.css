@@ -247,6 +247,9 @@
   align-items: flex-start;
   margin-bottom: 12px;
   width: 100%;
+  height: -moz-fit-content;
+  height: fit-content;
+  min-height: unset;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message:last-child {
   margin-bottom: 0;
@@ -272,6 +275,9 @@
   max-width: 70%;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  height: -moz-fit-content;
+  height: fit-content;
+  min-height: unset;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble {
   padding: 12px 16px;
@@ -279,12 +285,17 @@
   word-wrap: break-word;
   overflow-wrap: break-word;
   white-space: pre-wrap;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.4;
   margin-bottom: 4px;
   display: inline-block;
   max-width: 100%;
+  width: -moz-fit-content;
+  width: fit-content;
+  min-height: 1rem;
+  max-height: auto;
   box-sizing: border-box;
+  display: flex;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h1, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h2, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h3, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h4, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h5, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h6 {
   margin: 8px 0 4px 0;
@@ -393,11 +404,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  height: auto;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble {
   background-color: #2563eb;
   color: white;
   border-bottom-right-radius: 4px;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble code {
   background-color: rgba(255, 255, 255, 0.2);
@@ -433,6 +447,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  height: -moz-fit-content;
+  height: fit-content;
+  min-height: unset;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble {
   background-color: #f3f4f6;
@@ -533,7 +550,7 @@
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
   min-width: 75px;
-  max-width: 120px;
+  max-width: 100px;
   overflow: hidden;
   border: 1px solid black;
   border-radius: 10px;
@@ -641,4 +658,30 @@
   60% {
     transform: translateY(-5px);
   }
+}
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+@keyframes fadeInLine {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+#parent .typing-text .typing-cursor {
+  animation: blink 1s infinite;
+  font-weight: normal;
+  color: inherit;
+}
+#parent .typing-text .fade-in-line {
+  animation: fadeInLine 0.3s ease-out forwards;
 }/*# sourceMappingURL=app.css.map */
