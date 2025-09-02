@@ -47,11 +47,11 @@ const NavbarComp: React.FC = () => {
     return (
         <>
             <div id="innerNavbarContainer">
-                <div id="navbarclock" className="navbar-item" ref={tickTock}>
+                <div id="navbarclock" className="navbar-item poppins-regular" ref={tickTock}>
                     NA:NA:NA
                 </div>
                 <div id="navbarLogout" className="navbar-item">
-                    <button onClick={killSession}>kill session</button>
+                    <button onClick={killSession} className='poppins-regular'>kill session</button>
                 </div>
             </div>
         </>

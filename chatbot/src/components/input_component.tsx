@@ -165,22 +165,22 @@ const InputBox: React.FC = () => {
 
             <div id="inputBox">
                 <div id="inputChild">
-                    <textarea name="inputArea" id="inputArea" placeholder='query here...' onInput={getInput}></textarea>
+                    <textarea name="inputArea" id="inputArea" placeholder='query here...' onInput={getInput} className='montserrat-msg'></textarea>
                 </div>
             </div>
             <div id="toolBox">
                 <div id="leftCompartment">
                     <div id="llmDropContainer" className='dropContainer'>
-                        <select name="llmDrop" id="llmDrop" onChange={changeModel} className='pointer' ref={clientOption}>
+                        <select name="llmDrop" id="llmDrop" onChange={changeModel} className='pointer quicksand-light' ref={clientOption}>
                             {llms.map((e, i) => (
-                                <option id={(i + 1).toString()} value={e}>{e}</option>
+                                <option id={(i + 1).toString()} value={e} className='quicksand-msg'>{e}</option>
                             ))}
                         </select>
                     </div>
                     <div id="modelDropContainer" className='dropContainer'>
-                        <select name="modelDrop" id="modelDrop" className='pointer' ref={modelOption}>
+                        <select name="modelDrop" id="modelDrop" className='pointer quicksand-light' ref={modelOption}>
                             {models.map((e, i) => (
-                                <option key={i} value={e}>{e}</option>
+                                <option key={i} value={e} className='quicksand-msg'>{e}</option>
                             ))}
                         </select>
                     </div>
@@ -192,7 +192,7 @@ const InputBox: React.FC = () => {
                         <input type="file" name="attachment" id="attachment" />
                     </div>
                     <div id="sendContainer">
-                        <button className='button send-button pointer' onClick={triggerSend}><span className='button-text'>Ask</span><span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span></button>
+                        <button className='button send-button pointer quicksand-light' onClick={triggerSend}><span className='button-text'>Ask</span><span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span></button>
                     </div>
                 </div>
             </div>

@@ -289,7 +289,7 @@ const LoginComp: React.FC = () => {
                         </div>
                     </div>
                     <div className="compartment-2 compartment">
-                        <div id="loginHeaders">
+                        <div id="loginHeaders" className='poppins-regular'>
                             <h2 ref={h2Header}>{error ? error : "Confirm your identity"}</h2>
                             <br />
                             <span>&nbsp;&nbsp;Enter your account details below...</span>
@@ -298,16 +298,16 @@ const LoginComp: React.FC = () => {
                             <br />
                             <div id="formContainer">
                                 <form onSubmit={checkCredentials}>
-                                    <span className='err user-err' ref={userSpan}>invalid username...</span><br />
-                                    <input className='keyinput' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} disabled={!enableInput} /><br /><br />
-                                    <span className='err pass-err' ref={passSpan}>invalid password...</span>
-                                    <input className='keyinput' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput} /><br /><br />
-                                    <input type="submit" value="Login" disabled={!enableInput} />
+                                    <span className='err user-err poppins-regular' ref={userSpan}>invalid username...</span><br />
+                                    <input className='keyinput poppins-regular' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} disabled={!enableInput} /><br /><br />
+                                    <span className='err pass-err poppins-regular' ref={passSpan}>invalid password...</span>
+                                    <input className='keyinput poppins-regular' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput} /><br /><br />
+                                    <input type="submit" value="Login" disabled={!enableInput} className='poppins-regular'/>
                                 </form>
                             </div>
-                            <span className='or'>or</span>
+                            <span className='or poppins-regular'>or</span>
                             <div id="guestOptions">
-                                <button onClick={checkGuestUser} disabled={!enableInput}>Continue as Guest</button>
+                                <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest</button>
                             </div>
                         </div>
                     </div>
