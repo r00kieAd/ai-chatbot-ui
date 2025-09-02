@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { marked } from 'marked';
+import TypingEffect from './typing_effect_component';
 import bot from '../assets/bot.png';
 import face from '../assets/face.png';
 import aicloud from '../assets/ai-cloud.png';
@@ -37,6 +38,8 @@ const convertMarkdownToHTML = (text: string): string => {
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime }) => {
     const [isNewMessage, setIsNewMessage] = useState(true);
+    const [showTyping, setShowTyping] = useState(false);
+    const [typingComplete, setTypingComplete] = useState(false);
 
     useEffect(() => {
         // Remove the new message class after animation completes
@@ -44,8 +47,18 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
             setIsNewMessage(false);
         }, 1000); // Match animation duration
 
+        // For bot messages, start with typing immediately if message exists
+        if (botMessage) {
+            setShowTyping(true);
+            setTypingComplete(false); // Reset typing state for new messages
+        }
+
         return () => clearTimeout(timer);
-    }, []);
+    }, [botMessage]);
+
+    const handleTypingComplete = () => {
+        setTypingComplete(true);
+    };
 
     return (
         <div className={`chat-exchange ${isNewMessage ? 'new-message' : ''}`}>
@@ -69,7 +82,18 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                 <div className="message-content">
                     {botMessage ? (
                         <>
-                            <div className="message-bubble" dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }}>
+                            <div className="message-bubble">
+                                {showTyping && !typingComplete ? (
+                                    <TypingEffect 
+                                        text={botMessage}
+                                        // Using default speed (100 WPS) - no need to specify
+                                        onComplete={handleTypingComplete}
+                                    />
+                                ) : typingComplete ? (
+                                    <span dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
+                                ) : (
+                                    <span>Loading...</span>
+                                )}
                             </div>
                             <div className="message-time">{botTime}</div>
                         </>
