@@ -7,7 +7,7 @@ import './app.css'
 
 function App() {
 
-  const { authorized, setAuthorized, chatInitiated } = useGlobal();
+  const { authorized, setAuthorized, chatInitiated, setChatInitiated } = useGlobal();
   const loginContainer = useRef<HTMLDivElement>(null);
   const mainContainer = useRef<HTMLDivElement>(null);
   const innerContainer = useRef<HTMLDivElement>(null);
@@ -29,13 +29,17 @@ function App() {
 
   useEffect(() => {
     if (chatInitiated) {
-      if (mainContainer.current && inputBoxDiv.current) {
+      if (mainContainer.current && inputBoxDiv.current && chatBoxDiv.current && innerContainer.current) {
         if (window.screen.availWidth <= 500) {
           mainContainer.current.style.width = "90%";
         } else {
           mainContainer.current.style.width = "80%";
         }
         inputBoxDiv.current.classList.add('slideDownInputBox');
+        inputBoxDiv.current.classList.add('chat-initiated'); // Add class for input positioning
+        innerContainer.current.classList.add('chat-mode'); // Switch to flex layout
+        chatBoxDiv.current.classList.add('chat-visible'); // Make chat visible
+        setChatInitiated(false);
       }
     }
   }, [chatInitiated]);

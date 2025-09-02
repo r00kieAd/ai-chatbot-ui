@@ -8,7 +8,7 @@ import initiateAsk from '../services/ask_service';
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken } = useGlobal();
+    const { setChatInitiated, currUser, authToken, setChatHistory } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [attachCount, setAttachCount] = useState<number>(0);
@@ -39,6 +39,8 @@ const InputBox: React.FC = () => {
                 if (curr_prompt_value && curr_client && curr_model) {
                     // alert('sending request');
                     getAnswer(curr_prompt_value, curr_client, curr_model);
+                } else {
+                    // display error
                 }
             }
         };
@@ -56,6 +58,22 @@ const InputBox: React.FC = () => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
+        
+        // Generate a unique key for this chat exchange
+        const chatKey = Date.now().toString();
+        const userTime = new Date().toLocaleTimeString();
+        
+        // Store user message immediately
+        setChatHistory(prev => ({
+            ...prev,
+            [chatKey]: {
+                userMessage: curr_prompt,
+                userTime: userTime,
+                botMessage: '',
+                botTime: ''
+            }
+        }));
+
         const response = await initiateAsk({
             username: currUser,
             prompt: curr_prompt,
@@ -66,14 +84,38 @@ const InputBox: React.FC = () => {
             token: authToken ? authToken : 'null'
         });
 
+        const botTime = new Date().toLocaleTimeString();
+
         if (response && response.status) {
-            alert(response.resp.response);
+            // Update with bot response
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    ...prev[chatKey],
+                    botMessage: response.resp.response,
+                    botTime: botTime
+                }
+            }));
         } else if (response && response.statusCode < 500) {
-            alert(response.statusCode);
-            alert(response.resp);
+            // Handle error response
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    ...prev[chatKey],
+                    botMessage: `Error ${response.statusCode}: ${response.resp}`,
+                    botTime: botTime
+                }
+            }));
         } else {
-            alert(response.statusCode);
-            alert(response.resp);
+            // Handle server error
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    ...prev[chatKey],
+                    botMessage: `Server Error ${response?.statusCode}: ${response?.resp || 'Unknown error'}`,
+                    botTime: botTime
+                }
+            }));
         }
     }
 
