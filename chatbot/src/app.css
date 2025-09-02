@@ -52,6 +52,7 @@
   position: fixed;
   display: flex;
   justify-self: center;
+  z-index: 1000;
   transition: all 0.5s ease-in-out;
 }
 #parent #navbarContainer.show {
@@ -69,6 +70,12 @@
   justify-content: space-between;
   padding: 5px 8px;
 }
+#parent #navbarContainer #navbarController #innerNavbarContainer #navbarclock {
+  width: 90px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+}
 #parent #navbarContainer #navbarController #innerNavbarContainer #navbarLogout button {
   width: auto;
   height: sendButtonHeight;
@@ -81,6 +88,16 @@
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
+  width: 90px;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #navbarLogout button:hover {
+  font-weight: 900;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #displayInfo {
+  width: auto;
+  max-width: 50%;
+  text-align: center;
+  padding-top: 1px;
 }
 #parent #loginContainer #loginParent {
   position: absolute;
@@ -171,6 +188,9 @@
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
   line-height: 1px;
   position: relative;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
   margin-bottom: 10px;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
@@ -195,6 +215,10 @@
     font-size: 12px;
   }
 }
+#parent #loginContainer #loginParent #containerOne #loginHeaders.show {
+  opacity: 1;
+  visibility: visible;
+}
 #parent #loginContainer #loginParent #containerOne #loginForm {
   width: 100%;
   position: relative;
@@ -214,8 +238,8 @@
   outline: none;
   font-size: 15px;
 }
-#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input[type=submit] {
-  width: 90%;
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] {
+  width: 5rem;
   height: 30px;
   outline: none;
   border: 1px solid black;
@@ -227,7 +251,7 @@
   justify-content: space-around;
   cursor: pointer;
   justify-self: center;
-  margin: 15px 0;
+  margin: 10px 0;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err {
   font-size: 11px;
@@ -363,7 +387,7 @@
   white-space: pre-wrap;
   font-size: 15px;
   line-height: 1.4;
-  margin-bottom: 4px;
+  margin: 4px 0;
   max-width: 100%;
   width: -moz-fit-content;
   width: fit-content;
@@ -468,6 +492,10 @@
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table th {
   background-color: rgba(0, 0, 0, 0.05);
   font-weight: bold;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .bot-bubble {
+  padding-top: 20px;
+  padding-bottom: 0px;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time {
   font-size: 11px;
