@@ -24,6 +24,34 @@ $sendButtonWidth: 70px;
 $sendButtonHeight: 25px;
 $navbarPadding: 5px 8px;
 
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.quicksand-light {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.montserrat-msg {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.patrick-hand-regular {
+  font-family: "Patrick Hand", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
 @mixin centerElement() {
     position: absolute;
     top: 50%;
@@ -147,8 +175,12 @@ $navbarPadding: 5px 8px;
                 @include reveal()
             }
 
-            @media screen and (max-width: 700px) {
+            @media screen and (max-width: 900px) {
                 min-width: 90%;
+            }
+
+            @media screen and (min-width: 501px) and (max-width: 899px) {
+                min-width: 80%;
             }
 
             @media screen and (max-width: 500px) {
@@ -165,26 +197,29 @@ $navbarPadding: 5px 8px;
 
                 .compartment {
                     margin: 5px 40px;
-
+                    width: 100%;
                     @media screen and (max-width: 1200px) {
                         margin: 10px;
                     }
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
                 }
 
                 #policeDiv {
                     position: relative;
-
+                    width: 100%;
                     .intro-img-div {
                         opacity: 0;
                         visibility: hidden;
                         transition: all 0.5s ease-in-out;
 
                         .police {
-                            width: inherit;
                             display: none;
 
                             img {
-                                width: 15rem;
+                                width: 100%;
                             }
                         }
                     }
@@ -197,16 +232,18 @@ $navbarPadding: 5px 8px;
                 #loginHeaders {
                     line-height: 1px;
                     position: relative;
-
                     h2 {
                         width: fit-content;
-                        font-size: clamp(16px, 3vw, 24px);
+                        font-size: clamp(16px, 3vw, 21px);
                         line-height: 1.0;
                         word-wrap: break-word;
                     }
 
                     span {
-                        font-size: 14px;
+                        width: fit-content;
+                        font-size: clamp(12px, 1vw, 14px);
+                        line-height: 1.0;
+                        word-wrap: break-word;
                     }
 
                     margin-bottom: 10px;
@@ -226,7 +263,6 @@ $navbarPadding: 5px 8px;
                 #loginForm {
                     width: 100%;
                     position: relative;
-
                     @include flex-space-between(100%, column);
                     justify-content: center;
 
@@ -242,7 +278,7 @@ $navbarPadding: 5px 8px;
                         }
 
                         .err {
-                            font-size: 14px;
+                            font-size: 11px;
                             visibility: hidden;
                         }
                     }
@@ -384,13 +420,13 @@ $navbarPadding: 5px 8px;
                             font-size: 15px;
                             line-height: 1.4;
                             margin-bottom: 4px;
-                            display: inline-block;
                             max-width: 100%;
                             width: fit-content;
-                            min-height: 1rem;
+                            min-height: 0.5rem;
                             max-height: auto;
                             box-sizing: border-box;
                             display: flex;
+                            
 
                             h1,
                             h2,
@@ -400,7 +436,7 @@ $navbarPadding: 5px 8px;
                             h6 {
                                 margin: 8px 0 4px 0;
                                 font-weight: bold;
-                                line-height: 1.3;
+                                line-height: 1.1;
                             }
 
                             h1 {
