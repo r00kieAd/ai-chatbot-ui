@@ -90,7 +90,7 @@ function App() {
               <ChatBox />
             </div>
             <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
-              <span>Hello {currUser}! What brings you here today?</span>
+              <span>こんにちは&nbsp;{currUser}!&nbsp;What brings you here today <i className="fa-regular fa-face-laugh-beam"></i></span>
             </div>
             <div id="inputContainer" ref={inputBoxDiv}>
               <InputBox />

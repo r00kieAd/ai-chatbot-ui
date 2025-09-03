@@ -88,7 +88,7 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer {
   border: 1px solid black;
   border-radius: 10px;
-  width: 30rem;
+  width: 31rem;
   display: flex;
   justify-content: space-between;
   padding: 5px 8px;
@@ -129,7 +129,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 30rem;
+  width: 31rem;
   height: auto;
   border: 1px solid black;
   border-radius: 10px;
@@ -620,11 +620,8 @@ body {
   width: 100%;
   position: fixed;
   text-align: center;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 500;
-}
-#parent #mainContainer #innerContainer #welcomeMessage span {
-  margin-left: 18px;
 }
 #parent #mainContainer #innerContainer #inputContainer {
   border: 1px solid black;

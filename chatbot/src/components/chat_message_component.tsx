@@ -3,7 +3,7 @@ import { marked } from 'marked';
 import TypingEffect from './typing_effect_component';
 import bot from '../assets/bot.png';
 import face from '../assets/face.png';
-import aicloud from '../assets/ai-cloud.png';
+import aicloud from '../assets/think.png';
 
 marked.setOptions({
     breaks: true,

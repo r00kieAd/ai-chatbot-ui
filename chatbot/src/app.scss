@@ -5,7 +5,7 @@
 
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
-$loginContainerWidth: 30rem;
+$loginContainerWidth: 31rem;
 $loginContainerPadding: 20px;
 
 $mainContainerWidth: 40rem;
@@ -730,12 +730,8 @@ body {
                 width: 100%;
                 position: fixed;
                 text-align: center;
-                font-size: 25px;
+                font-size: 20px;
                 font-weight: 500;
-                
-                span {
-                    margin-left: 18px;
-                }
             }
 
             #inputContainer {
