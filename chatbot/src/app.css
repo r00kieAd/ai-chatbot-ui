@@ -38,13 +38,36 @@
     transform: translateY(-20px);
   }
   to {
-    transform: translateY(0);
+    transform: translateY(-15px);
   }
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100svh;
+  min-height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  min-height: 100%;
 }
 
 #parent {
   max-height: 50vh;
   overflow: hidden;
+  padding: 0;
+  margin: 0;
 }
 #parent #navbarContainer {
   visibility: hidden;
@@ -69,6 +92,8 @@
   display: flex;
   justify-content: space-between;
   padding: 5px 8px;
+  margin-top: 10px;
+  background: gray;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #navbarclock {
   width: 90px;
@@ -201,9 +226,8 @@
   word-wrap: break-word;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders span {
-  width: -moz-fit-content;
-  width: fit-content;
-  font-size: clamp(12px, 1vw, 14px);
+  width: 100%;
+  font-size: clamp(10px, 1vw, 12px);
   line-height: 1;
   word-wrap: break-word;
 }
@@ -276,7 +300,7 @@
   visibility: hidden;
   opacity: 0;
   width: 40rem;
-  height: 90vh;
+  height: 100svh;
   border-radius: 10px;
   transition: all 0.5s ease-in-out;
   position: absolute;
@@ -360,6 +384,7 @@
   border-radius: 50%;
   margin-right: 12px;
   flex-shrink: 0;
+  margin-top: 10px;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-avatar img {
   width: 100%;
@@ -387,7 +412,7 @@
   white-space: pre-wrap;
   font-size: 15px;
   line-height: 1.4;
-  margin: 4px 0;
+  margin: 5px 0;
   max-width: 100%;
   width: -moz-fit-content;
   width: fit-content;
@@ -585,6 +610,21 @@
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble table th {
   background-color: rgba(0, 0, 0, 0.1);
+}
+#parent #mainContainer #innerContainer #welcomeMessage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  top: 40%;
+  width: 100%;
+  position: fixed;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 500;
+}
+#parent #mainContainer #innerContainer #welcomeMessage span {
+  margin-left: 18px;
 }
 #parent #mainContainer #innerContainer #inputContainer {
   border: 1px solid black;

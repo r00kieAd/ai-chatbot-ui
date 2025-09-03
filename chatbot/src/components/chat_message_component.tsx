@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import TypingEffect from './typing_effect_component';
 import bot from '../assets/bot.png';
@@ -36,6 +36,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     const [isNewMessage, setIsNewMessage] = useState(true);
     const [showTyping, setShowTyping] = useState(false);
     const [typingComplete, setTypingComplete] = useState(false);
+    const [firstMessage, setFirstMessage] = useState(true);
+    const userMessageDiv = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -50,13 +52,22 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
         return () => clearTimeout(timer);
     }, [botMessage]);
 
+    useEffect(() => {
+        if (firstMessage && userMessageDiv.current) {
+            userMessageDiv.current.style.marginTop = "30px";
+            setFirstMessage(false);
+        } else if (userMessageDiv.current) {
+            // userMessageDiv.current.style.marginTop = "20px";
+        }
+    }, [firstMessage])
+
     const handleTypingComplete = () => {
         setTypingComplete(true);
     };
 
     return (
         <div className={`chat-exchange ${isNewMessage ? 'new-message' : ''}`}>
-            <div className="chat-message user-message">
+            <div className="chat-message user-message" ref={userMessageDiv}>
                 <div className="message-avatar">
                     <img src={face} alt="Face" />
                 </div>
