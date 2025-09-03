@@ -8,7 +8,7 @@ import './app.css'
 
 function App() {
 
-  const { authorized, loggedOut, setAuthorized, chatInitiated, setChatInitiated } = useGlobal();
+  const { authorized, loggedOut, setAuthorized, chatInitiated, setChatInitiated, currUser } = useGlobal();
   const loginContainer = useRef<HTMLDivElement>(null);
   const mainContainer = useRef<HTMLDivElement>(null);
   const innerContainer = useRef<HTMLDivElement>(null);
@@ -16,6 +16,7 @@ function App() {
   const chatBoxDiv = useRef<HTMLDivElement>(null);
   const navbarDiv1 = useRef<HTMLDivElement>(null);
   const navbarDiv2 = useRef<HTMLDivElement>(null);
+  const wlcmDiv = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setAuthorized(sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) === "true")
@@ -46,7 +47,7 @@ function App() {
         if (loginContainer.current) loginContainer.current.style.display = "block";
         if (navbarDiv2.current) navbarDiv2.current.style.display = "none"
       }, 200);
-      
+
       setTimeout(() => {
         if (mainContainer.current) mainContainer.current.classList.remove("show");
         if (navbarDiv1.current) navbarDiv1.current.classList.remove("show");
@@ -56,7 +57,7 @@ function App() {
 
   useEffect(() => {
     if (chatInitiated) {
-      if (mainContainer.current && inputBoxDiv.current && chatBoxDiv.current && innerContainer.current) {
+      if (mainContainer.current && inputBoxDiv.current && chatBoxDiv.current && innerContainer.current && wlcmDiv.current) {
         if (window.screen.availWidth <= 500) {
           mainContainer.current.style.width = "90%";
         } else {
@@ -66,6 +67,7 @@ function App() {
         inputBoxDiv.current.classList.add('chat-initiated');
         innerContainer.current.classList.add('chat-mode');
         chatBoxDiv.current.classList.add('chat-visible');
+        wlcmDiv.current.style.display = "none";
         setChatInitiated(false);
       }
     }
@@ -86,6 +88,9 @@ function App() {
           <div id="innerContainer" ref={innerContainer}>
             <div id="chatContainer" ref={chatBoxDiv}>
               <ChatBox />
+            </div>
+            <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
+              <span>Hello {currUser}! What brings you here today?</span>
             </div>
             <div id="inputContainer" ref={inputBoxDiv}>
               <InputBox />

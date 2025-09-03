@@ -113,7 +113,7 @@ $navbarPadding: 5px 8px;
         }
 
         to {
-            transform: translateY(0);
+            transform: translateY(-15px);
         }
     }
 }
@@ -122,10 +122,32 @@ $navbarPadding: 5px 8px;
     @include slideDownAnimation(0.4s, ease-in-out);
 }
 
+html {
+    margin: 0;
+    padding: 0;
+    height: 100svh;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    min-height: 100%;
+}
 
 #parent {
     max-height: 50vh;
     overflow: hidden;
+    padding: 0;
+    margin: 0;
 
     #navbarContainer {
         visibility: hidden;
@@ -150,6 +172,8 @@ $navbarPadding: 5px 8px;
                 display: flex;
                 justify-content: space-between;
                 padding: $navbarPadding;
+                margin-top: 10px;
+                background: gray;
 
                 #navbarclock {
                     width: 90px;
@@ -268,8 +292,8 @@ $navbarPadding: 5px 8px;
                     }
 
                     span {
-                        width: fit-content;
-                        font-size: clamp(12px, 1vw, 14px);
+                        width: 100%;
+                        font-size: clamp(10px, 1vw, 12px);
                         line-height: 1.0;
                         word-wrap: break-word;
                     }
@@ -331,7 +355,7 @@ $navbarPadding: 5px 8px;
         visibility: hidden;
         opacity: 0;
         width: $mainContainerWidth;
-        height: 90vh;
+        height: 100svh;
         border-radius: $mainBorderRadius;
         transition: all 0.5s ease-in-out;
         @include centerElement();
@@ -367,6 +391,7 @@ $navbarPadding: 5px 8px;
                 max-height: calc(100% - 120px);
                 scrollbar-width: none;
                 -ms-overflow-style: none;
+                // margin-top: 35px;
 
                 &::-webkit-scrollbar {
                     display: none;
@@ -423,6 +448,7 @@ $navbarPadding: 5px 8px;
                         border-radius: 50%;
                         margin-right: 12px;
                         flex-shrink: 0;
+                        margin-top: 10px;
 
                         img {
                             width: 100%;
@@ -451,7 +477,7 @@ $navbarPadding: 5px 8px;
                             white-space: pre-wrap;
                             font-size: 15px;
                             line-height: 1.4;
-                            margin: 4px 0;
+                            margin: 5px 0;
                             max-width: 100%;
                             width: fit-content;
                             min-height: 0.5rem;
@@ -692,16 +718,31 @@ $navbarPadding: 5px 8px;
                         }
                     }
                 }
+
+                // .user-message {
+                //     margin-top: 30px;
+                // }
+            }
+
+            #welcomeMessage {
+                @include centerElement();
+                top: 40%;
+                width: 100%;
+                position: fixed;
+                text-align: center;
+                font-size: 25px;
+                font-weight: 500;
+                
+                span {
+                    margin-left: 18px;
+                }
             }
 
             #inputContainer {
                 border: 1px solid black;
                 border-radius: $mainBorderRadius;
                 flex-shrink: 0;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
+                @include centerElement();
                 width: calc(100% - 40px);
                 background: white;
                 z-index: 10;
