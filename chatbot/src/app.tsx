@@ -1,9 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { useGlobal } from './utils/global_context';
 import LoginComp from './components/login_components';
 import ChatBox from './components/chat_component';
 import InputBox from './components/input_component';
 import NavbarComp from './components/navbar';
+import SplitText from './components/split_text';
 import './app.css'
 
 function App() {
@@ -17,6 +18,10 @@ function App() {
   const navbarDiv1 = useRef<HTMLDivElement>(null);
   const navbarDiv2 = useRef<HTMLDivElement>(null);
   const wlcmDiv = useRef<HTMLDivElement>(null);
+
+  const welcomeMessage = useMemo(() => {
+    return `こんにちは ${currUser || 'User'}! What brings you here today?`;
+  }, [currUser]);
 
   useEffect(() => {
     setAuthorized(sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) === "true")
@@ -57,6 +62,7 @@ function App() {
 
   useEffect(() => {
     if (chatInitiated) {
+      // welcomeMessage = 
       if (mainContainer.current && inputBoxDiv.current && chatBoxDiv.current && innerContainer.current && wlcmDiv.current) {
         if (window.screen.availWidth <= 500) {
           mainContainer.current.style.width = "90%";
@@ -73,9 +79,16 @@ function App() {
     }
   }, [chatInitiated]);
 
+  const handleAnimationComplete = () => {
+    console.log('All letters have animated!');
+  };
+
+
+
   return (
     <>
       <div id="parent">
+
         <div id='navbarContainer' ref={navbarDiv1}>
           <div id="navbarController" ref={navbarDiv2}>
             <NavbarComp />
@@ -90,7 +103,20 @@ function App() {
               <ChatBox />
             </div>
             <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
-              <span>こんにちは&nbsp;{currUser}!&nbsp;What brings you here today <i className="fa-regular fa-face-laugh-beam"></i></span>
+              <SplitText
+                text={welcomeMessage}
+                className="text-2xl font-semibold text-center"
+                delay={100}
+                duration={0.6}
+                ease="power3.out"
+                splitType="chars"
+                from={{ opacity: 0, y: 40 }}
+                to={{ opacity: 1, y: 0 }}
+                threshold={0.1}
+                rootMargin="-100px"
+                textAlign="center"
+                onLetterAnimationComplete={handleAnimationComplete}
+              />
             </div>
             <div id="inputContainer" ref={inputBoxDiv}>
               <InputBox />
