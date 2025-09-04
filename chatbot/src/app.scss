@@ -89,7 +89,7 @@ $navbarPadding: 5px 8px;
 }
 
 @mixin loginInputStyle() {
-    width: 96.5%;
+    width: 99.5%;
     height: 25px;
     padding: 5px;
     border: none;
@@ -142,6 +142,7 @@ body {
     width: 100%;
     min-height: 100%;
 }
+
 
 #parent {
     max-height: 50vh;
@@ -283,16 +284,18 @@ body {
                     visibility: hidden;
                     opacity: 0;
                     transition: all 0.5s ease-in-out;
+                    width: 100%;
+                    // border: 1px solid black;
 
                     h2 {
-                        width: fit-content;
+                        width: inherit;
                         font-size: clamp(16px, 3vw, 21px);
                         line-height: 1.0;
                         word-wrap: break-word;
                     }
 
                     span {
-                        width: 100%;
+                        width: inherit;
                         font-size: clamp(10px, 1vw, 12px);
                         line-height: 1.0;
                         word-wrap: break-word;

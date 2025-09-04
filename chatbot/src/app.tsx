@@ -88,7 +88,6 @@ function App() {
   return (
     <>
       <div id="parent">
-
         <div id='navbarContainer' ref={navbarDiv1}>
           <div id="navbarController" ref={navbarDiv2}>
             <NavbarComp />
