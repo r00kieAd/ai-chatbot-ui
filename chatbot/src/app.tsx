@@ -5,6 +5,7 @@ import ChatBox from './components/chat_component';
 import InputBox from './components/input_component';
 import NavbarComp from './components/navbar';
 import SplitText from './components/split_text';
+import Silk from './components/silk_bg';
 import './app.css'
 
 function App() {
@@ -87,6 +88,15 @@ function App() {
 
   return (
     <>
+      <div id="pageLiveBg">
+        <Silk
+          speed={5}
+          scale={1}
+          color="#222222"
+          noiseIntensity={1.5}
+          rotation={0}
+        />
+      </div>
       <div id="parent">
         <div id='navbarContainer' ref={navbarDiv1}>
           <div id="navbarController" ref={navbarDiv2}>

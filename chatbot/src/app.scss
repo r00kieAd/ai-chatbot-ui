@@ -5,9 +5,11 @@
 
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
-$loginContainerWidth: 31rem;
-$loginContainerPadding: 20px;
-
+$loginContainerWidth: 40rem;
+$loginContainerPadding: 25px;
+$loginContainerHeaderColor: #DFD0B8;
+$loginContainerSecondaryColor: #948979;
+$errorColor: #A62C2C;
 $mainContainerWidth: 40rem;
 $mainContainerHeight: auto;
 $mainBorderRadius: 10px;
@@ -93,9 +95,11 @@ $navbarPadding: 5px 8px;
     height: 25px;
     padding: 5px;
     border: none;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid $loginContainerSecondaryColor;
+    color: $loginContainerSecondaryColor;
     outline: none;
     font-size: 15px;
+    background: transparent;
 }
 
 @mixin reveal() {
@@ -141,6 +145,13 @@ body {
     height: 100%;
     width: 100%;
     min-height: 100%;
+}
+
+#pageLiveBg {
+    z-index: -1;
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -209,13 +220,14 @@ body {
             @include centerElement();
             width: $loginContainerWidth;
             height: auto;
-            border: 1px solid black;
+            border: 1px solid #222222;
             border-radius: $mainBorderRadius;
             padding: $loginContainerPadding;
             transition: all 0.5s ease-in;
             visibility: hidden;
             opacity: 0;
             transition: all 0.5s ease-in;
+            background-color: #222222;
 
             &.show {
                 @include reveal()
@@ -285,7 +297,7 @@ body {
                     opacity: 0;
                     transition: all 0.5s ease-in-out;
                     width: 100%;
-                    // border: 1px solid black;
+                    color: $loginContainerHeaderColor;
 
                     h2 {
                         width: inherit;
@@ -334,11 +346,13 @@ body {
                             @include button(black, 5rem, 30px);
                             justify-self: center;
                             margin: 10px 0;
+                            background-color: $loginContainerHeaderColor;
                         }
 
                         .err {
                             font-size: 11px;
                             visibility: hidden;
+                            color: $errorColor;
                         }
                     }
 
@@ -347,6 +361,7 @@ body {
                             margin: 10px 0;
                             @include button(black, 100%, 30px);
                             padding: 10px;
+                            background-color: $loginContainerHeaderColor;
                         }
                     }
                 }
