@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useGlobal } from '../utils/global_context';
 import { marked } from 'marked';
 import TypingEffect from './typing_effect_component';
 import bot from '../assets/bot.png';
@@ -33,6 +34,7 @@ const convertMarkdownToHTML = (text: string): string => {
 };
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime }) => {
+    const { currllmModel } = useGlobal();
     const [isNewMessage, setIsNewMessage] = useState(true);
     const [showTyping, setShowTyping] = useState(false);
     const [typingComplete, setTypingComplete] = useState(false);
@@ -97,7 +99,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                     <span>Loading...</span>
                                 )}
                             </div>
-                            <div className="message-time montserrat-msg">{botTime}</div>
+                            <div className="message-time montserrat-msg">from {currllmModel} at {botTime}</div>
                         </>
                     ) : (
                         <div className="message-bubble">

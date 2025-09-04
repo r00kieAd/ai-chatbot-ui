@@ -21,6 +21,8 @@ interface GlobalState {
     setCurrUser: (value: string | undefined) => void;
     chatHistory: { [key: string]: ChatMessage };
     setChatHistory: (value: { [key: string]: ChatMessage } | ((prev: { [key: string]: ChatMessage }) => { [key: string]: ChatMessage })) => void;
+    currllmModel: string | undefined;
+    setCurrllmModel: (value: string) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -32,14 +34,15 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [authToken, setAuthToken] = useState<string | undefined>(undefined);
     const [currUser, setCurrUser] = useState<string | undefined>(undefined);
     const [chatHistory, setChatHistory] = useState<{ [key: string]: ChatMessage }>({});
-
+    const [currllmModel, setCurrllmModel] = useState<string | undefined>('unknown');
     return <GlobalContext.Provider value={{ 
         authorized, setAuthorized,
         loggedOut, setLoggedOut,
         chatInitiated, setChatInitiated, 
         authToken, setAuthToken, 
         currUser, setCurrUser,
-        chatHistory, setChatHistory
+        chatHistory, setChatHistory,
+        currllmModel, setCurrllmModel
     }}>
         {children}
     </GlobalContext.Provider>

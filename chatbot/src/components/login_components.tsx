@@ -9,6 +9,7 @@ import eat from '../assets/eat.png';
 import full from '../assets/full.png';
 import shocked from '../assets/shocked.png';
 import ClickSpark from './click_spark';
+import ShinyText from './shiny_text';
 
 const LoginComp: React.FC = () => {
     const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut } = useGlobal();
@@ -320,7 +321,7 @@ const LoginComp: React.FC = () => {
                                     <input className='keyinput poppins-regular' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput} /><br /><br />
                                     <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
                                         <button type="submit" disabled={!enableInput} className='poppins-regular'>
-                                            <i className="fa-solid fa-arrow-right-to-bracket"></i> Login
+                                            <i className="fa-solid fa-arrow-right-to-bracket"></i> <ShinyText text="Login" disabled={false} speed={3} className='custom-class'/>
                                         </button>
                                     </ClickSpark>
 

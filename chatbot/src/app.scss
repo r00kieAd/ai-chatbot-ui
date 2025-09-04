@@ -9,11 +9,19 @@ $loginContainerWidth: 40rem;
 $loginContainerPadding: 25px;
 $loginContainerHeaderColor: #DFD0B8;
 $loginContainerSecondaryColor: #948979;
+
+$inputContainerBoxBg: #171717;
+$inputContainerMainTextColor: #948979;
+$inputContainerSecondaryColor: #DFD0B8;
+$navbarborder: #343131;
+$userMessageBg: #343131;
+
+
 $errorColor: #A62C2C;
 $mainContainerWidth: 40rem;
 $mainContainerHeight: auto;
 $mainBorderRadius: 10px;
-$textAreaWidth: 95%;
+$textAreaWidth: 98%;
 $textAreaHeight: var(--textAreaHeight);
 $textAreaMinHeight: 24px;
 $textAreaMaxHeight: var(--textAreaMaxHeight);
@@ -126,6 +134,37 @@ $navbarPadding: 5px 8px;
     @include slideDownAnimation(0.4s, ease-in-out);
 }
 
+@mixin shiny-text($font-color: black, $background: linear-gradient(120deg,#0b1220 0%,#0f172a 35%,rgba(255, 255, 255, 0.9) 50%,#0f172a 65%,#0b1220 100%),$duration: 5s,$active: true) {
+    display: inline-block;
+
+    @if $active {
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+        background: $background;
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: shine $duration linear infinite;
+    }
+
+    @else {
+        animation: none;
+        color: $font-color;
+        -webkit-text-fill-color: initial;
+        background: none;
+    }
+}
+
+@keyframes shine {
+    0% {
+        background-position: 100%;
+    }
+
+    100% {
+        background-position: -100%;
+    }
+}
+
 html {
     margin: 0;
     padding: 0;
@@ -135,7 +174,9 @@ html {
     box-sizing: border-box;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: inherit;
 }
 
@@ -176,16 +217,16 @@ body {
 
         #navbarController {
             display: none;
-
             #innerNavbarContainer {
-                border: 1px solid black;
+                background-color: $inputContainerBoxBg;
+                border: 1px solid $navbarborder;
                 border-radius: $mainBorderRadius;
                 width: $loginContainerWidth;
                 display: flex;
                 justify-content: space-between;
                 padding: $navbarPadding;
                 margin-top: 10px;
-                background: gray;
+                color: $inputContainerMainTextColor;
 
                 #navbarclock {
                     width: 90px;
@@ -196,10 +237,9 @@ body {
 
                 #navbarLogout button {
                     @include button(transparent, auto);
+                    color: $inputContainerMainTextColor;
                     width: 90px;
                 }
-
-                ;
 
                 #navbarLogout button:hover {
                     font-weight: 900;
@@ -281,6 +321,7 @@ body {
 
                             img {
                                 width: 100%;
+                                
                             }
                         }
                     }
@@ -347,6 +388,14 @@ body {
                             justify-self: center;
                             margin: 10px 0;
                             background-color: $loginContainerHeaderColor;
+
+                            .shiny-text {
+                                @include shiny-text();
+                            }
+
+                            .shiny-text.disabled {
+                                @include shiny-text($font-color: black, $background: none, $active: false);
+                            }
                         }
 
                         .err {
@@ -653,10 +702,10 @@ body {
                             height: auto;
 
                             .message-bubble {
-                                background-color: #2563eb;
-                                color: white;
+                                color: $inputContainerSecondaryColor;
                                 border-bottom-right-radius: 4px;
                                 height: fit-content;
+                                background-color: $userMessageBg;
 
                                 code {
                                     background-color: rgba(255, 255, 255, 0.2);
@@ -708,8 +757,8 @@ body {
                             min-height: unset;
 
                             .message-bubble {
-                                background-color: #f3f4f6;
-                                color: #1f2937;
+                                background-color: $inputContainerBoxBg;
+                                color: $inputContainerMainTextColor;
                                 border-bottom-left-radius: 4px;
 
                                 code {
@@ -748,19 +797,21 @@ body {
                 width: 100%;
                 position: fixed;
                 text-align: center;
-                font-size: 20px;
+                font-size: 21px;
                 font-weight: 500;
+                color: $inputContainerMainTextColor;
             }
 
             #inputContainer {
-                border: 1px solid black;
+                border: 1px solid $inputContainerBoxBg;
                 border-radius: $mainBorderRadius;
                 flex-shrink: 0;
                 @include centerElement();
                 width: calc(100% - 40px);
-                background: white;
                 z-index: 10;
                 transition: all 0.6s ease-in-out;
+                background-color: $inputContainerBoxBg;
+
 
                 &.chat-initiated {
                     position: relative;
@@ -779,7 +830,7 @@ body {
                         padding: 10px;
 
                         textarea {
-                            margin-right: 21px;
+                            // margin-right: 21px;
                             width: $textAreaWidth;
                             height: $textAreaHeight;
                             min-height: $textAreaMinHeight;
@@ -794,7 +845,8 @@ body {
                             line-height: $textAreaLineHeight;
                             box-sizing: border-box;
                             border: none;
-                            border-bottom: 1px solid black;
+                            border-bottom: 1px solid $inputContainerMainTextColor;
+                            color: $inputContainerSecondaryColor;
                         }
                     }
                 }
@@ -826,18 +878,33 @@ body {
                                 min-width: $dropdownMinWidth;
                                 max-width: $dropDownMaxWidth;
                                 overflow: hidden;
-                                border: 1px solid black;
+                                border: 1px solid $inputContainerMainTextColor;
+                                color: $inputContainerSecondaryColor;
                                 border-radius: $mainBorderRadius;
                                 padding: 4px;
                                 outline: none;
                                 background: transparent;
                                 font-size: 14px;
-                                // -webkit-appearance: none;
 
                                 @media screen and (max-width: 500px) {
                                     margin: 5px 0;
                                     max-width: 70px;
                                 }
+                            }
+
+                            .select-wrapper {
+                                position: relative;
+                                /* Essential for positioning the pseudo-element */
+                            }
+
+                            .select-wrapper::after {
+                                content: "▼";
+                                position: absolute;
+                                right: 2px;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                pointer-events: none;
+                                color: $inputContainerMainTextColor
                             }
                         }
                     }
@@ -877,16 +944,29 @@ body {
 
                         #sendContainer {
                             button {
-                                @include button(black);
+                                @include button($inputContainerMainTextColor);
+                                border-color: $inputContainerMainTextColor;
+                                padding: 2px 10px;
+                                background-color: $inputContainerMainTextColor;
                             }
 
                             .button-text {
-                                color: black;
+                                color: $inputContainerSecondaryColor;
+                                font-weight: 500;
+
+                                .shiny-text {
+                                    @include shiny-text($font-color: $inputContainerSecondaryColor);
+                                }
+
+                                .shiny-text.disabled {
+                                    @include shiny-text($font-color: $inputContainerSecondaryColor, $background: linear-gradient(90deg, #343131 0%, $inputContainerSecondaryColor 50%, #343131 100%), $active: false);
+                                }
                             }
 
                             .button-img {
                                 img {
                                     margin-top: 4px;
+                                    margin-left: 5px;
                                     width: 20px;
                                 }
                             }
