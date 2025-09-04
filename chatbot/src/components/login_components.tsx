@@ -8,6 +8,7 @@ import ok from '../assets/ok.png';
 import eat from '../assets/eat.png';
 import full from '../assets/full.png';
 import shocked from '../assets/shocked.png';
+import ClickSpark from './click_spark';
 
 const LoginComp: React.FC = () => {
     const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut } = useGlobal();
@@ -160,7 +161,6 @@ const LoginComp: React.FC = () => {
         }
 
         if (!error) return;
-
         setError(undefined);
         if (h2Header.current) h2Header.current.innerText = "Confirm your identity";
 
@@ -270,7 +270,7 @@ const LoginComp: React.FC = () => {
     };
 
     const checkGuestUser = async () => {
-        alert("Guest logins setup under development");
+        setError("Not Allowed!")
     }
 
     return (
@@ -310,14 +310,19 @@ const LoginComp: React.FC = () => {
                                     <input className='keyinput poppins-regular' type="text" name="username" id="username" placeholder='username' onInput={checkInput} ref={userinput} disabled={!enableInput} /><br /><br />
                                     <span className='err pass-err poppins-regular' ref={passSpan}>invalid password...</span>
                                     <input className='keyinput poppins-regular' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput} /><br /><br />
-                                    <button type="submit" disabled={!enableInput} className='poppins-regular'>
-                                        <i className="fa-solid fa-arrow-right-to-bracket"></i> Login
-                                    </button>
+                                    <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+                                        <button type="submit" disabled={!enableInput} className='poppins-regular'>
+                                            <i className="fa-solid fa-arrow-right-to-bracket"></i> Login
+                                        </button>
+                                    </ClickSpark>
+
                                 </form>
                             </div>
                             <span className='or poppins-regular'>or</span>
                             <div id="guestOptions">
-                                <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest&nbsp;&nbsp;<i className="fa-solid fa-feather"></i></button>
+                                <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+                                    <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest&nbsp;&nbsp;<i className="fa-solid fa-feather"></i></button>
+                                </ClickSpark>
                             </div>
                         </div>
                     </div>

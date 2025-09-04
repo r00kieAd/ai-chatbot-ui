@@ -5,6 +5,7 @@ import attach from '../assets/document.png';
 import LLMs from '../configs/available_llm_models.json';
 import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
+import ClickSpark from './click_spark';
 
 const InputBox: React.FC = () => {
 
@@ -58,10 +59,10 @@ const InputBox: React.FC = () => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
-        
+
         const chatKey = Date.now().toString();
         const userTime = new Date().toLocaleTimeString();
-        
+
         setChatHistory(prev => ({
             ...prev,
             [chatKey]: {
@@ -192,7 +193,10 @@ const InputBox: React.FC = () => {
                         <input type="file" name="attachment" id="attachment" />
                     </div>
                     <div id="sendContainer">
-                        <button className='button send-button pointer quicksand-light' onClick={triggerSend}><span className='button-text'>Ask</span><span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span></button>
+                        <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+                            <button className='button send-button pointer quicksand-light' onClick={triggerSend}><span className='button-text'>Ask</span><span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span></button>
+                        </ClickSpark>
+
                     </div>
                 </div>
             </div>
