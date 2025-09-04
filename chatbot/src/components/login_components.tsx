@@ -67,7 +67,7 @@ const LoginComp: React.FC = () => {
                 if (imgNum == 5 && loginParent.current) {
                     switch (true) {
                         case window.screen.width >= 900:
-                            loginParent.current.style.width = "40rem";
+                            loginParent.current.style.width = "45rem";
                             break;
                         case window.screen.width >= 768 && window.screen.width <= 900:
                             loginParent.current.style.width = "auto";
@@ -266,6 +266,14 @@ const LoginComp: React.FC = () => {
             } else {
                 showPoliceDiv(angryPoliceDiv.current, denyPoliceImage.current, errorMessage);
             }
+
+            if (errorMessage.includes("user") && userSpan.current) {
+                userSpan.current.style.visibility = "visible"
+            };
+
+            if (errorMessage.includes("password") && passSpan.current) {
+                passSpan.current.style.visibility = "visible"
+            };
         }
     };
 
@@ -318,7 +326,7 @@ const LoginComp: React.FC = () => {
 
                                 </form>
                             </div>
-                            <span className='or poppins-regular'>or</span>
+                            {/* <span className='or poppins-regular'>or</span> */}
                             <div id="guestOptions">
                                 <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
                                     <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest&nbsp;&nbsp;<i className="fa-solid fa-feather"></i></button>
