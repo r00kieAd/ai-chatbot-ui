@@ -19,14 +19,12 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
     const [displayedText, setDisplayedText] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isTyping, setIsTyping] = useState(true);
-    // Track only index and content; new line indices no longer needed
 
     useEffect(() => {
         if (currentIndex < text.length && isTyping) {
             const timer = setTimeout(() => {
                 const nextChar = text[currentIndex];
                 setDisplayedText(prev => prev + nextChar);
-                // No-op for newline; rendering logic handles partial lines safely
                 
                 setCurrentIndex(prev => prev + 1);
             }, speed);
@@ -46,7 +44,6 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
         setIsTyping(true);
     }, [text]);
 
-    // Keep marked behavior consistent
     marked.setOptions({ breaks: true, gfm: true });
 
     const escapeHtml = (s: string) =>

@@ -1,16 +1,21 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from './utils/global_context';
 import LoginComp from './components/login_components';
 import ChatBox from './components/chat_component';
 import InputBox from './components/input_component';
 import NavbarComp from './components/navbar';
 import SplitText from './components/split_text';
+import ping from './services/ping_server';
 import Silk from './components/silk_bg';
+import Loading from './components/loading_screen';
+import DisplayError from './components/display_error';
 import './app.css'
 
 function App() {
 
-  const { authorized, loggedOut, setAuthorized, chatInitiated, setChatInitiated, currUser } = useGlobal();
+  const { authorized, loggedOut, setAuthorized, chatInitiated, setChatInitiated, currUser, serverOnline, setServerOnline } = useGlobal();
+  const [serverOffline, setServerOffline] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
   const loginContainer = useRef<HTMLDivElement>(null);
   const mainContainer = useRef<HTMLDivElement>(null);
   const innerContainer = useRef<HTMLDivElement>(null);
@@ -19,6 +24,38 @@ function App() {
   const navbarDiv1 = useRef<HTMLDivElement>(null);
   const navbarDiv2 = useRef<HTMLDivElement>(null);
   const wlcmDiv = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!serverOnline) {
+      setTimeout(() => {
+        pingServer();
+      }, 500);
+    };
+  }, []);
+
+  const pingServer = async (): Promise<void> => {
+    const response = await ping();
+    console.log(response);
+    setTimeout(() => {
+      try {
+        if (response && response.status) {
+          setServerOffline(false);
+          setServerOnline(true);
+          setError(undefined);
+        } else {
+          setServerOffline(true);
+          setServerOnline(false);
+          setError("Server Offline, contact Admin");
+          
+        }
+      } catch (Exception) {
+        setServerOffline(true);
+        setServerOnline(false);
+        setError("Unknown error occured, please contact Admin.");
+      }
+    }, 500);
+
+  }
 
   const welcomeMessage = useMemo(() => {
     return `こんにちは ${currUser || 'User'}! What brings you here today?`;
@@ -84,8 +121,6 @@ function App() {
     console.log('All letters have animated!');
   };
 
-
-
   return (
     <>
       <div id="pageLiveBg">
@@ -97,42 +132,46 @@ function App() {
           rotation={0}
         />
       </div>
-      <div id="parent">
-        <div id='navbarContainer' ref={navbarDiv1}>
-          <div id="navbarController" ref={navbarDiv2}>
-            <NavbarComp />
-          </div>
-        </div>
-        <div id='loginContainer' ref={loginContainer}>
-          <LoginComp />
-        </div>
-        <div id="mainContainer" ref={mainContainer}>
-          <div id="innerContainer" ref={innerContainer}>
-            <div id="chatContainer" ref={chatBoxDiv}>
-              <ChatBox />
-            </div>
-            <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
-              <SplitText
-                text={welcomeMessage}
-                className="text-2xl font-semibold text-center"
-                delay={100}
-                duration={0.6}
-                ease="power3.out"
-                splitType="chars"
-                from={{ opacity: 0, y: 40 }}
-                to={{ opacity: 1, y: 0 }}
-                threshold={0.1}
-                rootMargin="-100px"
-                textAlign="center"
-                onLetterAnimationComplete={handleAnimationComplete}
-              />
-            </div>
-            <div id="inputContainer" ref={inputBoxDiv}>
-              <InputBox />
+
+      {!serverOnline && !serverOffline && <Loading />}
+      {!serverOnline && serverOffline && error && <DisplayError errorMessage={error} />}
+      {serverOnline && !serverOffline && (
+        <div id="parent">
+          <div id='navbarContainer' ref={navbarDiv1}>
+            <div id="navbarController" ref={navbarDiv2}>
+              <NavbarComp />
             </div>
           </div>
-        </div>
-      </div>
+          <div id='loginContainer' ref={loginContainer}>
+            <LoginComp />
+          </div>
+          <div id="mainContainer" ref={mainContainer}>
+            <div id="innerContainer" ref={innerContainer}>
+              <div id="chatContainer" ref={chatBoxDiv}>
+                <ChatBox />
+              </div>
+              <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
+                <SplitText
+                  text={welcomeMessage}
+                  className="text-2xl font-semibold text-center"
+                  delay={100}
+                  duration={0.6}
+                  ease="power3.out"
+                  splitType="chars"
+                  from={{ opacity: 0, y: 40 }}
+                  to={{ opacity: 1, y: 0 }}
+                  threshold={0.1}
+                  rootMargin="-100px"
+                  textAlign="center"
+                  onLetterAnimationComplete={handleAnimationComplete}
+                />
+              </div>
+              <div id="inputContainer" ref={inputBoxDiv}>
+                <InputBox />
+              </div>
+            </div>
+          </div>
+        </div>)}
     </>
   )
 }

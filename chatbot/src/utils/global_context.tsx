@@ -10,6 +10,8 @@ interface ChatMessage {
 }
 
 interface GlobalState {
+    serverOnline: boolean;
+    setServerOnline: (value: boolean) => void;
     authorized: boolean;
     setAuthorized: (value: boolean) => void;
     loggedOut: boolean;
@@ -29,6 +31,7 @@ interface GlobalState {
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
 
 export function GlobalProvider({ children }: { children: ReactNode }) {
+    const [serverOnline, setServerOnline] = useState(false);
     const [authorized, setAuthorized] = useState(false);
     const [loggedOut, setLoggedOut] = useState(false);
     const [chatInitiated, setChatInitiated] = useState(false);
@@ -37,6 +40,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [chatHistory, setChatHistory] = useState<{ [key: string]: ChatMessage }>({});
     const [currllmModel, setCurrllmModel] = useState<string | undefined>('unknown');
     return <GlobalContext.Provider value={{ 
+        serverOnline, setServerOnline,
         authorized, setAuthorized,
         loggedOut, setLoggedOut,
         chatInitiated, setChatInitiated, 
