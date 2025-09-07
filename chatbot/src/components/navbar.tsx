@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
 import initiateLogout from '../services/logout_service';
+import clearAttachments from '../services/clear_attachments';
 
 const NavbarComp: React.FC = () => {
     const tickTock = useRef<HTMLSpanElement>(null);
@@ -27,6 +28,19 @@ const NavbarComp: React.FC = () => {
         sessionStorage.removeItem(import.meta.env.VITE_SESSION_AUTH_VAR);
         let info = "not authorized";
         if (currUser && authToken) {
+
+            try {
+                const response = await clearAttachments({ username: currUser, token: authToken });
+                if (response.status) {
+                    info = "session cleared";
+                } else {
+                    info = "session cleared with error";
+                }
+                console.warn(info);
+            } catch (error) {
+                console.warn("files weren't cleared");
+            }
+
             const response = await initiateLogout({ username: currUser, token: authToken });
             if (response.status && response.resp.logged_out) {
                 info = "session cleared";
@@ -37,7 +51,7 @@ const NavbarComp: React.FC = () => {
         if (infoDiv.current) {
             infoDiv.current.innerText = info;
         } else {
-            alert(info);
+            console.warn(info);
         };
 
         setTimeout(() => {
@@ -58,7 +72,7 @@ const NavbarComp: React.FC = () => {
         <>
             <div id="innerNavbarContainer">
                 <div id="navbarclock" className="navbar-item poppins-regular">
-                    <span className='clock-icon'><i className="fa-solid fa-circle-check"></i></span>&nbsp;<span  ref={tickTock}></span>
+                    <span className='clock-icon'><i className="fa-solid fa-circle-check"></i></span>&nbsp;<span ref={tickTock}></span>
                 </div>
                 <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>Chatbot UI</div>
                 <div id="navbarLogout" className="navbar-item">
