@@ -158,6 +158,7 @@ body {
   overflow: hidden;
   padding: 0;
   margin: 0;
+  background-color: #171717;
 }
 #parent #navbarContainer {
   visibility: hidden;
@@ -223,14 +224,14 @@ body {
   transform: translate(-50%, -50%);
   width: 40rem;
   height: auto;
-  border: 1px solid #222222;
+  border: 1px solid #171717;
   border-radius: 10px;
   padding: 25px;
   transition: all 0.5s ease-in;
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-in;
-  background-color: #222222;
+  background-color: #171717;
 }
 #parent #loginContainer #loginParent.show {
   opacity: 1;
@@ -311,19 +312,24 @@ body {
   transition: all 0.5s ease-in-out;
   width: 100%;
   color: #DFD0B8;
+  padding: 5px;
   margin-bottom: 10px;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
-  width: inherit;
-  font-size: clamp(16px, 3vw, 21px);
-  line-height: 1;
-  word-wrap: break-word;
+  max-width: 17rem;
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.5;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders span {
   width: inherit;
   font-size: clamp(10px, 1vw, 12px);
   line-height: 1;
   word-wrap: break-word;
+  color: #948979;
 }
 @media screen and (max-width: 500px) {
   #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
@@ -395,6 +401,7 @@ body {
   font-size: 11px;
   visibility: hidden;
   color: #A62C2C;
+  margin: 3px 0;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #guestOptions button {
   margin: 10px 0;
@@ -707,8 +714,8 @@ body {
   min-height: unset;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble {
-  background-color: #171717;
-  color: #948979;
+  background-color: #C8B6A6;
+  color: #000;
   border-bottom-left-radius: 4px;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble code {
@@ -732,7 +739,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  top: 40%;
+  top: 42%;
   width: 100%;
   position: fixed;
   text-align: center;
@@ -783,17 +790,20 @@ body {
   line-height: 20px;
   box-sizing: border-box;
   border: none;
-  border-bottom: 1px solid #948979;
   color: #DFD0B8;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox {
   position: relative;
   margin: 15px;
+  margin-top: 0px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: auto;
+  border-top: 1px solid #948979;
+  padding: 10px 10px;
+  border-radius: 10px;
 }
 @media screen and (max-width: 500px) {
   #parent #mainContainer #innerContainer #inputContainer #toolBox {
@@ -821,7 +831,9 @@ body {
   min-width: 75px;
   max-width: 100px;
   overflow: hidden;
-  border: 1px solid #948979;
+  border: none;
+  border-top: 1px solid #948979;
+  border-bottom: 1px solid #948979;
   color: #DFD0B8;
   border-radius: 10px;
   padding: 4px;
@@ -891,7 +903,8 @@ body {
   cursor: pointer;
   border-color: #948979;
   padding: 2px 10px;
-  background-color: #948979;
+  background-color: #C8B6A6;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text {
   color: #DFD0B8;

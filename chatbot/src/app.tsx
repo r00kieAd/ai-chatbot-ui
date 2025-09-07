@@ -9,11 +9,12 @@ import ping from './services/ping_server';
 import Silk from './components/silk_bg';
 import Loading from './components/loading_screen';
 import DisplayError from './components/display_error';
+import initiateLogout from './services/logout_service';
 import './app.css'
 
 function App() {
 
-  const { authorized, loggedOut, setAuthorized, chatInitiated, setChatInitiated, currUser, serverOnline, setServerOnline } = useGlobal();
+  const { authorized, loggedOut, setAuthorized, setLoggedOut, chatInitiated, setChatInitiated, currUser, authToken, serverOnline, setServerOnline } = useGlobal();
   const [serverOffline, setServerOffline] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const loginContainer = useRef<HTMLDivElement>(null);
@@ -24,6 +25,87 @@ function App() {
   const navbarDiv1 = useRef<HTMLDivElement>(null);
   const navbarDiv2 = useRef<HTMLDivElement>(null);
   const wlcmDiv = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!authorized) return;
+
+    const INACTIVITY_MS = 300_000;
+    let timeoutId: number | null = null;
+    let lastActivity = Date.now();
+    let hiddenAt: number | null = null;
+    let isLoggingOut = false;
+
+    const doLogout = async () => {
+      if (isLoggingOut) return;
+      isLoggingOut = true;
+      try {
+        if (currUser && authToken) {
+          await initiateLogout({ username: currUser, token: authToken });
+        }
+      } catch {
+      } finally {
+        if (sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) === "true") {
+          sessionStorage.removeItem(import.meta.env.VITE_SESSION_AUTH_VAR);
+        }
+        setAuthorized(false);
+        setChatInitiated(false);
+        setLoggedOut(true);
+        setTimeout(() => {
+            window.location.reload();
+        }, 600);
+      }
+    };
+
+    const scheduleLogout = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      const elapsed = Date.now() - lastActivity;
+      const remaining = Math.max(0, INACTIVITY_MS - elapsed);
+      timeoutId = window.setTimeout(() => {
+        void doLogout();
+      }, remaining);
+    };
+
+    const handleActivity = () => {
+      lastActivity = Date.now();
+      scheduleLogout();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        hiddenAt = Date.now();
+      } else {
+        const since = Date.now();
+        const lastRelevant = Math.max(lastActivity, hiddenAt ?? 0);
+        const idleFor = since - lastRelevant;
+        if (idleFor >= INACTIVITY_MS) {
+          void doLogout();
+          return;
+        }
+        scheduleLogout();
+      }
+    };
+
+    document.addEventListener('pointerdown', handleActivity);
+    document.addEventListener('pointermove', handleActivity);
+    document.addEventListener('keydown', handleActivity);
+    document.addEventListener('wheel', handleActivity, { passive: true });
+    document.addEventListener('touchstart', handleActivity, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Initial arm
+    lastActivity = Date.now();
+    scheduleLogout();
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      document.removeEventListener('pointerdown', handleActivity);
+      document.removeEventListener('pointermove', handleActivity);
+      document.removeEventListener('keydown', handleActivity);
+      document.removeEventListener('wheel', handleActivity as any);
+      document.removeEventListener('touchstart', handleActivity as any);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [authorized, setAuthorized, setChatInitiated]);
 
   useEffect(() => {
     if (!serverOnline) {
