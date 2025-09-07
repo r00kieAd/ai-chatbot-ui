@@ -882,9 +882,35 @@ body {
   margin-top: 3px;
   width: 20px;
 }
-#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .attach-count {
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .attach-attr {
   cursor: default;
   font-size: 12.5px;
+  color: #DFD0B8;
+  margin-left: 3px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .clear-link a {
+  color: #A62C2C;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: pointer;
+  font: inherit;
+  line-height: inherit;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .clear-link a:hover,
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .clear-link a:active {
+  color: inherit;
+  text-decoration: none;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .clear-link a:focus {
+  outline: none;
+  box-shadow: none;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer #attachment {
   display: none;
@@ -976,6 +1002,9 @@ body {
   60% {
     transform: translateY(-5px);
   }
+}
+#parent .bounceAnimation {
+  animation: bounce 1.5s infinite;
 }
 @keyframes blink {
   0%, 50% {

@@ -376,6 +376,7 @@ body {
                 .compartment {
                     margin: 5px 40px;
                     width: 100%;
+
                     @media screen and (max-width: 1200px) {
                         margin: 10px;
                     }
@@ -954,9 +955,11 @@ body {
                     .pointer {
                         cursor: pointer;
                     }
+
                     border-top: 1px solid $inputContainerMainTextColor;
                     padding: 10px 10px;
                     border-radius: $mainBorderRadius;
+
                     #leftCompartment {
                         @include flex-space-between(12rem);
                         max-width: 12rem;
@@ -1027,9 +1030,40 @@ body {
                                 }
                             }
 
-                            .attach-count {
+                            .attach-attr {
                                 cursor: default;
                                 font-size: 12.5px;
+                                color: $inputContainerSecondaryColor;
+                                margin-left: 3px;
+                            }
+
+                            .clear-link {
+                                a {
+                                    color: $errorColor;
+                                    text-decoration: none;
+                                    background: transparent;
+                                    border: none;
+                                    padding: 0;
+                                    margin: 0;
+                                    outline: none;
+                                    cursor: pointer;
+                                    font: inherit;
+                                    line-height: inherit;
+                                    -webkit-appearance: none;
+                                    -moz-appearance: none;
+                                    appearance: none;
+                                }
+
+                                a:hover,
+                                a:active {
+                                    color: inherit;
+                                    text-decoration: none;
+                                }
+
+                                a:focus {
+                                    outline: none;
+                                    box-shadow: none;
+                                }
                             }
 
                             #attachment {
@@ -1131,6 +1165,10 @@ body {
         60% {
             transform: translateY(-5px);
         }
+    }
+
+    .bounceAnimation {
+        animation: bounce 1.5s infinite;
     }
 
     @keyframes blink {

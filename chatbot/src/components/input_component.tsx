@@ -7,16 +7,19 @@ import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
 import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
+import uploadFile from '../services/file_service';
+import clearAttachments from '../services/clear_attachments';
 
 const InputBox: React.FC = () => {
 
     const { setChatInitiated, currUser, authToken, setChatHistory } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
+    const [useRag, setUseRag] = useState<boolean>(false);
+    const [uploading, setUploading] = useState<boolean>(false);
     const [enableAskButton, setEnableAskButton] = useState(true);
     const [attachCount, setAttachCount] = useState<number>(0);
     const [llmID, setllmID] = useState<string>("1");
-    const textareaEle = document.querySelector('textarea') as HTMLTextAreaElement | undefined;
     const [llms, setLlms] = useState<string[]>([]);
     const [models, setModels] = useState<string[]>([]);
     const txtHeightStyle = new TextAreaHeight();
@@ -40,7 +43,6 @@ const InputBox: React.FC = () => {
                     currentTextarea.style.height = textareaHeight;
                 };
                 if (curr_prompt_value && curr_client && curr_model) {
-                    // alert('sending request');
                     getAnswer(curr_prompt_value, curr_client, curr_model);
                 } else {
                     // display error
@@ -57,7 +59,7 @@ const InputBox: React.FC = () => {
         fetchModels();
     }, [llmID]);
 
-    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_top_k = 3, curr_use_rag = false) => {
+    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_top_k = 3, curr_use_rag = useRag) => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
@@ -165,6 +167,40 @@ const InputBox: React.FC = () => {
         setAsked(true);
     }
 
+    const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setUploading(true);
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (!currUser || !authToken) {
+            return;
+        }
+        
+        const resp = await uploadFile({ token: authToken, username: currUser, blob: file });
+        if (resp && resp.status) {
+            setUseRag(true);
+            setAttachCount(prev => prev + 1);
+        } else {
+            console.warn('Upload failed:', resp?.statusCode, resp?.resp);
+        }
+        setTimeout(() => {
+            setUploading(false);
+        }, 500);
+        e.target.value = '';
+    };
+
+    const clearFiles = async () => {
+        if (!currUser || !authToken) {
+            return;
+        }
+        const resp = await clearAttachments({username: currUser , token: authToken});
+        if (resp && resp.status) {
+            setUseRag(false);
+            setAttachCount(0);
+        } else {
+            console.warn('Delete failed:', resp?.statusCode, resp?.resp);
+        }
+    }
+
     return (
         <>
 
@@ -192,9 +228,10 @@ const InputBox: React.FC = () => {
                 </div>
                 <div id="rightCompartment">
                     <div id="fileContainer">
-                        <label htmlFor="attachment" className='pointer'><span className='attach-img'><img src={attach} alt="File Attach" id="fileTransferGif" /></span></label>
-                        <span className='attach-count'>&nbsp;{attachCount > 0 ? attachCount : ''}</span>
-                        <input type="file" name="attachment" id="attachment" />
+                        <label htmlFor="attachment" className='pointer'><span className={'attach-img' + (uploading ? ' bounceAnimation' : '')}><img src={attach} alt="File Attach" id="fileTransferGif" /></span></label>
+                        <span className='attach-attr attach-count poppins-regular' >&nbsp;{attachCount > 0 ? attachCount : ''}</span>
+                        <span className='attach-attr clear-link poppins-regular' >&nbsp;{attachCount > 0 ? (<><a onClick={clearFiles}>X</a></>) : ''}</span>
+                        <input type="file" name="attachment" id="attachment" onChange={onFileSelected} />
                     </div>
                     <div id="sendContainer">
                         <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
