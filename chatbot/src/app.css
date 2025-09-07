@@ -81,6 +81,78 @@ body {
   height: 100%;
 }
 
+#loadingScreen {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  color: #948979;
+}
+#loadingScreen .shuffle-parent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  white-space: normal;
+  word-wrap: break-word;
+  will-change: transform;
+  line-height: 1;
+  /* keep line height consistent before/after split to avoid jump */
+  font-size: 4rem;
+  font-family: "Press Start 2P", sans-serif;
+  text-transform: uppercase;
+  visibility: hidden;
+  /* hidden until initialized to avoid flash/jump */
+}
+#loadingScreen .shuffle-parent.is-ready {
+  visibility: visible;
+}
+#loadingScreen .shuffle-char-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: baseline;
+  position: relative;
+}
+#loadingScreen .shuffle-char-wrapper > span {
+  display: inline-flex;
+  will-change: transform;
+}
+#loadingScreen .shuffle-char {
+  line-height: 1;
+  display: inline-block;
+  text-align: center;
+}
+
+#errDiv {
+  width: 100%;
+  height: 100%;
+  color: #A62C2C;
+}
+#errDiv .errorContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-width: 500px;
+  padding: 10px;
+  align-items: center;
+}
+#errDiv .errorContainer .errContainerChild {
+  width: -moz-fit-content;
+  width: fit-content;
+  height: auto;
+  font-size: 24px;
+  text-align: center;
+  word-break: break-all;
+}
+#errDiv .errorContainer .errContainerChild1 img {
+  width: 300px;
+  height: auto;
+}
+
 #parent {
   max-height: 50vh;
   overflow: hidden;

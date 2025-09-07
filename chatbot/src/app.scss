@@ -134,7 +134,7 @@ $navbarPadding: 5px 8px;
     @include slideDownAnimation(0.4s, ease-in-out);
 }
 
-@mixin shiny-text($font-color: black, $background: linear-gradient(120deg,#0b1220 0%,#0f172a 35%,rgba(255, 255, 255, 0.9) 50%,#0f172a 65%,#0b1220 100%),$duration: 5s,$active: true) {
+@mixin shiny-text($font-color: black, $background: linear-gradient(120deg, #0b1220 0%, #0f172a 35%, rgba(255, 255, 255, 0.9) 50%, #0f172a 65%, #0b1220 100%), $duration: 5s, $active: true) {
     display: inline-block;
 
     @if $active {
@@ -195,6 +195,75 @@ body {
     height: 100%;
 }
 
+#loadingScreen {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    color: $inputContainerMainTextColor;
+    .shuffle-parent {
+        @include centerElement();
+        display: inline-block;
+        white-space: normal;
+        word-wrap: break-word;
+        will-change: transform;
+        line-height: 1;
+        /* keep line height consistent before/after split to avoid jump */
+        font-size: 4rem;
+        font-family: 'Press Start 2P', sans-serif;
+        text-transform: uppercase;
+        visibility: hidden;
+        /* hidden until initialized to avoid flash/jump */
+    }
+
+    .shuffle-parent.is-ready {
+        visibility: visible;
+    }
+
+    .shuffle-char-wrapper {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: baseline;
+        position: relative;
+    }
+
+    .shuffle-char-wrapper>span {
+        display: inline-flex;
+        will-change: transform;
+    }
+
+    .shuffle-char {
+        line-height: 1;
+        display: inline-block;
+        text-align: center;
+    }
+}
+
+#errDiv {
+    width: 100%;
+    height: 100%;
+    color: $errorColor;
+    .errorContainer {
+        @include centerElement();
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        max-width: 500px;
+        padding: 10px;
+        align-items: center;
+        .errContainerChild {
+            width: fit-content;
+            height: auto;
+            font-size: 24px;
+            text-align: center;
+            word-break: break-all;
+        };
+
+        .errContainerChild1 img {
+            width: 300px;
+            height: auto;
+        }
+    }
+}
 
 #parent {
     max-height: 50vh;
@@ -217,6 +286,7 @@ body {
 
         #navbarController {
             display: none;
+
             #innerNavbarContainer {
                 background-color: $inputContainerBoxBg;
                 border: 1px solid $navbarborder;
@@ -321,7 +391,7 @@ body {
 
                             img {
                                 width: 100%;
-                                
+
                             }
                         }
                     }

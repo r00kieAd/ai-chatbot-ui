@@ -3,5 +3,6 @@
     "ASK": "/ask",
     "LOGIN": "/authenticate",
     "LOGOUT": "/logout",
-    "CLEAR-DATA": "/clear-data"
+    "CLEAR-DATA": "/clear-data",
+    "PING": "/start"
 }
