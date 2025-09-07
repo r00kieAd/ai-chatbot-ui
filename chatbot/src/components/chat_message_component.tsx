@@ -56,10 +56,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
         return () => clearTimeout(timer);
     }, [botMessage]);
 
-    // Separate effect for auto-scrolling to bot message when it appears
     useEffect(() => {
         if (isSecondOrLater && isNewMessage) {
-            // Scroll to the entire chat exchange after user message appears
             setTimeout(() => {
                 botMessageRef.current?.scrollIntoView({ 
                     behavior: 'smooth', 
@@ -69,7 +67,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
         }
     }, [isSecondOrLater, isNewMessage]);
 
-    // Additional scroll when bot starts thinking
     useEffect(() => {
         if (isSecondOrLater && !botMessage && isNewMessage) {
             setTimeout(() => {
