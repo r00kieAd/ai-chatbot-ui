@@ -61,11 +61,9 @@ const InputBox: React.FC = () => {
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
         
-        // Generate a unique key for this chat exchange
         const chatKey = Date.now().toString();
         const userTime = new Date().toLocaleTimeString();
         
-        // Store user message immediately with LLM model information
         setChatHistory(prev => ({
             ...prev,
             [chatKey]: {
