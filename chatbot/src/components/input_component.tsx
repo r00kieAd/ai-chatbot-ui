@@ -13,6 +13,7 @@ const InputBox: React.FC = () => {
     const { setChatInitiated, currUser, authToken, setChatHistory } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
+    const [enableAskButton, setEnableAskButton] = useState(true);
     const [attachCount, setAttachCount] = useState<number>(0);
     const [llmID, setllmID] = useState<string>("1");
     const textareaEle = document.querySelector('textarea') as HTMLTextAreaElement | undefined;
@@ -60,7 +61,7 @@ const InputBox: React.FC = () => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
-        
+        setEnableAskButton(false);
         const chatKey = Date.now().toString();
         const userTime = new Date().toLocaleTimeString();
         
@@ -115,6 +116,7 @@ const InputBox: React.FC = () => {
                 }
             }));
         }
+        setEnableAskButton(true);
     }
 
 
@@ -196,7 +198,7 @@ const InputBox: React.FC = () => {
                     </div>
                     <div id="sendContainer">
                         <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-                            <button className='button send-button pointer quicksand-light' onClick={triggerSend}>
+                            <button className='button send-button pointer quicksand-light' onClick={triggerSend} disabled={!enableAskButton}>
                                 <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class'/></span>
                                 <span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span>
                                 </button>

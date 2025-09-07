@@ -204,6 +204,7 @@ body {
     height: 100%;
     z-index: 1;
     color: $inputContainerMainTextColor;
+
     .shuffle-parent {
         @include centerElement();
         display: inline-block;
@@ -246,6 +247,7 @@ body {
     width: 100%;
     height: 100%;
     color: $errorColor;
+
     .errorContainer {
         @include centerElement();
         display: flex;
@@ -254,13 +256,16 @@ body {
         max-width: 500px;
         padding: 10px;
         align-items: center;
+
         .errContainerChild {
             width: fit-content;
             height: auto;
             font-size: 24px;
             text-align: center;
             word-break: break-all;
-        };
+        }
+
+        ;
 
         .errContainerChild1 img {
             width: 300px;
@@ -371,7 +376,6 @@ body {
                 .compartment {
                     margin: 5px 40px;
                     width: 100%;
-
                     @media screen and (max-width: 1200px) {
                         margin: 10px;
                     }
@@ -381,6 +385,12 @@ body {
                     justify-content: center;
                     align-items: center;
                 }
+
+                // .compartment-1 {
+                //     border-right: 1px solid $loginContainerSecondaryColor;
+                //     // border-radius: $mainBorderRadius;
+                //     // padding-right: 50px;
+                // }
 
                 #policeDiv {
                     position: relative;
@@ -414,12 +424,16 @@ body {
                     transition: all 0.5s ease-in-out;
                     width: 100%;
                     color: $loginContainerHeaderColor;
+                    padding: 5px;
 
                     h2 {
-                        width: inherit;
-                        font-size: clamp(16px, 3vw, 21px);
-                        line-height: 1.0;
-                        word-wrap: break-word;
+                        max-width: 17rem;
+                        font-size: clamp(16px, 1.5vw, 20px);
+                        line-height: 1.5;
+                        display: block;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
 
                     span {
@@ -427,6 +441,7 @@ body {
                         font-size: clamp(10px, 1vw, 12px);
                         line-height: 1.0;
                         word-wrap: break-word;
+                        color: $loginContainerSecondaryColor;
                     }
 
                     margin-bottom: 10px;
@@ -477,6 +492,7 @@ body {
                             font-size: 11px;
                             visibility: hidden;
                             color: $errorColor;
+                            margin: 3px 0;
                         }
                     }
 
@@ -868,7 +884,7 @@ body {
 
             #welcomeMessage {
                 @include centerElement();
-                top: 40%;
+                top: 42%;
                 width: 100%;
                 position: fixed;
                 text-align: center;
@@ -920,7 +936,6 @@ body {
                             line-height: $textAreaLineHeight;
                             box-sizing: border-box;
                             border: none;
-                            border-bottom: 1px solid $inputContainerMainTextColor;
                             color: $inputContainerSecondaryColor;
                         }
                     }
@@ -929,6 +944,7 @@ body {
                 #toolBox {
                     position: relative;
                     margin: 15px;
+                    margin-top: 0px;
                     @include flex-space-between(auto);
 
                     @media screen and (max-width: 500px) {
@@ -938,7 +954,9 @@ body {
                     .pointer {
                         cursor: pointer;
                     }
-
+                    border-top: 1px solid $inputContainerMainTextColor;
+                    padding: 10px 10px;
+                    border-radius: $mainBorderRadius;
                     #leftCompartment {
                         @include flex-space-between(12rem);
                         max-width: 12rem;
@@ -953,7 +971,9 @@ body {
                                 min-width: $dropdownMinWidth;
                                 max-width: $dropDownMaxWidth;
                                 overflow: hidden;
-                                border: 1px solid $inputContainerMainTextColor;
+                                border: none;
+                                border-top: 1px solid $inputContainerMainTextColor;
+                                border-bottom: 1px solid $inputContainerMainTextColor;
                                 color: $inputContainerSecondaryColor;
                                 border-radius: $mainBorderRadius;
                                 padding: 4px;
@@ -1024,6 +1044,7 @@ body {
                                 padding: 2px 10px;
                                 // background-color: $inputContainerMainTextColor;
                                 background-color: $botMessageBg;
+                                box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
                             }
 
                             .button-text {

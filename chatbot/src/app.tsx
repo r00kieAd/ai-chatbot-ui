@@ -29,7 +29,7 @@ function App() {
   useEffect(() => {
     if (!authorized) return;
 
-    const INACTIVITY_MS = 60_000; // 60 seconds
+    const INACTIVITY_MS = 300_000;
     let timeoutId: number | null = null;
     let lastActivity = Date.now();
     let hiddenAt: number | null = null;
@@ -43,7 +43,6 @@ function App() {
           await initiateLogout({ username: currUser, token: authToken });
         }
       } catch {
-        // Ignore network/API errors; still log out client-side
       } finally {
         if (sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) === "true") {
           sessionStorage.removeItem(import.meta.env.VITE_SESSION_AUTH_VAR);
@@ -74,7 +73,6 @@ function App() {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         hiddenAt = Date.now();
-        // Let existing timer elapse; background timers may be throttled
       } else {
         const since = Date.now();
         const lastRelevant = Math.max(lastActivity, hiddenAt ?? 0);
@@ -83,7 +81,6 @@ function App() {
           void doLogout();
           return;
         }
-        // Still within window, resume timer from remaining idle budget
         scheduleLogout();
       }
     };

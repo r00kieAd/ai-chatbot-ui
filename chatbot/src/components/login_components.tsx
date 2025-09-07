@@ -35,8 +35,6 @@ const LoginComp: React.FC = () => {
     const [enableInput, setEnableInput] = useState<boolean>(false);
     const [imgNum, setImageNum] = useState<number>(5);
     const [error, setError] = useState<string | undefined>(undefined);
-    const [nameError, setNameError] = useState<string | undefined>("What's your NAME!!??");
-    const [passwordError, setPasswordError] = useState<string | undefined>("What's your PASS!!??");
     const [loginHeaderVisible, setLoginHeaderVisible] = useState<boolean>(false);
 
     function fadeOut(el: HTMLElement | null) {
@@ -202,6 +200,7 @@ const LoginComp: React.FC = () => {
 
     const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
         setError(undefined);
+        setEnableInput(false);
         event.preventDefault();
         if (h2Header.current) h2Header.current.innerText = "Validating...";
 
@@ -210,12 +209,13 @@ const LoginComp: React.FC = () => {
 
         if (!username || !password) {
             setError("You shall not pass!");
+            if (h2Header.current) h2Header.current.innerText = error ?  error : "";
             fadeOut(calmPoliceDiv.current);
             if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
             showPoliceDiv(angryPoliceDiv.current, angryPoliceImage.current, "You shall not pass!");
-
             if (!username && userSpan.current) userSpan.current.style.visibility = "visible";
             if (!password && passSpan.current) passSpan.current.style.visibility = "visible";
+            setEnableInput(true);
             return;
         }
 
@@ -229,8 +229,10 @@ const LoginComp: React.FC = () => {
             is_user: true,
             ip_value: ""
         });
+        
         if (response && response.status) {
             if (!response.resp.verification_passed) {
+                setEnableInput(true);
                 displayErrResp();
                 return;
             }
@@ -251,9 +253,9 @@ const LoginComp: React.FC = () => {
                 setLoggedIn(true);
             }
         } else {
+            setEnableInput(true);
             displayErrResp();
         }
-
         function displayErrResp() {
             const statusCode = response?.statusCode ?? 0;
             let errorMessage = "";
