@@ -6,6 +6,7 @@ interface ChatMessage {
     userTime: string;
     botMessage: string;
     botTime: string;
+    llmModel?: string;
 }
 
 interface GlobalState {

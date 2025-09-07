@@ -10,7 +10,7 @@ import ShinyText from './shiny_text';
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, setChatHistory, setCurrllmModel } = useGlobal();
+    const { setChatInitiated, currUser, authToken, setChatHistory } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [attachCount, setAttachCount] = useState<number>(0);
@@ -60,17 +60,20 @@ const InputBox: React.FC = () => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
-        setCurrllmModel(curr_client);
+        
+        // Generate a unique key for this chat exchange
         const chatKey = Date.now().toString();
         const userTime = new Date().toLocaleTimeString();
-
+        
+        // Store user message immediately with LLM model information
         setChatHistory(prev => ({
             ...prev,
             [chatKey]: {
                 userMessage: curr_prompt,
                 userTime: userTime,
                 botMessage: '',
-                botTime: ''
+                botTime: '',
+                llmModel: curr_client
             }
         }));
 

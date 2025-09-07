@@ -92,7 +92,7 @@ function App() {
         <Silk
           speed={5}
           scale={1}
-          color="#222222"
+          color="#171717"
           noiseIntensity={1.5}
           rotation={0}
         />
