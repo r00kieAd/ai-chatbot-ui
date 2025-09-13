@@ -74,7 +74,7 @@ const NavbarComp: React.FC = () => {
                 <div id="navbarclock" className="navbar-item poppins-regular">
                     <span className='clock-icon'><i className="fa-solid fa-circle-check"></i></span>&nbsp;<span ref={tickTock}></span>
                 </div>
-                <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>Chatbot UI</div>
+                <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>Smart Owl</div>
                 <div id="navbarLogout" className="navbar-item">
                     <button onClick={killSession} className='poppins-regular'><i className="fa-solid fa-skull"></i>&nbsp;session</button>
                 </div>

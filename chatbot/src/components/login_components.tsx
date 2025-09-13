@@ -5,17 +5,17 @@ import hello from '../assets/hello.png';
 import angry from '../assets/angry.png';
 import no from '../assets/no.png';
 import ok from '../assets/ok.png';
-import eat from '../assets/eat.png';
-import full from '../assets/full.png';
-import shocked from '../assets/shocked.png';
+import sing from '../assets/sing.png';
+import welcome from '../assets/welcome.png';
+import sorry from '../assets/sorry.png';
 import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
 
 const LoginComp: React.FC = () => {
     const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
-    const eatPoliceImage = useRef<HTMLSpanElement>(null);
-    const fullPoliceImage = useRef<HTMLSpanElement>(null);
+    const singPoliceImage = useRef<HTMLSpanElement>(null);
+    const welcomePoliceImage = useRef<HTMLSpanElement>(null);
     const angryPoliceImage = useRef<HTMLSpanElement>(null);
     const denyPoliceImage = useRef<HTMLSpanElement>(null);
     const okPoliceImage = useRef<HTMLSpanElement>(null);
@@ -23,13 +23,14 @@ const LoginComp: React.FC = () => {
     const calmPoliceDiv = useRef<HTMLDivElement>(null);
     const angryPoliceDiv = useRef<HTMLDivElement>(null);
     const happyPoliceDiv = useRef<HTMLDivElement>(null);
-    const shockedPoliceDiv = useRef<HTMLDivElement>(null);
-    const shockedPoliceImage = useRef<HTMLDivElement>(null);
+    const sorryPoliceDiv = useRef<HTMLDivElement>(null);
+    const sorryPoliceImage = useRef<HTMLDivElement>(null);
     const userinput = useRef<HTMLInputElement>(null);
     const passinput = useRef<HTMLInputElement>(null);
     const userSpan = useRef<HTMLSpanElement>(null);
     const passSpan = useRef<HTMLSpanElement>(null);
     const h2Header = useRef<HTMLHeadingElement>(null);
+    const ninjaIcon = useRef<HTMLSpanElement>(null);
     const loginHeaderDiv = useRef<HTMLDivElement>(null);
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
     const [enableInput, setEnableInput] = useState<boolean>(false);
@@ -96,15 +97,15 @@ const LoginComp: React.FC = () => {
             if (userSpan.current) userSpan.current.style.visibility = "hidden";
             if (passSpan.current) passSpan.current.style.visibility = "hidden";
             fadeOut(angryPoliceDiv.current);
-            fadeOut(shockedPoliceDiv.current);
+            fadeOut(sorryPoliceDiv.current);
             fadeOut(happyPoliceDiv.current);
 
             setTimeout(() => {
                 if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
-                if (shockedPoliceDiv.current) shockedPoliceDiv.current.style.display = "none";
+                if (sorryPoliceDiv.current) sorryPoliceDiv.current.style.display = "none";
                 if (happyPoliceDiv.current) happyPoliceDiv.current.style.display = "none";
                 if (angryPoliceImage.current) angryPoliceImage.current.style.display = "none";
-                if (shockedPoliceImage.current) shockedPoliceImage.current.style.display = "none";
+                if (sorryPoliceImage.current) sorryPoliceImage.current.style.display = "none";
                 if (okPoliceImage.current) okPoliceImage.current.style.display = "none";
                 if (denyPoliceImage.current) denyPoliceImage.current.style.display = "none";
 
@@ -128,18 +129,18 @@ const LoginComp: React.FC = () => {
                 switch (nextNum) {
                     case 0:
                         if (helloPoliceImage.current) helloPoliceImage.current.style.display = "block";
-                        if (eatPoliceImage.current) eatPoliceImage.current.style.display = "none";
-                        if (fullPoliceImage.current) fullPoliceImage.current.style.display = "none";
+                        if (singPoliceImage.current) singPoliceImage.current.style.display = "none";
+                        if (welcomePoliceImage.current) welcomePoliceImage.current.style.display = "none";
                         break;
                     case 1:
                         if (helloPoliceImage.current) helloPoliceImage.current.style.display = "none";
-                        if (eatPoliceImage.current) eatPoliceImage.current.style.display = "block";
-                        if (fullPoliceImage.current) fullPoliceImage.current.style.display = "none";
+                        if (singPoliceImage.current) singPoliceImage.current.style.display = "block";
+                        if (welcomePoliceImage.current) welcomePoliceImage.current.style.display = "none";
                         break;
                     case 2:
                         if (helloPoliceImage.current) helloPoliceImage.current.style.display = "none";
-                        if (eatPoliceImage.current) eatPoliceImage.current.style.display = "none";
-                        if (fullPoliceImage.current) fullPoliceImage.current.style.display = "block";
+                        if (singPoliceImage.current) singPoliceImage.current.style.display = "none";
+                        if (welcomePoliceImage.current) welcomePoliceImage.current.style.display = "block";
                         break;
                     default:
                         if (helloPoliceImage.current) helloPoliceImage.current.style.display = "block";
@@ -161,17 +162,18 @@ const LoginComp: React.FC = () => {
 
         if (!error) return;
         setError(undefined);
+        if (ninjaIcon.current) ninjaIcon.current.classList.remove('err-color');
         if (h2Header.current) h2Header.current.innerText = "Confirm your identity";
 
         fadeOut(angryPoliceDiv.current);
-        fadeOut(shockedPoliceDiv.current);
+        fadeOut(sorryPoliceDiv.current);
         fadeOut(happyPoliceDiv.current);
 
         setTimeout(() => {
             if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
-            if (shockedPoliceDiv.current) shockedPoliceDiv.current.style.display = "none";
+            if (sorryPoliceDiv.current) sorryPoliceDiv.current.style.display = "none";
             if (angryPoliceImage.current) angryPoliceImage.current.style.display = "none";
-            if (shockedPoliceImage.current) shockedPoliceImage.current.style.display = "none";
+            if (sorryPoliceImage.current) sorryPoliceImage.current.style.display = "none";
 
             if (calmPoliceDiv.current) {
                 calmPoliceDiv.current.style.display = "block";
@@ -215,6 +217,7 @@ const LoginComp: React.FC = () => {
             showPoliceDiv(angryPoliceDiv.current, angryPoliceImage.current, "You shall not pass!");
             if (!username && userSpan.current) userSpan.current.style.visibility = "visible";
             if (!password && passSpan.current) passSpan.current.style.visibility = "visible";
+            if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
             setEnableInput(true);
             return;
         }
@@ -265,17 +268,20 @@ const LoginComp: React.FC = () => {
                 errorMessage = response?.resp.msg || response?.resp || "Authentication failed";
             }
             if (statusCode >= 500) {
-                showPoliceDiv(shockedPoliceDiv.current, shockedPoliceImage.current, errorMessage);
+                showPoliceDiv(sorryPoliceDiv.current, sorryPoliceImage.current, errorMessage);
             } else {
                 showPoliceDiv(angryPoliceDiv.current, denyPoliceImage.current, errorMessage);
+                if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
             }
 
             if (errorMessage.includes("user") && userSpan.current) {
                 userSpan.current.style.visibility = "visible"
+                if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
             };
 
             if (errorMessage.includes("password") && passSpan.current) {
                 passSpan.current.style.visibility = "visible"
+                if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
             };
         }
     };
@@ -292,8 +298,8 @@ const LoginComp: React.FC = () => {
                         <div id="policeDiv">
                             <div className='intro-img-div intro-img-slides' ref={calmPoliceDiv}>
                                 <span className="police police-hello" ref={helloPoliceImage}><img src={hello} alt="police" /></span>
-                                <span className="police police-eat" ref={eatPoliceImage}><img src={eat} alt="police" /></span>
-                                <span className="police police-full" ref={fullPoliceImage}><img src={full} alt="police" /></span>
+                                <span className="police police-sing" ref={singPoliceImage}><img src={sing} alt="police" /></span>
+                                <span className="police police-welcome" ref={welcomePoliceImage}><img src={welcome} alt="police" /></span>
                             </div>
                             <div className="intro-img-div error-img-div" ref={angryPoliceDiv}>
                                 <span className="police police-angry" ref={angryPoliceImage}><img src={angry} alt="police" /></span>
@@ -302,8 +308,8 @@ const LoginComp: React.FC = () => {
                             <div className="intro-img-div ok-img-div" ref={happyPoliceDiv}>
                                 <span className="police police-ok" ref={okPoliceImage}><img src={ok} alt="police" /></span>
                             </div>
-                            <div className="intro-img-div shocked-img-div" ref={shockedPoliceDiv}>
-                                <span className="police police-shocked" ref={shockedPoliceImage}><img src={shocked} alt="police" /></span>
+                            <div className="intro-img-div sorry-img-div" ref={sorryPoliceDiv}>
+                                <span className="police police-sorry" ref={sorryPoliceImage}><img src={sorry} alt="police" /></span>
                             </div>
                         </div>
                     </div>
@@ -311,7 +317,7 @@ const LoginComp: React.FC = () => {
                         <div id="loginHeaders" className='poppins-regular' ref={loginHeaderDiv}>
                             <h2 ref={h2Header}>{error ? error : "Confirm your identity"}</h2>
                             <br />
-                            <i className="fa-solid fa-user-ninja"></i><span>&nbsp;&nbsp;Enter your account details below...</span>
+                            <span ref={ninjaIcon}><i className="fa-solid fa-user-ninja"></i></span><span className='sec-head'>&nbsp;&nbsp;Enter your account details below...</span>
                         </div>
                         <div id="loginForm">
                             <br />
@@ -332,7 +338,7 @@ const LoginComp: React.FC = () => {
                             {/* <span className='or poppins-regular'>or</span> */}
                             <div id="guestOptions">
                                 <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-                                    <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest&nbsp;&nbsp;<i className="fa-solid fa-feather"></i></button>
+                                    <button onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular'>Continue as Guest&nbsp;&nbsp;<i className="fa-solid fa-fsingher"></i></button>
                                 </ClickSpark>
                             </div>
                         </div>

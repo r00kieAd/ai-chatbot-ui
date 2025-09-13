@@ -3,6 +3,7 @@ import { useGlobal } from '../utils/global_context';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
 import LLMs from '../configs/available_llm_models.json';
+import PROMPTS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
 import ClickSpark from './click_spark';
@@ -80,7 +81,7 @@ const InputBox: React.FC = () => {
 
         const response = await initiateAsk({
             username: currUser,
-            prompt: curr_prompt,
+            prompt: `${PROMPTS.PERSONALITY} ${curr_prompt}`,
             client: curr_client.toLowerCase(),
             model: curr_model.toLowerCase(),
             top_k: curr_top_k,
@@ -163,7 +164,6 @@ const InputBox: React.FC = () => {
         if (!inputVal) {
             return;
         };
-
         setAsked(true);
     }
 

@@ -3,25 +3,37 @@
     --textAreaMaxHeight: 100px;
 }
 
+$mainBackgroundColor: #F0F0D7;
+$loadingScreenTextColor: #727D73;
+$box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
 $parentContainerWidth: 100%;
 $parentContainerHeight: auto;
-$parentBgColor: #171717;
+$parentBgColor: #727D73;
 
 $loginContainerWidth: 40rem;
 $loginContainerPadding: 25px;
-$loginContainerHeaderColor: #DFD0B8;
-$loginContainerSecondaryColor: #948979;
+$loginContainerPrimaryColor: #EEEFE0;
+$loginContainerSecondaryColor: #AAB99A;
+$loginContainerButtonBorder: transparent;
+$loginContainerButtonTextColor: #4A4947;
+$loginContainerInputBorderColor: #F0F0D7;
+$loginContainerInputTextColor: #F0F0D7;
 
-$inputContainerBoxBg: #171717;
-$inputContainerMainTextColor: #948979;
-$inputContainerSecondaryColor: #DFD0B8;
-$navbarborder: #343131;
-$userMessageBg: #343131;
-$botMessageBg: #C8B6A6;
-$botMessageColor: #000;
+$inputContainerBoxBg: #727D73;
+$inputContainerMainTextColor: #D0DDD0;
+$inputContainerSecondaryColor: #F0F0D7;
+$inputCOntainerWelcomeColor: #727D73;
+$inputContainerButtonBg: #F0F0D7;
+$inputContainerButtonTextColor: #4A4947;
 
+$navbarborder: #D0DDD0;
+$userMessageBg: #D0DDD0;
+$userMessageColor: #4A4947;
+$botMessageBg: #AAB99A;
+$botMessageColor: #4A4947;
 
-$errorColor: #A62C2C;
+$errorColor: #660B05;
 $mainContainerWidth: 40rem;
 $mainContainerHeight: auto;
 $mainBorderRadius: 10px;
@@ -106,12 +118,18 @@ $navbarPadding: 5px 8px;
     width: 99.5%;
     height: 25px;
     padding: 5px;
+    padding-bottom: 10px;
+    margin: 5px 0;
     border: none;
-    border-bottom: 1px solid $loginContainerSecondaryColor;
-    color: $loginContainerSecondaryColor;
+    border-bottom: 1px solid $loginContainerInputBorderColor;
+    color: $loginContainerInputTextColor;
     outline: none;
     font-size: 15px;
     background: transparent;
+
+    &::placeholder {
+        color: $loginContainerSecondaryColor;
+    }
 }
 
 @mixin reveal() {
@@ -138,7 +156,7 @@ $navbarPadding: 5px 8px;
     @include slideDownAnimation(0.4s, ease-in-out);
 }
 
-@mixin shiny-text($font-color: black, $background: linear-gradient(120deg, #0b1220 0%, #0f172a 35%, rgba(255, 255, 255, 0.9) 50%, #0f172a 65%, #0b1220 100%), $duration: 5s, $active: true) {
+@mixin shiny-text($font-color: $loginContainerButtonTextColor, $background: linear-gradient(120deg, #0b1220 0%, #0f172a 35%, rgba(255, 255, 255, 0.9) 50%, #0f172a 65%, #0b1220 100%), $duration: 5s, $active: true) {
     display: inline-block;
 
     @if $active {
@@ -197,13 +215,14 @@ body {
     position: fixed;
     width: 100%;
     height: 100%;
+    background-color: $mainBackgroundColor;
 }
 
 #loadingScreen {
     width: 100%;
     height: 100%;
     z-index: 1;
-    color: $inputContainerMainTextColor;
+    color: $loadingScreenTextColor;
 
     .shuffle-parent {
         @include centerElement();
@@ -299,7 +318,7 @@ body {
 
             #innerNavbarContainer {
                 background-color: $inputContainerBoxBg;
-                border: 1px solid $navbarborder;
+                border: 0.5px solid $navbarborder;
                 border-radius: $mainBorderRadius;
                 width: $loginContainerWidth;
                 display: flex;
@@ -307,6 +326,7 @@ body {
                 padding: $navbarPadding;
                 margin-top: 10px;
                 color: $inputContainerMainTextColor;
+                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
                 #navbarclock {
                     width: 90px;
@@ -348,6 +368,7 @@ body {
             opacity: 0;
             transition: all 0.5s ease-in;
             background-color: $parentBgColor;
+            box-shadow: $box-shadow;
 
             &.show {
                 @include reveal()
@@ -424,7 +445,7 @@ body {
                     opacity: 0;
                     transition: all 0.5s ease-in-out;
                     width: 100%;
-                    color: $loginContainerHeaderColor;
+                    color: $loginContainerPrimaryColor;
                     padding: 5px;
 
                     h2 {
@@ -437,7 +458,7 @@ body {
                         text-overflow: ellipsis;
                     }
 
-                    span {
+                    span.sec-head {
                         width: inherit;
                         font-size: clamp(10px, 1vw, 12px);
                         line-height: 1.0;
@@ -463,6 +484,10 @@ body {
 
                 }
 
+                .err-color {
+                    color: $errorColor;
+                }
+
                 #loginForm {
                     width: 100%;
                     position: relative;
@@ -475,17 +500,18 @@ body {
                         }
 
                         button[type=submit] {
-                            @include button(black, 5rem, 30px);
+                            @include button($loginContainerButtonBorder, 5rem, 30px);
                             justify-self: center;
                             margin: 10px 0;
-                            background-color: $loginContainerHeaderColor;
+                            background-color: $loginContainerPrimaryColor;
+                            color: $loginContainerButtonTextColor;
 
                             .shiny-text {
-                                @include shiny-text();
+                                @include shiny-text($font-color: $loginContainerButtonTextColor);
                             }
 
                             .shiny-text.disabled {
-                                @include shiny-text($font-color: black, $background: none, $active: false);
+                                @include shiny-text($font-color: $loginContainerButtonTextColor, $background: none, $active: false);
                             }
                         }
 
@@ -500,9 +526,10 @@ body {
                     #guestOptions {
                         button {
                             margin: 10px 0;
-                            @include button(black, 100%, 30px);
+                            @include button($loginContainerButtonBorder, 100%, 30px);
                             padding: 10px;
-                            background-color: $loginContainerHeaderColor;
+                            background-color: $loginContainerPrimaryColor;
+                            color: $loginContainerButtonTextColor;
                         }
                     }
                 }
@@ -612,7 +639,7 @@ body {
                         img {
                             width: 100%;
                             height: 100%;
-                            border-radius: 50%;
+                            border-radius: 0%;
                             object-fit: cover;
                         }
 
@@ -794,10 +821,11 @@ body {
                             height: auto;
 
                             .message-bubble {
-                                color: $inputContainerSecondaryColor;
+                                color: $userMessageColor;
                                 border-bottom-right-radius: 4px;
                                 height: fit-content;
                                 background-color: $userMessageBg;
+                                box-shadow: $box-shadow;
 
                                 code {
                                     background-color: rgba(255, 255, 255, 0.2);
@@ -852,6 +880,7 @@ body {
                                 background-color: $botMessageBg;
                                 color: $botMessageColor;
                                 border-bottom-left-radius: 4px;
+                                box-shadow: $box-shadow;
 
                                 code {
                                     background-color: rgba(0, 0, 0, 0.15);
@@ -885,13 +914,13 @@ body {
 
             #welcomeMessage {
                 @include centerElement();
-                top: 42%;
+                top: calc(42dvh - 5%);
                 width: 100%;
                 position: fixed;
                 text-align: center;
                 font-size: 21px;
                 font-weight: 500;
-                color: $inputContainerMainTextColor;
+                color: $inputCOntainerWelcomeColor;
             }
 
             #inputContainer {
@@ -903,6 +932,7 @@ body {
                 z-index: 10;
                 transition: all 0.6s ease-in-out;
                 background-color: $inputContainerBoxBg;
+                box-shadow: $box-shadow;
 
 
                 &.chat-initiated {
@@ -938,6 +968,10 @@ body {
                             box-sizing: border-box;
                             border: none;
                             color: $inputContainerSecondaryColor;
+
+                            &::placeholder {
+                                color: $inputContainerSecondaryColor;
+                            }
                         }
                     }
                 }

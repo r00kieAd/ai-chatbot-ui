@@ -79,13 +79,14 @@ body {
   position: fixed;
   width: 100%;
   height: 100%;
+  background-color: #F0F0D7;
 }
 
 #loadingScreen {
   width: 100%;
   height: 100%;
   z-index: 1;
-  color: #948979;
+  color: #727D73;
 }
 #loadingScreen .shuffle-parent {
   position: absolute;
@@ -126,7 +127,7 @@ body {
 #errDiv {
   width: 100%;
   height: 100%;
-  color: #A62C2C;
+  color: #660B05;
 }
 #errDiv .errorContainer {
   position: absolute;
@@ -158,7 +159,7 @@ body {
   overflow: hidden;
   padding: 0;
   margin: 0;
-  background-color: #171717;
+  background-color: #727D73;
 }
 #parent #navbarContainer {
   visibility: hidden;
@@ -177,15 +178,16 @@ body {
   display: none;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer {
-  background-color: #171717;
-  border: 1px solid #343131;
+  background-color: #727D73;
+  border: 0.5px solid #D0DDD0;
   border-radius: 10px;
   width: 40rem;
   display: flex;
   justify-content: space-between;
   padding: 5px 8px;
   margin-top: 10px;
-  color: #948979;
+  color: #D0DDD0;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #navbarclock {
   width: 90px;
@@ -205,7 +207,7 @@ body {
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
-  color: #948979;
+  color: #D0DDD0;
   width: 90px;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #navbarLogout button:hover {
@@ -224,14 +226,15 @@ body {
   transform: translate(-50%, -50%);
   width: 40rem;
   height: auto;
-  border: 1px solid #171717;
+  border: 1px solid #727D73;
   border-radius: 10px;
   padding: 25px;
   transition: all 0.5s ease-in;
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-in;
-  background-color: #171717;
+  background-color: #727D73;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 #parent #loginContainer #loginParent.show {
   opacity: 1;
@@ -311,7 +314,7 @@ body {
   opacity: 0;
   transition: all 0.5s ease-in-out;
   width: 100%;
-  color: #DFD0B8;
+  color: #EEEFE0;
   padding: 5px;
   margin-bottom: 10px;
 }
@@ -324,12 +327,12 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#parent #loginContainer #loginParent #containerOne #loginHeaders span {
+#parent #loginContainer #loginParent #containerOne #loginHeaders span.sec-head {
   width: inherit;
   font-size: clamp(10px, 1vw, 12px);
   line-height: 1;
   word-wrap: break-word;
-  color: #948979;
+  color: #AAB99A;
 }
 @media screen and (max-width: 500px) {
   #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
@@ -342,6 +345,9 @@ body {
 #parent #loginContainer #loginParent #containerOne #loginHeaders.show {
   opacity: 1;
   visibility: visible;
+}
+#parent #loginContainer #loginParent #containerOne .err-color {
+  color: #660B05;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm {
   width: 100%;
@@ -357,18 +363,26 @@ body {
   width: 99.5%;
   height: 25px;
   padding: 5px;
+  padding-bottom: 10px;
+  margin: 5px 0;
   border: none;
-  border-bottom: 1px solid #948979;
-  color: #948979;
+  border-bottom: 1px solid #F0F0D7;
+  color: #F0F0D7;
   outline: none;
   font-size: 15px;
   background: transparent;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::-moz-placeholder {
+  color: #AAB99A;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::placeholder {
+  color: #AAB99A;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] {
   width: 5rem;
   height: 30px;
   outline: none;
-  border: 1px solid black;
+  border: 1px solid transparent;
   border-radius: 10px;
   background: transparent;
   display: flex;
@@ -378,7 +392,8 @@ body {
   cursor: pointer;
   justify-self: center;
   margin: 10px 0;
-  background-color: #DFD0B8;
+  background-color: #EEEFE0;
+  color: #4A4947;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] .shiny-text {
   display: inline-block;
@@ -393,14 +408,14 @@ body {
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] .shiny-text.disabled {
   display: inline-block;
   animation: none;
-  color: black;
+  color: #4A4947;
   -webkit-text-fill-color: initial;
   background: none;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err {
   font-size: 11px;
   visibility: hidden;
-  color: #A62C2C;
+  color: #660B05;
   margin: 3px 0;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #guestOptions button {
@@ -408,7 +423,7 @@ body {
   width: 100%;
   height: 30px;
   outline: none;
-  border: 1px solid black;
+  border: 1px solid transparent;
   border-radius: 10px;
   background: transparent;
   display: flex;
@@ -417,7 +432,8 @@ body {
   justify-content: space-around;
   cursor: pointer;
   padding: 10px;
-  background-color: #DFD0B8;
+  background-color: #EEEFE0;
+  color: #4A4947;
 }
 #parent #mainContainer {
   visibility: hidden;
@@ -512,7 +528,7 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-avatar img {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
+  border-radius: 0%;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -668,11 +684,12 @@ body {
   height: auto;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble {
-  color: #DFD0B8;
+  color: #4A4947;
   border-bottom-right-radius: 4px;
   height: -moz-fit-content;
   height: fit-content;
-  background-color: #343131;
+  background-color: #D0DDD0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble code {
   background-color: rgba(255, 255, 255, 0.2);
@@ -714,9 +731,10 @@ body {
   min-height: unset;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble {
-  background-color: #C8B6A6;
-  color: #000;
+  background-color: #AAB99A;
+  color: #4A4947;
   border-bottom-left-radius: 4px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble code {
   background-color: rgba(0, 0, 0, 0.15);
@@ -739,16 +757,16 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  top: 42%;
+  top: calc(42dvh - 5%);
   width: 100%;
   position: fixed;
   text-align: center;
   font-size: 21px;
   font-weight: 500;
-  color: #948979;
+  color: #727D73;
 }
 #parent #mainContainer #innerContainer #inputContainer {
-  border: 1px solid #171717;
+  border: 1px solid #727D73;
   border-radius: 10px;
   flex-shrink: 0;
   position: absolute;
@@ -758,7 +776,8 @@ body {
   width: calc(100% - 40px);
   z-index: 10;
   transition: all 0.6s ease-in-out;
-  background-color: #171717;
+  background-color: #727D73;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 #parent #mainContainer #innerContainer #inputContainer.chat-initiated {
   position: relative;
@@ -790,7 +809,13 @@ body {
   line-height: 20px;
   box-sizing: border-box;
   border: none;
-  color: #DFD0B8;
+  color: #F0F0D7;
+}
+#parent #mainContainer #innerContainer #inputContainer #inputBox #inputChild textarea::-moz-placeholder {
+  color: #F0F0D7;
+}
+#parent #mainContainer #innerContainer #inputContainer #inputBox #inputChild textarea::placeholder {
+  color: #F0F0D7;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox {
   position: relative;
@@ -801,7 +826,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: auto;
-  border-top: 1px solid #948979;
+  border-top: 1px solid #D0DDD0;
   padding: 10px 10px;
   border-radius: 10px;
 }
@@ -832,9 +857,9 @@ body {
   max-width: 100px;
   overflow: hidden;
   border: none;
-  border-top: 1px solid #948979;
-  border-bottom: 1px solid #948979;
-  color: #DFD0B8;
+  border-top: 1px solid #D0DDD0;
+  border-bottom: 1px solid #D0DDD0;
+  color: #F0F0D7;
   border-radius: 10px;
   padding: 4px;
   outline: none;
@@ -858,7 +883,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: #948979;
+  color: #D0DDD0;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
   display: flex;
@@ -885,11 +910,11 @@ body {
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .attach-attr {
   cursor: default;
   font-size: 12.5px;
-  color: #DFD0B8;
+  color: #F0F0D7;
   margin-left: 3px;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .clear-link a {
-  color: #A62C2C;
+  color: #660B05;
   text-decoration: none;
   background: transparent;
   border: none;
@@ -919,7 +944,7 @@ body {
   width: 70px;
   height: sendButtonHeight;
   outline: none;
-  border: 1px solid #948979;
+  border: 1px solid #D0DDD0;
   border-radius: 10px;
   background: transparent;
   display: flex;
@@ -927,13 +952,13 @@ body {
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
-  border-color: #948979;
+  border-color: #D0DDD0;
   padding: 2px 10px;
-  background-color: #C8B6A6;
+  background-color: #AAB99A;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text {
-  color: #DFD0B8;
+  color: #F0F0D7;
   font-weight: 500;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text .shiny-text {
@@ -949,7 +974,7 @@ body {
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text .shiny-text.disabled {
   display: inline-block;
   animation: none;
-  color: #DFD0B8;
+  color: #F0F0D7;
   -webkit-text-fill-color: initial;
   background: none;
 }
