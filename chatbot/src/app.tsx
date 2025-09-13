@@ -7,6 +7,7 @@ import NavbarComp from './components/navbar';
 import SplitText from './components/split_text';
 import ping from './services/ping_server';
 import Silk from './components/silk_bg';
+import MeteorsBg from './components/meteors_bg';
 import Loading from './components/loading_screen';
 import DisplayError from './components/display_error';
 import initiateLogout from './services/logout_service';
@@ -206,13 +207,14 @@ function App() {
   return (
     <>
       <div id="pageLiveBg">
-        <Silk
+        {/* <Silk
           speed={5}
           scale={1}
-          color="#171717"
+          color="#F0F0D7"
+          // color='#fff'
           noiseIntensity={1.5}
           rotation={0}
-        />
+        /> */}
       </div>
 
       {!serverOnline && !serverOffline && <Loading />}
