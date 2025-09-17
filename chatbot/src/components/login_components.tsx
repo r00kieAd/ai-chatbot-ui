@@ -250,9 +250,9 @@ const LoginComp: React.FC = () => {
                     setAuthorized(true);
                     sessionStorage.setItem(import.meta.env.VITE_SESSION_AUTH_VAR, "true");
                     setAuthToken(response.resp.token);
-                    setCurrUser(username);
                     fadeOut(loginParent.current);
                 }, 2000);
+                setCurrUser(username);
                 setLoggedIn(true);
             }
         } else {
