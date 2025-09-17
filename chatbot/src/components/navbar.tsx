@@ -1,28 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
 import initiateLogout from '../services/logout_service';
 import clearAttachments from '../services/clear_attachments';
 
 const NavbarComp: React.FC = () => {
-    const tickTock = useRef<HTMLSpanElement>(null);
     const infoDiv = useRef<HTMLDivElement>(null);
     const {
         setAuthorized, authToken, currUser, setLoggedOut, setChatInitiated, setAuthToken, setCurrUser, setChatHistory
     } = useGlobal();
 
-    useEffect(() => {
-        const updateTime = () => {
-            if (tickTock.current) {
-                const currrTime = new Date().toLocaleTimeString();
-                tickTock.current.innerText = currrTime;
-            }
-        };
-
-        updateTime();
-        const interval = setInterval(updateTime, 1000);
-
-        return () => clearInterval(interval);
-    }, []);
+    function openSettings() {
+        alert('work in progress')
+    }
 
     async function killSession() {
         sessionStorage.removeItem(import.meta.env.VITE_SESSION_AUTH_VAR);
@@ -71,12 +60,12 @@ const NavbarComp: React.FC = () => {
     return (
         <>
             <div id="innerNavbarContainer">
-                <div id="navbarclock" className="navbar-item poppins-regular">
-                    <span className='clock-icon'><i className="fa-solid fa-circle-check"></i></span>&nbsp;<span ref={tickTock}></span>
+                <div id="settingsDiv" className="navbar-item poppins-regular">
+                    <button onClick={openSettings} className='navbar-button poppins-regular'><i className="fa-solid fa-sliders .setting-icon"></i>&nbsp;settings</button>
                 </div>
                 <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>Smart Owl</div>
                 <div id="navbarLogout" className="navbar-item">
-                    <button onClick={killSession} className='poppins-regular'><i className="fa-solid fa-skull"></i>&nbsp;session</button>
+                    <button onClick={killSession} className='navbar-button poppins-regular'><i className="fa-solid fa-skull"></i>&nbsp;session</button>
                 </div>
             </div>
         </>
