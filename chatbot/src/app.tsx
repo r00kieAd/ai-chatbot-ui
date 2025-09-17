@@ -27,10 +27,14 @@ function App() {
   const navbarDiv2 = useRef<HTMLDivElement>(null);
   const wlcmDiv = useRef<HTMLDivElement>(null);
 
+
+  useEffect(() => {
+    sessionStorage.clear();
+  }, []);
+
   useEffect(() => {
     if (!authorized) return;
-
-    const INACTIVITY_MS = 300_000;
+    const INACTIVITY_MS = 900_000;
     let timeoutId: number | null = null;
     let lastActivity = Date.now();
     let hiddenAt: number | null = null;
@@ -93,7 +97,6 @@ function App() {
     document.addEventListener('touchstart', handleActivity, { passive: true });
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Initial arm
     lastActivity = Date.now();
     scheduleLogout();
 
@@ -141,7 +144,7 @@ function App() {
   }
 
   const welcomeMessage = useMemo(() => {
-    return `こんにちは ${currUser || 'User'}! What brings you here today?`;
+    return `こんにちは ${currUser}! What brings you here today?`;
   }, [currUser]);
 
   useEffect(() => {
@@ -235,7 +238,7 @@ function App() {
                 <ChatBox />
               </div>
               <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
-                <SplitText
+                {currUser && <SplitText
                   text={welcomeMessage}
                   className="text-2xl font-semibold text-center"
                   delay={100}
@@ -248,7 +251,7 @@ function App() {
                   rootMargin="-100px"
                   textAlign="center"
                   onLetterAnimationComplete={handleAnimationComplete}
-                />
+                />}
               </div>
               <div id="inputContainer" ref={inputBoxDiv}>
                 <InputBox />

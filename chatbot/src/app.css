@@ -211,7 +211,8 @@ body {
   width: 90px;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsDiv button:hover {
-  color: #F0F0D7;
+  font-weight: 300;
+  transition: all 0.2s ease-in-out;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #navbarLogout button:hover {
   color: #660B05;
