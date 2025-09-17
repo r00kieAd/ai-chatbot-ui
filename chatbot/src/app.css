@@ -189,13 +189,13 @@ body {
   color: #D0DDD0;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
-#parent #navbarContainer #navbarController #innerNavbarContainer #navbarclock {
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsDiv {
   width: 90px;
   text-align: center;
   display: flex;
   justify-content: space-between;
 }
-#parent #navbarContainer #navbarController #innerNavbarContainer #navbarLogout button {
+#parent #navbarContainer #navbarController #innerNavbarContainer .navbar-button {
   width: auto;
   height: sendButtonHeight;
   outline: none;
@@ -210,8 +210,11 @@ body {
   color: #D0DDD0;
   width: 90px;
 }
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsDiv button:hover {
+  color: #F0F0D7;
+}
 #parent #navbarContainer #navbarController #innerNavbarContainer #navbarLogout button:hover {
-  font-weight: 900;
+  color: #660B05;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #displayInfo {
   width: auto;
