@@ -412,6 +412,14 @@ body {
                     }
                 }
 
+                @mixin settingsInfoButton {
+                    border: none;
+                    outline: none;
+                    background-color: transparent;
+                    color: $inputContainerButtonTextColor;
+                    font-weight: 500;
+                }
+
                 #settingsMenu {
                     max-height: 0;
                     visibility: hidden;
@@ -432,37 +440,260 @@ body {
                         border-top-color: $navbarborder;
                     }
 
-                    .settings-flex-container {
+                    @mixin flexContainerForSettings ($justifyContent: space-between) {
                         display: flex;
                         flex-wrap: wrap;
                         gap: 1rem;
                         align-items: center;
-                        justify-content: space-between;
+                        justify-content: $justifyContent;
                     }
 
-                    .setting-item {
-                        flex: 1 1 30%;
-                        min-width: 50px;
-                        display: flex;
-                        flex-direction: row;
-                        align-items: last baseline;
-                        justify-content: space-between;
+                    #settingsItemsFlexContainer {
+
+                        @include flexContainerForSettings();
+
+                        .setting-item {
+                            flex: 1 1 30%;
+                            min-width: 50px;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: last baseline;
+                            justify-content: space-between;
+                        }
+
+                        .setting-item label {
+                            font-size: 14px;
+                            align-self: center
+                        }
+
+                        .setting-item input {
+                            @include navbarInputStyle();
+                        }
+
+                        .setting-item input::-webkit-outer-spin-button,
+                        input::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                        }
                     }
 
-                    .setting-item label {
-                        font-size: 14px;
-                        align-self: center
+                    #settingsInfo {
+                        margin-top: 1em;
+                        @include flexContainerForSettings($justifyContent: space-around);
+
+                        .setting-info-div button {
+                            @include settingsInfoButton();
+
+                            i {
+                                margin-left: 4px;
+                            }
+                        }
+
+                        .setting-info-div button:hover {
+                            color: $inputContainerButtonBg;
+                            cursor: pointer;
+                        }
+                    }
+                }
+
+                #infoCard {
+                    display: none;
+                    @include centerElement();
+                    position:fixed;
+                    // border: 1px solid black;
+                    .close-info-card {
+                        margin: .5em 0;
+                        float: left;
+                        font-size: 20px;
+                        @include settingsInfoButton();
+                        color: $errorColor;
+                        cursor: pointer;
                     }
 
-                    .setting-item input {
-                        @include navbarInputStyle();
+                    #settingsInfoParentDiv {
+                        background-color: $inputContainerBoxBg;
+                        width: 100%;
+                        max-height: 45rem;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        padding: 1.5rem;
+                        box-sizing: border-box;
+                        scrollbar-width: thin;
+                        scrollbar-color: $inputContainerMainTextColor transparent;
+                        border-radius: $mainBorderRadius;
+
+
+                        &::-webkit-scrollbar {
+                            width: 6px;
+                        }
+
+                        &::-webkit-scrollbar-track {
+                            background: transparent;
+                        }
+
+                        &::-webkit-scrollbar-thumb {
+                            background-color: $inputContainerMainTextColor;
+                            border-radius: 3px;
+                            opacity: 0.6;
+                        }
+
+                        &::-webkit-scrollbar-thumb:hover {
+                            background-color: $inputContainerSecondaryColor;
+                            opacity: 0.8;
+                        }
+
+                        #settingInfoChildDiv {
+                            width: 100%;
+
+                            .settings-info-header {
+                                text-align: center;
+                                margin-bottom: 2rem;
+                                padding-bottom: 1rem;
+                                border-bottom: 2px solid $navbarborder;
+                                color: $inputContainerMainTextColor;
+
+                                h3 {
+                                    margin: 0 0 0.5rem 0;
+                                    font-size: 1.5rem;
+                                    color: $inputContainerSecondaryColor;
+                                    text-transform: uppercase;
+                                    letter-spacing: 1px;
+                                }
+
+                                p {
+                                    margin: 0;
+                                    font-size: 0.9rem;
+                                    opacity: 0.8;
+                                    font-style: italic;
+                                }
+                            }
+
+                            .info-grid {
+                                display: grid;
+                                gap: 1.5rem;
+                                grid-template-columns: 1fr;
+
+                                @media screen and (min-width: 768px) {
+                                    grid-template-columns: repeat(2, 1fr);
+                                }
+
+                                .info-div {
+                                    background-color: rgba(255, 255, 255, 0.05);
+                                    border: 1px solid $navbarborder;
+                                    border-radius: $mainBorderRadius;
+                                    padding: 1.5rem;
+                                    margin-bottom: 1rem;
+                                    transition: all 0.3s ease-in-out;
+                                    position: relative;
+
+                                    &:not(:last-child) {
+                                        border-bottom: 2px solid $navbarborder;
+                                    }
+
+                                    &:hover {
+                                        background-color: rgba(255, 255, 255, 0.08);
+                                        transform: translateY(-3px);
+                                        box-shadow: rgba(0, 0, 0, 0.25) 0px 6px 12px;
+                                        border-color: $inputContainerSecondaryColor;
+                                    }
+
+                                    .param-header {
+                                        margin-bottom: 1rem;
+                                        padding-bottom: 0.75rem;
+                                        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+                                        .param-name {
+                                            font-size: 1.2rem;
+                                            font-weight: 700;
+                                            color: $inputContainerSecondaryColor;
+                                            text-transform: uppercase;
+                                            letter-spacing: 0.8px;
+                                            display: block;
+                                            position: relative;
+
+                                            &::after {
+                                                content: '';
+                                                position: absolute;
+                                                bottom: -0.75rem;
+                                                left: 0;
+                                                width: 30px;
+                                                height: 2px;
+                                                background-color: $inputContainerSecondaryColor;
+                                                border-radius: 1px;
+                                            }
+                                        }
+                                    }
+
+                                    .param-details {
+                                        .param-row {
+                                            display: flex;
+                                            flex-direction: column;
+                                            margin-bottom: 1rem;
+                                            padding: 0.75rem 0;
+                                            border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+                                            &:first-child {
+                                                border-top: none;
+                                                padding-top: 0;
+                                            }
+
+                                            &:last-child {
+                                                margin-bottom: 0;
+                                                padding-bottom: 0;
+                                            }
+
+                                            .label {
+                                                font-size: 0.75rem;
+                                                font-weight: 700;
+                                                color: $inputContainerMainTextColor;
+                                                margin-bottom: 0.5rem;
+                                                text-transform: uppercase;
+                                                letter-spacing: 0.5px;
+                                                opacity: 0.8;
+                                                display: flex;
+                                                align-items: center;
+
+                                                &::before {
+                                                    content: '▸';
+                                                    margin-right: 0.5rem;
+                                                    color: $inputContainerSecondaryColor;
+                                                    font-weight: bold;
+                                                }
+                                            }
+
+                                            .info-prop {
+                                                font-size: 0.9rem;
+                                                color: $inputContainerMainTextColor;
+                                                line-height: 1.5;
+                                                padding-left: 1rem;
+
+                                                &.description {
+                                                    font-style: italic;
+                                                    color: rgba(240, 240, 215, 0.9);
+                                                }
+
+                                                &.range,
+                                                &.default-value,
+                                                &.example {
+                                                    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                                                    background-color: rgba(0, 0, 0, 0.3);
+                                                    color: $inputContainerSecondaryColor;
+                                                    padding: 0.5rem 0.75rem;
+                                                    border-radius: 4px;
+                                                    font-size: 0.8rem;
+                                                    border-left: 3px solid $inputContainerSecondaryColor;
+                                                    display: inline-block;
+                                                    max-width: 100%;
+                                                    word-break: break-all;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
-                    .setting-item input::-webkit-outer-spin-button,
-                    input::-webkit-inner-spin-button {
-                        -webkit-appearance: none;
-                        margin: 0;
-                    }
                 }
 
             }
@@ -1086,6 +1317,16 @@ body {
                             &::placeholder {
                                 color: $inputContainerSecondaryColor;
                             }
+                        }
+
+                        textarea::-webkit-scrollbar {
+                            width: 5px;
+                        }
+
+                        textarea::-webkit-scrollbar-thumb {
+                            border: 0.1px solid;
+                            border-radius: $mainBorderRadius;
+                            background-color: $inputContainerMainTextColor;
                         }
                     }
                 }

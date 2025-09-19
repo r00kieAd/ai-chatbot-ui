@@ -1,0 +1,46 @@
+{
+  "parameters": [
+    {
+      "name": "max_output_tokens",
+      "description": "Caps the number of tokens the model can generate in the output.",
+      "range": "Integer (e.g., 1 - 8192 depending on model)",
+      "default": "None (model decides)",
+      "example": "max_output_tokens=100"
+    },
+    {
+      "name": "frequency_penalty",
+      "description": "Penalizes tokens that appear too often in the output to reduce repetition.",
+      "range": "-2.0 to 2.0",
+      "default": "0",
+      "example": "frequency_penalty=0.8"
+    },
+    {
+      "name": "presence_penalty",
+      "description": "Penalizes already-used tokens, encouraging the model to introduce new concepts.",
+      "range": "-2.0 to 2.0",
+      "default": "0",
+      "example": "presence_penalty=0.6"
+    },
+    {
+      "name": "temperature",
+      "description": "Controls randomness. Lower values make output more focused and deterministic, higher values make it more creative.",
+      "range": "0.0 to 2.0",
+      "default": "1.0",
+      "example": "temperature=0.7"
+    },
+    {
+      "name": "top_p",
+      "description": "Controls nucleus sampling. Only the most likely tokens with cumulative probability of top_p are considered.",
+      "range": "0.0 to 1.0",
+      "default": "1.0",
+      "example": "top_p=0.9"
+    },
+    {
+      "name": "top_k",
+      "description": "Restricts sampling to the top K most likely tokens. Smaller values narrow the output choices.",
+      "range": "Integer (e.g., 1 - 100)",
+      "default": "None (unlimited)",
+      "example": "top_k=50"
+    }
+  ]
+}
