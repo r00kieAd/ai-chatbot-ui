@@ -26,6 +26,18 @@ interface GlobalState {
     setChatHistory: (value: { [key: string]: ChatMessage } | ((prev: { [key: string]: ChatMessage }) => { [key: string]: ChatMessage })) => void;
     currllmModel: string | undefined;
     setCurrllmModel: (value: string) => void;
+    currTemperature: number;
+    setTemperature: (value: number) => void;
+    currTop_p: number;
+    setTop_p: (value: number) => void;
+    currTop_k: number;
+    setTop_k: (value: number) => void;
+    currMaxOutputToken: number;
+    setMaxOutputToken: (value: number) => void;
+    currFrequencyPenalty: number;
+    setFrequencyPenalty: (value: number) => void;
+    currPresencePenalty: number;
+    setPresencePenalty: (value: number) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -39,6 +51,12 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [currUser, setCurrUser] = useState<string | undefined>(undefined);
     const [chatHistory, setChatHistory] = useState<{ [key: string]: ChatMessage }>({});
     const [currllmModel, setCurrllmModel] = useState<string | undefined>('unknown');
+    const [currTemperature, setTemperature] = useState<number>(0);
+    const [currTop_p, setTop_p] = useState<number>(0);
+    const [currTop_k, setTop_k] = useState<number>(0);
+    const [currMaxOutputToken, setMaxOutputToken] = useState<number>(0);
+    const [currFrequencyPenalty, setFrequencyPenalty] = useState<number>(0);
+    const [currPresencePenalty, setPresencePenalty] = useState<number>(0);
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
         authorized, setAuthorized,
@@ -47,7 +65,13 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         authToken, setAuthToken, 
         currUser, setCurrUser,
         chatHistory, setChatHistory,
-        currllmModel, setCurrllmModel
+        currllmModel, setCurrllmModel,
+        currTemperature, setTemperature,
+        currTop_p, setTop_p,
+        currTop_k, setTop_k,
+        currMaxOutputToken, setMaxOutputToken,
+        currFrequencyPenalty, setFrequencyPenalty,
+        currPresencePenalty, setPresencePenalty
     }}>
         {children}
     </GlobalContext.Provider>
