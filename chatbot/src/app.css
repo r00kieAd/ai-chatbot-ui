@@ -342,30 +342,44 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   position: fixed;
+  width: 70vw;
+  max-height: 90vh;
+  z-index: 9999;
+  background-color: #727D73;
+  border: 1px solid #D0DDD0;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px;
+  overflow: hidden;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard .close-info-card {
-  margin: 0.5em 0;
-  float: left;
-  font-size: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
   border: none;
-  outline: none;
-  background-color: transparent;
-  color: #4A4947;
-  font-weight: 500;
+  font-size: 1.2rem;
   color: #660B05;
   cursor: pointer;
+  z-index: 10000;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s ease-in-out;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #infoCard .close-info-card:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv {
-  background-color: #727D73;
   width: 100%;
-  max-height: 45rem;
+  height: 100%;
+  max-height: calc(90vh - 2rem);
   overflow-y: auto;
   overflow-x: hidden;
   padding: 1.5rem;
+  padding-top: 2.5rem;
   box-sizing: border-box;
   scrollbar-width: thin;
   scrollbar-color: #D0DDD0 transparent;
-  border-radius: 10px;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv::-webkit-scrollbar {
   width: 6px;
@@ -387,23 +401,34 @@ body {
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .settings-info-header {
   text-align: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: clamp(1rem, 3vw, 2rem);
+  padding-bottom: clamp(0.5rem, 2vw, 1rem);
   border-bottom: 2px solid #D0DDD0;
   color: #D0DDD0;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .settings-info-header h3 {
   margin: 0 0 0.5rem 0;
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
   color: #F0F0D7;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: clamp(0.5px, 0.2vw, 1.2px);
+}
+@media screen and (max-width: 480px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .settings-info-header h3 {
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .settings-info-header p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 1rem);
   opacity: 0.8;
   font-style: italic;
+}
+@media screen and (max-width: 480px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .settings-info-header p {
+    font-size: 0.85rem;
+  }
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid {
   display: grid;
@@ -419,8 +444,8 @@ body {
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid #D0DDD0;
   border-radius: 10px;
-  padding: 1.5rem;
-  margin-bottom: 1rem;
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
   transition: all 0.3s ease-in-out;
   position: relative;
 }
@@ -434,18 +459,24 @@ body {
   border-color: #F0F0D7;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-header {
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
+  padding-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-header .param-name {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
   font-weight: 700;
   color: #F0F0D7;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: clamp(0.5px, 0.15vw, 1px);
   display: block;
   position: relative;
+}
+@media screen and (max-width: 480px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-header .param-name {
+    font-size: 0.95rem;
+    letter-spacing: 0.4px;
+  }
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-header .param-name::after {
   content: "";
@@ -460,8 +491,8 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
-  padding: 0.75rem 0;
+  margin-bottom: clamp(0.75rem, 2vw, 1rem);
+  padding: clamp(0.5rem, 1.5vw, 0.75rem) 0;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row:first-child {
@@ -473,43 +504,65 @@ body {
   padding-bottom: 0;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .label {
-  font-size: 0.75rem;
+  font-size: clamp(0.65rem, 1.8vw, 0.8rem);
   font-weight: 700;
   color: #D0DDD0;
-  margin-bottom: 0.5rem;
+  margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: clamp(0.3px, 0.1vw, 0.6px);
   opacity: 0.8;
   display: flex;
   align-items: center;
 }
+@media screen and (max-width: 480px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .label {
+    font-size: 0.7rem;
+    letter-spacing: 0.3px;
+  }
+}
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .label::before {
   content: "▸";
-  margin-right: 0.5rem;
+  margin-right: clamp(0.3rem, 1vw, 0.5rem);
   color: #F0F0D7;
   font-weight: bold;
+  font-size: clamp(0.7rem, 2vw, 0.9rem);
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
   color: #D0DDD0;
   line-height: 1.5;
-  padding-left: 1rem;
+  padding-left: clamp(0.75rem, 2vw, 1rem);
+}
+@media screen and (max-width: 480px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop {
+    font-size: 0.8rem;
+    padding-left: 0.75rem;
+  }
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop.description {
   font-style: italic;
   color: rgba(240, 240, 215, 0.9);
+  line-height: 1.6;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop.range, #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop.default-value, #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop.example {
   font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   background-color: rgba(0, 0, 0, 0.3);
   color: #F0F0D7;
-  padding: 0.5rem 0.75rem;
+  padding: clamp(0.4rem, 1.2vw, 0.6rem) clamp(0.6rem, 1.5vw, 0.8rem);
   border-radius: 4px;
-  font-size: 0.8rem;
-  border-left: 3px solid #F0F0D7;
+  font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+  border-left: clamp(2px, 0.5vw, 3px) solid #F0F0D7;
   display: inline-block;
   max-width: 100%;
   word-break: break-all;
+  line-height: 1.4;
+}
+@media screen and (max-width: 480px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop.range, #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop.default-value, #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard #settingsInfoParentDiv #settingInfoChildDiv .info-grid .info-div .param-details .param-row .info-prop.example {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+    border-left-width: 2px;
+  }
 }
 #parent #loginContainer #loginParent {
   position: absolute;
