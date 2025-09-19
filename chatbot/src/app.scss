@@ -132,6 +132,26 @@ $navbarPadding: 5px 8px;
     }
 }
 
+@mixin navbarInputStyle() {
+    width: 40px;
+    height: 25px;
+    border: none;
+    margin-top: .2rem;
+    border-radius: 5px;
+    color: $inputContainerMainTextColor;
+    outline: none;
+    font-size: 15px;
+    background: transparent;
+
+    &::placeholder {
+        color: $inputContainerButtonTextColor;
+    }
+
+    &:focus {
+        border-bottom: .5px solid $mainBackgroundColor;
+    }
+}
+
 @mixin reveal() {
     opacity: 1;
     visibility: visible;
@@ -317,45 +337,134 @@ body {
             display: none;
 
             #innerNavbarContainer {
+                position: relative;
+                min-height: 1.35em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
                 background-color: $inputContainerBoxBg;
                 border: 0.5px solid $navbarborder;
                 border-radius: $mainBorderRadius;
                 width: $loginContainerWidth;
-                display: flex;
-                justify-content: space-between;
                 padding: $navbarPadding;
                 margin-top: 10px;
                 color: $inputContainerMainTextColor;
                 box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+                transition: all 0.3s ease-in-out;
 
-                #settingsDiv {
-                    width: 90px;
-                    text-align: center;
+                #mainNavbarMenu {
                     display: flex;
                     justify-content: space-between;
+                    width: inherit;
+                    align-items: center;
+                    height: inherit;
+
+
+                    #navbarSettingsButton {
+                        width: 90px;
+                        text-align: center;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+
+                    .navbar-button {
+                        @include button(transparent, auto);
+                        color: $inputContainerMainTextColor;
+                        width: 90px;
+                    }
+
+                    #navbarSettingsButton button {
+                        transition: all .2s ease-in-out;
+
+                        &:hover {
+                            color: $inputContainerButtonTextColor;
+                        }
+                    }
+
+                    #navbarLogout button:hover {
+                        color: $errorColor;
+
+                        .icon-show {
+                            display: block;
+                        }
+
+                        .icon-hide {
+                            display: none;
+                        }
+                    }
+
+                    #navbarLogout button {
+                        .icon-show {
+                            display: none;
+                        }
+
+                        .icon-hide {
+                            display: block;
+                        }
+                    }
+
+                    #displayInfo {
+                        width: auto;
+                        max-width: 50%;
+                        text-align: center;
+                        padding-top: 1px;
+                    }
                 }
 
-                .navbar-button {
-                    @include button(transparent, auto);
-                    color: $inputContainerMainTextColor;
-                    width: 90px;
+                #settingsMenu {
+                    max-height: 0;
+                    visibility: hidden;
+                    opacity: 0;
+                    padding: 0 1rem;
+                    margin-top: 0;
+                    background-color: transparent;
+                    border-top: 1px solid transparent;
+                    border-radius: $mainBorderRadius;
+                    transition: all 0.3s ease-in-out;
+                    overflow: hidden;
+
+                    &.show {
+                        @include reveal();
+                        max-height: 10em;
+                        padding: 1rem;
+                        margin-top: .5rem;
+                        border-top-color: $navbarborder;
+                    }
+
+                    .settings-flex-container {
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 1rem;
+                        align-items: center;
+                        justify-content: space-between;
+                    }
+
+                    .setting-item {
+                        flex: 1 1 30%;
+                        min-width: 50px;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: last baseline;
+                        justify-content: space-between;
+                    }
+
+                    .setting-item label {
+                        font-size: 14px;
+                        align-self: center
+                    }
+
+                    .setting-item input {
+                        @include navbarInputStyle();
+                    }
+
+                    .setting-item input::-webkit-outer-spin-button,
+                    input::-webkit-inner-spin-button {
+                        -webkit-appearance: none;
+                        margin: 0;
+                    }
                 }
 
-                #settingsDiv button:hover {
-                    font-weight: 300;
-                    transition: all .2s ease-in-out;
-                }
-
-                #navbarLogout button:hover {
-                    color: $errorColor;
-                }
-
-                #displayInfo {
-                    width: auto;
-                    max-width: 50%;
-                    text-align: center;
-                    padding-top: 1px;
-                }
             }
         }
     }
