@@ -38,6 +38,10 @@ interface GlobalState {
     setFrequencyPenalty: (value: number) => void;
     currPresencePenalty: number;
     setPresencePenalty: (value: number) => void;
+    guestLogin: boolean;
+    setGuestLogin: (value: boolean) => void;
+    guestPromptCount: number;
+    setGuestPromptCount: (value: number) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -57,6 +61,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [currMaxOutputToken, setMaxOutputToken] = useState<number>(0);
     const [currFrequencyPenalty, setFrequencyPenalty] = useState<number>(0);
     const [currPresencePenalty, setPresencePenalty] = useState<number>(0);
+    const [guestLogin, setGuestLogin] = useState<boolean>(false);
+    const [guestPromptCount, setGuestPromptCount] = useState<number>(0);
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
         authorized, setAuthorized,
@@ -71,7 +77,9 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         currTop_k, setTop_k,
         currMaxOutputToken, setMaxOutputToken,
         currFrequencyPenalty, setFrequencyPenalty,
-        currPresencePenalty, setPresencePenalty
+        currPresencePenalty, setPresencePenalty,
+        guestLogin, setGuestLogin,
+        guestPromptCount, setGuestPromptCount
     }}>
         {children}
     </GlobalContext.Provider>
