@@ -18,6 +18,7 @@ function App() {
   const { authorized, loggedOut, setAuthorized, setLoggedOut, chatInitiated, setChatInitiated, currUser, authToken, serverOnline, setServerOnline } = useGlobal();
   const [serverOffline, setServerOffline] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [hasPreviousError, setHasPreviousError] = useState(false);
   const loginContainer = useRef<HTMLDivElement>(null);
   const mainContainer = useRef<HTMLDivElement>(null);
   const innerContainer = useRef<HTMLDivElement>(null);
@@ -28,9 +29,27 @@ function App() {
   const wlcmDiv = useRef<HTMLDivElement>(null);
 
 
+  const [isMobileScreen, setIsMobileScreen] = useState(false);
+
   useEffect(() => {
     sessionStorage.clear();
+    setHasPreviousError(false);
   }, []);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      const isMobile = window.innerWidth < 768;
+      console.log('Screen width:', window.innerWidth, 'isMobile:', isMobile);
+      setIsMobileScreen(isMobile);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+
 
   useEffect(() => {
     if (!authorized) return;
@@ -128,16 +147,18 @@ function App() {
           setServerOffline(false);
           setServerOnline(true);
           setError(undefined);
+          setHasPreviousError(false);
         } else {
           setServerOffline(true);
           setServerOnline(false);
           setError("Server Offline, contact Admin");
-          
+          setHasPreviousError(true);
         }
       } catch (Exception) {
         setServerOffline(true);
         setServerOnline(false);
         setError("Unknown error occured, please contact Admin.");
+        setHasPreviousError(true);
       }
     }, 500);
 
@@ -203,10 +224,6 @@ function App() {
     }
   }, [chatInitiated]);
 
-  const handleAnimationComplete = () => {
-    console.log('All letters have animated!');
-  };
-
   return (
     <>
       <div id="pageLiveBg">
@@ -222,6 +239,11 @@ function App() {
 
       {!serverOnline && !serverOffline && <Loading />}
       {!serverOnline && serverOffline && error && <DisplayError errorMessage={error} />}
+      {serverOnline && !serverOffline && isMobileScreen && !hasPreviousError && (
+        <div style={{ width: '100vw', height: '100vh'}}>
+          <DisplayError errorMessage={undefined} smallerScreen={true} />
+        </div>
+      )}
       {serverOnline && !serverOffline && (
         <div id="parent">
           <div id='navbarContainer' ref={navbarDiv1}>
@@ -250,7 +272,6 @@ function App() {
                   threshold={0.1}
                   rootMargin="-100px"
                   textAlign="center"
-                  onLetterAnimationComplete={handleAnimationComplete}
                 />}
               </div>
               <div id="inputContainer" ref={inputBoxDiv}>

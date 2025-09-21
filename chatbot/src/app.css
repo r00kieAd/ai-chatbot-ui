@@ -140,14 +140,15 @@ body {
   max-width: 500px;
   padding: 10px;
   align-items: center;
+  font-size: 10px;
 }
 #errDiv .errorContainer .errContainerChild {
   width: -moz-fit-content;
   width: fit-content;
   height: auto;
-  font-size: 24px;
+  font-size: clamp(16px, 2vw, 32px);
   text-align: center;
-  word-break: break-all;
+  text-align: left;
 }
 #errDiv .errorContainer .errContainerChild1 img {
   width: 300px;
