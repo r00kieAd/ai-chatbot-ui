@@ -15,7 +15,7 @@ import './app.css'
 
 function App() {
 
-  const { authorized, loggedOut, setAuthorized, setLoggedOut, chatInitiated, setChatInitiated, currUser, authToken, serverOnline, setServerOnline } = useGlobal();
+  const { authorized, loggedOut, setAuthorized, setLoggedOut, chatInitiated, setChatInitiated, currUser, guestLogin, authToken, serverOnline, setServerOnline } = useGlobal();
   const [serverOffline, setServerOffline] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [hasPreviousError, setHasPreviousError] = useState(false);
@@ -165,7 +165,7 @@ function App() {
   }
 
   const welcomeMessage = useMemo(() => {
-    return `こんにちは ${currUser}! What brings you here today?`;
+    return `こんにちは ${guestLogin ? 'Guest' : currUser}! What brings you here today?`;
   }, [currUser]);
 
   useEffect(() => {

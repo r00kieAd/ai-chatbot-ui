@@ -13,7 +13,7 @@ import clearAttachments from '../services/clear_attachments';
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, setChatHistory } = useGlobal();
+    const { setChatInitiated, currUser, authToken, setChatHistory, guestPromptCount, setGuestPromptCount } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -67,7 +67,7 @@ const InputBox: React.FC = () => {
         setEnableAskButton(false);
         const chatKey = Date.now().toString();
         const userTime = new Date().toLocaleTimeString();
-        
+
         setChatHistory(prev => ({
             ...prev,
             [chatKey]: {
@@ -79,45 +79,58 @@ const InputBox: React.FC = () => {
             }
         }));
 
-        const response = await initiateAsk({
-            username: currUser,
-            prompt: `${PROMPTS.PERSONALITY} ${curr_prompt}`,
-            client: curr_client.toLowerCase(),
-            model: curr_model.toLowerCase(),
-            top_k: curr_top_k,
-            use_rag: curr_use_rag,
-            token: authToken ? authToken : 'null'
-        });
-
-        const botTime = new Date().toLocaleTimeString();
-
-        if (response && response.status) {
+        const initiatedBotTime = new Date().toLocaleTimeString();
+        if (guestPromptCount >= 2) {
             setChatHistory(prev => ({
                 ...prev,
                 [chatKey]: {
                     ...prev[chatKey],
-                    botMessage: response.resp.response,
-                    botTime: botTime
-                }
-            }));
-        } else if (response && response.statusCode < 500) {
-            setChatHistory(prev => ({
-                ...prev,
-                [chatKey]: {
-                    ...prev[chatKey],
-                    botMessage: `Error ${response.statusCode}: ${response.resp}`,
-                    botTime: botTime
+                    botMessage: `Your guest prompt count has reached it's limit of ${guestPromptCount}`,
+                    botTime: initiatedBotTime
                 }
             }));
         } else {
-            setChatHistory(prev => ({
-                ...prev,
-                [chatKey]: {
-                    ...prev[chatKey],
-                    botMessage: `Server Error ${response?.statusCode}: ${response?.resp || 'Unknown error'}`,
-                    botTime: botTime
-                }
-            }));
+            setGuestPromptCount(guestPromptCount + 1)
+            const response = await initiateAsk({
+                username: currUser,
+                prompt: `${PROMPTS.PERSONALITY} ${curr_prompt}`,
+                client: curr_client.toLowerCase(),
+                model: curr_model.toLowerCase(),
+                top_k: curr_top_k,
+                use_rag: curr_use_rag,
+                token: authToken ? authToken : 'null'
+            });
+
+            const botTime = new Date().toLocaleTimeString();
+
+            if (response && response.status) {
+                setChatHistory(prev => ({
+                    ...prev,
+                    [chatKey]: {
+                        ...prev[chatKey],
+                        botMessage: response.resp.response,
+                        botTime: botTime
+                    }
+                }));
+            } else if (response && response.statusCode < 500) {
+                setChatHistory(prev => ({
+                    ...prev,
+                    [chatKey]: {
+                        ...prev[chatKey],
+                        botMessage: `Error ${response.statusCode}: ${response.resp}`,
+                        botTime: botTime
+                    }
+                }));
+            } else {
+                setChatHistory(prev => ({
+                    ...prev,
+                    [chatKey]: {
+                        ...prev[chatKey],
+                        botMessage: `Server Error ${response?.statusCode}: ${response?.resp || 'Unknown error'}`,
+                        botTime: botTime
+                    }
+                }));
+            }
         }
         setEnableAskButton(true);
     }
@@ -174,7 +187,7 @@ const InputBox: React.FC = () => {
         if (!currUser || !authToken) {
             return;
         }
-        
+
         const resp = await uploadFile({ token: authToken, username: currUser, blob: file });
         if (resp && resp.status) {
             setUseRag(true);
@@ -192,7 +205,7 @@ const InputBox: React.FC = () => {
         if (!currUser || !authToken) {
             return;
         }
-        const resp = await clearAttachments({username: currUser , token: authToken});
+        const resp = await clearAttachments({ username: currUser, token: authToken });
         if (resp && resp.status) {
             setUseRag(false);
             setAttachCount(0);
@@ -236,9 +249,9 @@ const InputBox: React.FC = () => {
                     <div id="sendContainer">
                         <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
                             <button className='button send-button pointer quicksand-light' onClick={triggerSend} disabled={!enableAskButton}>
-                                <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class'/></span>
+                                <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class' /></span>
                                 <span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span>
-                                </button>
+                            </button>
                         </ClickSpark>
 
                     </div>

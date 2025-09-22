@@ -14,7 +14,6 @@ import ShinyText from './shiny_text';
 const LoginComp: React.FC = () => {
     const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut } = useGlobal();
     const { guestLogin, setGuestLogin } = useGlobal();
-    const [ipAddr, setIpAddr] = useState<string | undefined>();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const singPoliceImage = useRef<HTMLSpanElement>(null);
     const welcomePoliceImage = useRef<HTMLSpanElement>(null);
@@ -363,9 +362,8 @@ const LoginComp: React.FC = () => {
         if (h2Header.current) h2Header.current.innerText = "Getting your ip...";
         const ip = await getClientIP();
         if (!ip) return;
-        setIpAddr(ip);
         await performAuthentication({
-            username: "guest" + ip,
+            username: ip,
             password: "",
             is_user: false,
             ip_value: ip
