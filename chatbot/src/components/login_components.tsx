@@ -13,6 +13,7 @@ import ShinyText from './shiny_text';
 
 const LoginComp: React.FC = () => {
     const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut } = useGlobal();
+    const { guestLogin, setGuestLogin } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const singPoliceImage = useRef<HTMLSpanElement>(null);
     const welcomePoliceImage = useRef<HTMLSpanElement>(null);
@@ -165,115 +166,106 @@ const LoginComp: React.FC = () => {
         if (ninjaIcon.current) ninjaIcon.current.classList.remove('err-color');
         if (h2Header.current) h2Header.current.innerText = "Confirm your identity";
 
-        fadeOut(angryPoliceDiv.current);
-        fadeOut(sorryPoliceDiv.current);
-        fadeOut(happyPoliceDiv.current);
+        // alert("I am here");
+        hideAllPoliceDivs();
 
         setTimeout(() => {
-            if (angryPoliceDiv.current) angryPoliceDiv.current.style.display = "none";
-            if (sorryPoliceDiv.current) sorryPoliceDiv.current.style.display = "none";
-            if (angryPoliceImage.current) angryPoliceImage.current.style.display = "none";
-            if (sorryPoliceImage.current) sorryPoliceImage.current.style.display = "none";
-
             if (calmPoliceDiv.current) {
                 calmPoliceDiv.current.style.display = "block";
                 setTimeout(() => {
                     fadeIn(calmPoliceDiv.current);
                 }, 100);
             }
-        }, 500);
+        }, 100);
     }
 
-    const showPoliceDiv = (div: HTMLDivElement | null, image: HTMLSpanElement | null | HTMLDivElement | null, message: string) => {
-        if (div && image) {
-            div.style.display = "block";
-            (image as HTMLElement).style.display = "block";
-            setTimeout(() => {
-                fadeIn(div);
-                setError(message);
-            }, 200);
-        } else {
-            setTimeout(() => {
-                fadeIn(div);
-                setError(message);
-            }, 200);
-        }
+    const hideAllPoliceDivs = () => {
+        const allPoliceDivs = [
+            calmPoliceDiv.current,
+            angryPoliceDiv.current,
+            happyPoliceDiv.current,
+            sorryPoliceDiv.current
+        ];
+        
+        const allPoliceImages = [
+            helloPoliceImage.current,
+            singPoliceImage.current,
+            welcomePoliceImage.current,
+            angryPoliceImage.current,
+            denyPoliceImage.current,
+            okPoliceImage.current,
+            sorryPoliceImage.current
+        ];
+
+        allPoliceDivs.forEach(div => {
+            if (div) {
+                fadeOut(div);
+                setTimeout(() => {
+                    div.style.display = "none";
+                }, 100);
+            }
+        });
+
+        allPoliceImages.forEach(image => {
+            if (image) {
+                (image as HTMLElement).style.display = "none";
+            }
+        });
     };
 
-    const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
-        setError(undefined);
-        setEnableInput(false);
-        event.preventDefault();
-        if (h2Header.current) h2Header.current.innerText = "Validating...";
-
-        const username = userinput.current?.value;
-        const password = passinput.current?.value;
-
-        if (!username || !password) {
-            setError("You shall not pass!");
-            if (h2Header.current) h2Header.current.innerText = error ?  error : "";
-            fadeOut(calmPoliceDiv.current);
-            if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
-            showPoliceDiv(angryPoliceDiv.current, angryPoliceImage.current, "You shall not pass!");
-            if (!username && userSpan.current) userSpan.current.style.visibility = "visible";
-            if (!password && passSpan.current) passSpan.current.style.visibility = "visible";
-            if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
-            setEnableInput(true);
-            return;
-        }
-
-        fadeIn(happyPoliceDiv.current);
-        fadeOut(calmPoliceDiv.current);
-        if (calmPoliceDiv.current) calmPoliceDiv.current.style.display = "none";
-
-        const response = await authorizationProcess({
-            username: username,
-            password: password,
-            is_user: true,
-            ip_value: ""
-        });
+    const showPoliceDiv = (div: HTMLDivElement | null, image: HTMLSpanElement | null | HTMLDivElement | null, message: string) => {
+        hideAllPoliceDivs();
         
-        if (response && response.status) {
-            if (!response.resp.verification_passed) {
-                setEnableInput(true);
-                displayErrResp();
-                return;
-            }
-            if (happyPoliceDiv.current && okPoliceImage.current) {
-                happyPoliceDiv.current.style.display = "block";
-                okPoliceImage.current.style.display = "block";
+        setTimeout(() => {
+            if (div && image) {
+                div.style.display = "block";
+                (image as HTMLElement).style.display = "block";
                 setTimeout(() => {
-                    if (h2Header.current) h2Header.current.innerText = "Logging in...";
-                    fadeIn(happyPoliceDiv.current);
+                    fadeIn(div);
+                    setError(message);
+                    if (h2Header.current) h2Header.current.innerText = message;
                 }, 200);
+            } else {
                 setTimeout(() => {
-                    setAuthorized(true);
-                    sessionStorage.setItem(import.meta.env.VITE_SESSION_AUTH_VAR, "true");
-                    setAuthToken(response.resp.token);
-                    fadeOut(loginParent.current);
-                }, 2000);
-                setCurrUser(username);
-                setLoggedIn(true);
+                    fadeIn(div);
+                    setError(message);
+                    if (h2Header.current) h2Header.current.innerText = message;
+                }, 200);
             }
-        } else {
-            setEnableInput(true);
-            displayErrResp();
-        }
-        function displayErrResp() {
-            const statusCode = response?.statusCode ?? 0;
-            let errorMessage = "";
-            if (statusCode >= 200 && statusCode < 300) {
-                errorMessage = response?.resp.msg || "Authentication failed";
-            } else {
-                errorMessage = response?.resp.msg || response?.resp || "Authentication failed";
-            }
-            if (statusCode >= 500) {
-                showPoliceDiv(sorryPoliceDiv.current, sorryPoliceImage.current, errorMessage);
-            } else {
-                showPoliceDiv(angryPoliceDiv.current, denyPoliceImage.current, errorMessage);
-                if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
-            }
+        }, 200);
+    };
 
+    const setupAuthenticationUI = () => {
+        setEnableInput(false);
+        if (h2Header.current) h2Header.current.innerText = "Validating...";
+        setError(undefined);
+        hideAllPoliceDivs();
+        
+        setTimeout(() => {
+            if (happyPoliceDiv.current) {
+                happyPoliceDiv.current.style.display = "block";
+                fadeIn(happyPoliceDiv.current);
+            }
+        }, 200);
+    };
+
+    const displayErrResp = (response: any) => {
+        setGuestLogin(false);
+        const statusCode = response?.statusCode ?? 0;
+        let errorMessage = "";
+        if (statusCode >= 200 && statusCode < 300) {
+            errorMessage = response?.resp.msg || "Authentication failed";
+        } else {
+            errorMessage = response?.resp.msg || response?.resp || "Authentication failed";
+        }
+        if (statusCode >= 500) {
+            showPoliceDiv(sorryPoliceDiv.current, sorryPoliceImage.current, errorMessage);
+        } else {
+            showPoliceDiv(angryPoliceDiv.current, denyPoliceImage.current, errorMessage);
+            if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
+        }
+
+        if (!guestLogin) {
             if (errorMessage.includes("user") && userSpan.current) {
                 userSpan.current.style.visibility = "visible"
                 if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
@@ -286,8 +278,96 @@ const LoginComp: React.FC = () => {
         }
     };
 
+    const handleAuthSuccess = (response: any, username: string) => {
+        if (happyPoliceDiv.current && okPoliceImage.current) {
+            setCurrUser(username);
+            happyPoliceDiv.current.style.display = "block";
+            okPoliceImage.current.style.display = "block";
+            setTimeout(() => {
+                if (h2Header.current) h2Header.current.innerText = "Logging in...";
+                fadeIn(happyPoliceDiv.current);
+            }, 200);
+            setTimeout(() => {
+                setAuthorized(true);
+                sessionStorage.setItem(import.meta.env.VITE_SESSION_AUTH_VAR, "true");
+                setAuthToken(response.resp.token);
+                fadeOut(loginParent.current);
+            }, 500);
+            setLoggedIn(true);
+        }
+    };
+
+    const performAuthentication = async (authParams: any) => {
+        setupAuthenticationUI();
+
+        const response = await authorizationProcess(authParams);
+
+        if (response && response.status) {
+            if (!response.resp.verification_passed) {
+                setEnableInput(true);
+                displayErrResp(response);
+                return;
+            }
+            handleAuthSuccess(response, authParams.username);
+        } else {
+            setEnableInput(true);
+            displayErrResp(response);
+        }
+    };
+
+
+
+    const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        
+        const username = userinput.current?.value;
+        const password = passinput.current?.value;
+
+        // console.log('checkCredentials - username:', username, 'password:', password, 'guestLogin:', guestLogin);
+        
+        if ((!username || !password) && !guestLogin) {
+            const errorMsg = "You shall not pass!";
+            showPoliceDiv(angryPoliceDiv.current, angryPoliceImage.current, errorMsg);
+            
+            if (!username && userSpan.current) userSpan.current.style.visibility = "visible";
+            if (!password && passSpan.current) passSpan.current.style.visibility = "visible";
+            if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
+            setEnableInput(true);
+            return;
+        }
+
+        await performAuthentication({
+            username: username,
+            password: password ,
+            is_user: !guestLogin,
+            ip_value: ""
+        });
+    };
+
+    const getClientIP = async (): Promise<string | undefined> => {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip;
+        } catch (err) {
+            console.error(err);
+            setError('Failed to get IP address');
+            return undefined;
+        }
+    };
+
     const checkGuestUser = async () => {
-        setError("Not Allowed!")
+        setGuestLogin(true);
+        
+        if (h2Header.current) h2Header.current.innerText = "Getting your ip...";
+        const ip = await getClientIP();
+        if (!ip) return;
+        await performAuthentication({
+            username: ip,
+            password: "",
+            is_user: false,
+            ip_value: ip
+        });
     }
 
     return (
@@ -329,7 +409,7 @@ const LoginComp: React.FC = () => {
                                     <input className='keyinput poppins-regular' type="password" name="password" id="password" placeholder='password' onInput={checkInput} ref={passinput} disabled={!enableInput} /><br /><br />
                                     <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
                                         <button type="submit" disabled={!enableInput} className='poppins-regular'>
-                                            <i className="fa-solid fa-arrow-right-to-bracket"></i> <ShinyText text="Login" disabled={false} speed={3} className='custom-class'/>
+                                            <i className="fa-solid fa-arrow-right-to-bracket"></i> <ShinyText text="Login" disabled={false} speed={3} className='custom-class' />
                                         </button>
                                     </ClickSpark>
 
