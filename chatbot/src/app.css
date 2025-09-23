@@ -1237,38 +1237,121 @@ body {
     flex-wrap: wrap;
   }
 }
-#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
-  min-width: 75px;
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown {
+  position: relative;
+  min-width: 60px;
+  width: 90px;
   max-width: 100px;
-  overflow: hidden;
-  border: none;
-  border-top: 1px solid #D0DDD0;
-  border-bottom: 1px solid #D0DDD0;
-  color: #F0F0D7;
-  border-radius: 10px;
-  padding: 4px;
-  outline: none;
-  background: transparent;
-  font-size: 14px;
 }
 @media screen and (max-width: 500px) {
-  #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer select {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown {
     margin: 5px 0;
     max-width: 70px;
   }
 }
-#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .select-wrapper {
-  position: relative;
-  /* Essential for positioning the pseudo-element */
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 4px 5px 6px;
+  background: transparent;
+  border: none;
+  border-top: 1px solid #D0DDD0;
+  border-bottom: 1px solid #D0DDD0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  color: #F0F0D7;
+  min-height: auto;
+  box-sizing: border-box;
+  outline: none;
+  overflow: hidden;
 }
-#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .select-wrapper::after {
-  content: "▼";
-  position: absolute;
-  right: 2px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-trigger .dropdown-value {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-trigger .dropdown-arrow {
+  margin-left: 1px;
+  margin-right: 4px;
+  transition: transform 0.3s ease;
   color: #D0DDD0;
+  font-size: 10px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-trigger .dropdown-arrow.rotated {
+  transform: rotate(180deg);
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: #727D73;
+  border: 1px solid #D0DDD0;
+  border-radius: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 2px 0;
+  animation: dropdownSlide 0.3s ease-out;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list.opens-down {
+  top: calc(100% + 2px);
+  transform-origin: top;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list.opens-up {
+  bottom: calc(100% + 2px);
+  transform-origin: bottom;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list .dropdown-option {
+  padding: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #F0F0D7;
+  font-size: 14px;
+  border-radius: 5px;
+  margin: 2px 5px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list .dropdown-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list .dropdown-option.selected {
+  background: rgba(255, 255, 255, 0.15);
+  color: #F0F0D7;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list::-webkit-scrollbar {
+  width: 4px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown.disabled .dropdown-trigger {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scaleY(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+  }
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
   display: flex;
