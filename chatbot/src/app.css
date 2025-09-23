@@ -1025,7 +1025,7 @@ body {
   min-height: unset;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble {
-  padding: 12px 16px;
+  padding: 10px 16px;
   border-radius: 18px;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -1166,6 +1166,11 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .bot-bubble {
   padding-top: 20px;
   padding-bottom: 0px;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .user-bubble {
+  padding-bottom: 0px;
+  text-align: left;
+  line-height: 1;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time {
   font-size: 11px;
@@ -1365,8 +1370,8 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 12rem;
-  max-width: 12rem;
+  width: 14rem;
+  max-width: 14rem;
 }
 @media screen and (max-width: 500px) {
   #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment {
@@ -1377,8 +1382,8 @@ body {
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown {
   position: relative;
   min-width: 60px;
-  width: 90px;
-  max-width: 100px;
+  width: 100px;
+  max-width: 120px;
 }
 @media screen and (max-width: 500px) {
   #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown {

@@ -1,5 +1,6 @@
 import { createContext, useState, useContext } from "react";
 import type { ReactNode } from "react";
+import PROMPTS from '../configs/bot_prompts.json'
 
 interface ChatMessage {
     userMessage: string;
@@ -7,6 +8,7 @@ interface ChatMessage {
     botMessage: string;
     botTime: string;
     llmModel?: string;
+    personality?: string;
 }
 
 interface GlobalState {
@@ -42,6 +44,8 @@ interface GlobalState {
     setGuestLogin: (value: boolean) => void;
     guestPromptCount: number;
     setGuestPromptCount: (value: number) => void;
+    personality: string;
+    setPersonality: (value: string) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -63,6 +67,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [currPresencePenalty, setPresencePenalty] = useState<number>(0);
     const [guestLogin, setGuestLogin] = useState<boolean>(false);
     const [guestPromptCount, setGuestPromptCount] = useState<number>(0);
+    const [personality, setPersonality] = useState<string>(PROMPTS.PERSONALITY[0].NAME);
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
         authorized, setAuthorized,
@@ -79,7 +84,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         currFrequencyPenalty, setFrequencyPenalty,
         currPresencePenalty, setPresencePenalty,
         guestLogin, setGuestLogin,
-        guestPromptCount, setGuestPromptCount
+        guestPromptCount, setGuestPromptCount,
+        personality, setPersonality
     }}>
         {children}
     </GlobalContext.Provider>

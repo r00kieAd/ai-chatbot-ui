@@ -4,6 +4,7 @@ import initiateLogout from '../services/logout_service';
 import clearAttachments from '../services/clear_attachments';
 import SettingInfoCard from './settings_info_card';
 import CustomCheckbox from './custom_checkbox';
+import PROMPTS from '../configs/bot_prompts.json'
 
 const NavbarComp: React.FC = () => {
     const navbarDiv = useRef<HTMLDivElement>(null);
@@ -11,14 +12,13 @@ const NavbarComp: React.FC = () => {
     const settingsDiv = useRef<HTMLDivElement>(null);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [infoCardVisible, setInfoCardVisible] = useState<boolean>(false);
-    
-    // Independent checkbox states for prompt options
-    const [owlActive, setOwlActive] = useState<boolean>(false);
-    const [optimusActive, setOptimusActive] = useState<boolean>(false);
+    const [owlActive, setOwlActive] = useState<boolean>(true);
+    const [ghostActive, setghostActive] = useState<boolean>(false);
     const [megatronActive, setMegatronActive] = useState<boolean>(false);
     const [narutoActive, setNarutoActive] = useState<boolean>(false);
+    const [trait, setTrait] = useState<string>(PROMPTS.PERSONALITY[0].TRAIT);
     const {
-        setAuthorized, authToken, currUser, setLoggedOut, setChatInitiated, setAuthToken, setCurrUser, setChatHistory
+        setAuthorized, authToken, currUser, setLoggedOut, setChatInitiated, setAuthToken, setCurrUser, setChatHistory, personality, setPersonality
     } = useGlobal();
     const {
         currTemperature, setTemperature, currTop_p, setTop_p, currTop_k, setTop_k, currMaxOutputToken, setMaxOutputToken, currFrequencyPenalty, setFrequencyPenalty, currPresencePenalty, setPresencePenalty
@@ -114,8 +114,10 @@ const NavbarComp: React.FC = () => {
     // Exclusive checkbox handlers - only one can be true at a time
     const handleOwlChange = (checked: boolean) => {
         if (checked) {
+            setPersonality(PROMPTS.PERSONALITY[0].NAME);
+            setTrait(PROMPTS.PERSONALITY[0].TRAIT);
             setOwlActive(true);
-            setOptimusActive(false);
+            setghostActive(false);
             setMegatronActive(false);
             setNarutoActive(false);
         } else {
@@ -123,21 +125,25 @@ const NavbarComp: React.FC = () => {
         }
     };
 
-    const handleOptimusChange = (checked: boolean) => {
+    const handleGhostChange = (checked: boolean) => {
         if (checked) {
+            setPersonality(PROMPTS.PERSONALITY[1].NAME);
+            setTrait(PROMPTS.PERSONALITY[1].TRAIT);
             setOwlActive(false);
-            setOptimusActive(true);
+            setghostActive(true);
             setMegatronActive(false);
             setNarutoActive(false);
         } else {
-            setOptimusActive(false);
+            setghostActive(false);
         }
     };
 
     const handleMegatronChange = (checked: boolean) => {
         if (checked) {
+            setPersonality(PROMPTS.PERSONALITY[2].NAME);
+            setTrait(PROMPTS.PERSONALITY[2].TRAIT);
             setOwlActive(false);
-            setOptimusActive(false);
+            setghostActive(false);
             setMegatronActive(true);
             setNarutoActive(false);
         } else {
@@ -147,8 +153,10 @@ const NavbarComp: React.FC = () => {
 
     const handleNarutoChange = (checked: boolean) => {
         if (checked) {
+            setPersonality(PROMPTS.PERSONALITY[3].NAME);
+            setTrait(PROMPTS.PERSONALITY[3].TRAIT);
             setOwlActive(false);
-            setOptimusActive(false);
+            setghostActive(false);
             setMegatronActive(false);
             setNarutoActive(true);
         } else {
@@ -163,7 +171,7 @@ const NavbarComp: React.FC = () => {
                     <div id="navbarSettingsButton" className="navbar-item poppins-regular">
                         <button onClick={openSettings} className='navbar-button poppins-regular'><i className={settingsOpen ? "fa-solid fa-gear fa-spin" : "fa-solid fa-gear"}></i>&nbsp;settings</button>
                     </div>
-                    <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>Smart Owl</div>
+                    <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>{trait} {personality.toUpperCase()}</div>
                     <div id="navbarLogout" className="navbar-item">
                         <button onClick={killSession} className='navbar-button poppins-regular'>
                             <i className="fa-solid fa-skull icon-show"></i>
@@ -202,7 +210,7 @@ const NavbarComp: React.FC = () => {
                     <div id="promptSettings">
                         <div className="setting-prompt-div">
                             <div id="promptOpt1" className="prompt-opt">
-                                <label className='poppins-regular' htmlFor="owl-checkbox">Owl</label>
+                                <label className='poppins-regular' htmlFor="owl-checkbox">{PROMPTS.PERSONALITY[0].NAME}</label>
                                 <CustomCheckbox 
                                     id="owl-checkbox"
                                     checked={owlActive}
@@ -212,17 +220,17 @@ const NavbarComp: React.FC = () => {
                                 />
                             </div>
                             <div id="promptOpt2" className="prompt-opt">
-                                <label className='poppins-regular' htmlFor="optimus-checkbox">Optimus</label>
+                                <label className='poppins-regular' htmlFor="optimus-checkbox">{PROMPTS.PERSONALITY[1].NAME}</label>
                                 <CustomCheckbox
                                     id="optimus-checkbox"
-                                    checked={optimusActive}
-                                    onChange={handleOptimusChange}
+                                    checked={ghostActive}
+                                    onChange={handleGhostChange}
                                     onLabel="ON"
                                     offLabel="OFF"
                                 />
                             </div>
                             <div id="promptOpt3" className="prompt-opt">
-                                <label className='poppins-regular' htmlFor="megatron-checkbox">Megatron</label>
+                                <label className='poppins-regular' htmlFor="megatron-checkbox">{PROMPTS.PERSONALITY[2].NAME}</label>
                                 <CustomCheckbox
                                     id="megatron-checkbox"
                                     checked={megatronActive}
@@ -232,7 +240,7 @@ const NavbarComp: React.FC = () => {
                                 />
                             </div>
                             <div id="promptOpt4" className="prompt-opt">
-                                <label className='poppins-regular' htmlFor="naruto-checkbox">Naruto</label>
+                                <label className='poppins-regular' htmlFor="naruto-checkbox">{PROMPTS.PERSONALITY[3].NAME}</label>
                                 <CustomCheckbox
                                     id="naruto-checkbox"
                                     checked={narutoActive}

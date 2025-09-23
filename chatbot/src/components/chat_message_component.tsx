@@ -1,9 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import TypingEffect from './typing_effect_component';
-import bot from '../assets/bot.png';
+import owl from '../assets/owl.png';
+import ghost from '../assets/ghost.png';
+import doraemon from '../assets/doraemon.png';
+import megatron from '../assets/megatron.png';
 import face from '../assets/face.png';
 import aicloud from '../assets/think.png';
+import { useGlobal } from '../utils/global_context';
+import PROMPTS from '../configs/bot_prompts.json'
 
 marked.setOptions({
     breaks: true,
@@ -17,6 +22,7 @@ interface ChatMessageProps {
     botTime: string;
     llmModel?: string;
     isSecondOrLater?: boolean;
+    personality?: string;
 }
 
 const convertMarkdownToHTML = (text: string): string => {
@@ -34,7 +40,7 @@ const convertMarkdownToHTML = (text: string): string => {
     }
 };
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmModel, isSecondOrLater }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmModel, isSecondOrLater, personality: messagePersonality }) => {
     const [isNewMessage, setIsNewMessage] = useState(true);
     const [showTyping, setShowTyping] = useState(false);
     const [typingComplete, setTypingComplete] = useState(false);
@@ -42,6 +48,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     const userMessageDiv = useRef<HTMLDivElement>(null);
     const chatExchangeRef = useRef<HTMLDivElement>(null);
     const botMessageRef = useRef<HTMLDivElement>(null);
+    const {personality: globalPersonality} = useGlobal();
+    
+    // Use message-specific personality or fall back to global personality
+    const currentPersonality = messagePersonality || globalPersonality;
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -106,7 +116,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
             
             <div className="chat-message bot-message" ref={botMessageRef}>
                 <div className={`message-avatar ${!botMessage ? 'loading' : ''}`}>
-                    <img src={botMessage ? bot : aicloud} alt={botMessage ? "Bot" : "Loading"} />
+                    <img src={
+                        botMessage ? currentPersonality == PROMPTS.PERSONALITY[0].NAME ? owl
+                        : currentPersonality == PROMPTS.PERSONALITY[1].NAME ? ghost
+                        : currentPersonality == PROMPTS.PERSONALITY[2].NAME ? megatron
+                        : currentPersonality == PROMPTS.PERSONALITY[3].NAME ? doraemon
+                        : owl : aicloud}
+                         alt={botMessage ? "Bot" : "Loading"} />
                 </div>
                 <div className="message-content">
                     {botMessage ? (
