@@ -904,7 +904,7 @@ body {
   min-height: 0.5rem;
   max-height: auto;
   box-sizing: border-box;
-  display: flex;
+  display: block;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h1,
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h2,
@@ -958,27 +958,39 @@ body {
   border-radius: 6px;
   margin: 8px 0;
   overflow-x: auto;
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble pre code {
   background: none;
   padding: 0;
   font-size: 13px;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ul,
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ol {
   margin: 6px 0;
   padding-left: 20px;
+  max-width: 100%;
+  word-break: break-word;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ul li,
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ol li {
   margin: 2px 0;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble blockquote {
-  border-left: 3px solid rgba(0, 0, 0, 0.2);
+  border-left: 4px solid #666;
   margin: 8px 0;
-  padding: 4px 0 4px 12px;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.05);
   font-style: italic;
-  opacity: 0.8;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble a {
   color: inherit;
@@ -992,16 +1004,27 @@ body {
   border-collapse: collapse;
   margin: 8px 0;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table th,
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table td {
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 6px 8px;
   text-align: left;
+  word-break: break-word;
+  white-space: normal;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table th {
   background-color: rgba(0, 0, 0, 0.05);
   font-weight: bold;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tbody, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table thead, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .bot-bubble {
   padding-top: 20px;
@@ -1036,6 +1059,10 @@ body {
   height: fit-content;
   background-color: #D0DDD0;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  overflow: hidden;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+          hyphens: auto;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble code {
   background-color: rgba(255, 255, 255, 0.2);
@@ -1081,6 +1108,10 @@ body {
   color: #4A4947;
   border-bottom-left-radius: 4px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  overflow: hidden;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+          hyphens: auto;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble code {
   background-color: rgba(0, 0, 0, 0.15);
