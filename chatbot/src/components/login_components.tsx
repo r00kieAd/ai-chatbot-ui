@@ -186,7 +186,7 @@ const LoginComp: React.FC = () => {
             happyPoliceDiv.current,
             sorryPoliceDiv.current
         ];
-        
+
         const allPoliceImages = [
             helloPoliceImage.current,
             singPoliceImage.current,
@@ -202,7 +202,7 @@ const LoginComp: React.FC = () => {
                 fadeOut(div);
                 setTimeout(() => {
                     div.style.display = "none";
-                }, 100);
+                }, 1);
             }
         });
 
@@ -215,7 +215,7 @@ const LoginComp: React.FC = () => {
 
     const showPoliceDiv = (div: HTMLDivElement | null, image: HTMLSpanElement | null | HTMLDivElement | null, message: string) => {
         hideAllPoliceDivs();
-        
+
         setTimeout(() => {
             if (div && image) {
                 div.style.display = "block";
@@ -224,29 +224,26 @@ const LoginComp: React.FC = () => {
                     fadeIn(div);
                     setError(message);
                     if (h2Header.current) h2Header.current.innerText = message;
-                }, 200);
+                }, 2);
             } else {
                 setTimeout(() => {
                     fadeIn(div);
                     setError(message);
                     if (h2Header.current) h2Header.current.innerText = message;
-                }, 200);
+                }, 2);
             }
-        }, 200);
+        }, 2);
     };
 
     const setupAuthenticationUI = () => {
         setEnableInput(false);
         if (h2Header.current) h2Header.current.innerText = "Validating...";
-        setError(undefined);
+        // setError(undefined);
         hideAllPoliceDivs();
-        
-        setTimeout(() => {
-            if (happyPoliceDiv.current) {
-                happyPoliceDiv.current.style.display = "block";
-                fadeIn(happyPoliceDiv.current);
-            }
-        }, 200);
+        if (happyPoliceDiv.current) {
+            happyPoliceDiv.current.style.display = "block";
+            fadeIn(happyPoliceDiv.current);
+        }
     };
 
     const displayErrResp = (response: any) => {
@@ -319,16 +316,16 @@ const LoginComp: React.FC = () => {
 
     const checkCredentials = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
+
         const username = userinput.current?.value;
         const password = passinput.current?.value;
 
         // console.log('checkCredentials - username:', username, 'password:', password, 'guestLogin:', guestLogin);
-        
+
         if ((!username || !password) && !guestLogin) {
             const errorMsg = "You shall not pass!";
             showPoliceDiv(angryPoliceDiv.current, angryPoliceImage.current, errorMsg);
-            
+
             if (!username && userSpan.current) userSpan.current.style.visibility = "visible";
             if (!password && passSpan.current) passSpan.current.style.visibility = "visible";
             if (ninjaIcon.current) ninjaIcon.current.classList.add('err-color');
@@ -338,7 +335,7 @@ const LoginComp: React.FC = () => {
 
         await performAuthentication({
             username: username,
-            password: password ,
+            password: password,
             is_user: !guestLogin,
             ip_value: ""
         });
@@ -358,7 +355,7 @@ const LoginComp: React.FC = () => {
 
     const checkGuestUser = async () => {
         setGuestLogin(true);
-        
+
         if (h2Header.current) h2Header.current.innerText = "Getting your ip...";
         const ip = await getClientIP();
         if (!ip) return;

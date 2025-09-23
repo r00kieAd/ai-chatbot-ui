@@ -1068,7 +1068,7 @@ body {
                             min-height: 0.5rem;
                             max-height: auto;
                             box-sizing: border-box;
-                            display: flex;
+                            display: block;
 
 
                             h1,
@@ -1134,11 +1134,16 @@ body {
                                 border-radius: 6px;
                                 margin: 8px 0;
                                 overflow-x: auto;
+                                max-width: 100%;
+                                white-space: pre-wrap;
+                                word-break: break-all;
 
                                 code {
                                     background: none;
                                     padding: 0;
                                     font-size: 13px;
+                                    white-space: pre-wrap;
+                                    word-break: break-all;
                                 }
                             }
 
@@ -1146,18 +1151,25 @@ body {
                             ol {
                                 margin: 6px 0;
                                 padding-left: 20px;
+                                max-width: 100%;
+                                word-break: break-word;
 
                                 li {
                                     margin: 2px 0;
+                                    word-break: break-word;
+                                    overflow-wrap: break-word;
                                 }
                             }
 
                             blockquote {
-                                border-left: 3px solid rgba(0, 0, 0, 0.2);
+                                border-left: 4px solid #666;
                                 margin: 8px 0;
-                                padding: 4px 0 4px 12px;
+                                padding: 8px 12px;
+                                background-color: rgba(0, 0, 0, 0.05);
                                 font-style: italic;
-                                opacity: 0.8;
+                                max-width: 100%;
+                                word-break: break-word;
+                                overflow-wrap: break-word;
                             }
 
                             a {
@@ -1174,17 +1186,29 @@ body {
                                 border-collapse: collapse;
                                 margin: 8px 0;
                                 width: 100%;
+                                max-width: 100%;
+                                overflow-x: auto;
+                                display: block;
+                                white-space: nowrap;
 
                                 th,
                                 td {
                                     border: 1px solid rgba(0, 0, 0, 0.2);
                                     padding: 6px 8px;
                                     text-align: left;
+                                    word-break: break-word;
+                                    white-space: normal;
                                 }
 
                                 th {
                                     background-color: rgba(0, 0, 0, 0.05);
                                     font-weight: bold;
+                                }
+
+                                tbody, thead, tr {
+                                    display: table;
+                                    width: 100%;
+                                    table-layout: fixed;
                                 }
                             }
                         }
@@ -1225,6 +1249,9 @@ body {
                                 height: fit-content;
                                 background-color: $userMessageBg;
                                 box-shadow: $box-shadow;
+                                overflow: hidden;
+                                word-break: break-word;
+                                hyphens: auto;
 
                                 code {
                                     background-color: rgba(255, 255, 255, 0.2);
@@ -1280,6 +1307,9 @@ body {
                                 color: $botMessageColor;
                                 border-bottom-left-radius: 4px;
                                 box-shadow: $box-shadow;
+                                overflow: hidden;
+                                word-break: break-word;
+                                hyphens: auto;
 
                                 code {
                                     background-color: rgba(0, 0, 0, 0.15);
