@@ -3,6 +3,7 @@ import { useGlobal } from '../utils/global_context';
 import initiateLogout from '../services/logout_service';
 import clearAttachments from '../services/clear_attachments';
 import SettingInfoCard from './settings_info_card';
+import CustomCheckbox from './custom_checkbox';
 
 const NavbarComp: React.FC = () => {
     const navbarDiv = useRef<HTMLDivElement>(null);
@@ -10,6 +11,12 @@ const NavbarComp: React.FC = () => {
     const settingsDiv = useRef<HTMLDivElement>(null);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [infoCardVisible, setInfoCardVisible] = useState<boolean>(false);
+    
+    // Independent checkbox states for prompt options
+    const [owlActive, setOwlActive] = useState<boolean>(false);
+    const [optimusActive, setOptimusActive] = useState<boolean>(false);
+    const [megatronActive, setMegatronActive] = useState<boolean>(false);
+    const [narutoActive, setNarutoActive] = useState<boolean>(false);
     const {
         setAuthorized, authToken, currUser, setLoggedOut, setChatInitiated, setAuthToken, setCurrUser, setChatHistory
     } = useGlobal();
@@ -45,7 +52,7 @@ const NavbarComp: React.FC = () => {
 
             const response = await initiateLogout({ username: currUser, token: authToken });
             if (response.status && response.resp.logged_out) {
-                info = "Owl is dead";
+                info = "Session Killed";
             } else {
                 info = "Schrödinger's Owl";
             }
@@ -104,6 +111,51 @@ const NavbarComp: React.FC = () => {
         setInfoCardVisible(!infoCardVisible);
     }
 
+    // Exclusive checkbox handlers - only one can be true at a time
+    const handleOwlChange = (checked: boolean) => {
+        if (checked) {
+            setOwlActive(true);
+            setOptimusActive(false);
+            setMegatronActive(false);
+            setNarutoActive(false);
+        } else {
+            setOwlActive(false);
+        }
+    };
+
+    const handleOptimusChange = (checked: boolean) => {
+        if (checked) {
+            setOwlActive(false);
+            setOptimusActive(true);
+            setMegatronActive(false);
+            setNarutoActive(false);
+        } else {
+            setOptimusActive(false);
+        }
+    };
+
+    const handleMegatronChange = (checked: boolean) => {
+        if (checked) {
+            setOwlActive(false);
+            setOptimusActive(false);
+            setMegatronActive(true);
+            setNarutoActive(false);
+        } else {
+            setMegatronActive(false);
+        }
+    };
+
+    const handleNarutoChange = (checked: boolean) => {
+        if (checked) {
+            setOwlActive(false);
+            setOptimusActive(false);
+            setMegatronActive(false);
+            setNarutoActive(true);
+        } else {
+            setNarutoActive(false);
+        }
+    };
+
     return (
         <>
             <div id="innerNavbarContainer" ref={navbarDiv}>
@@ -147,9 +199,53 @@ const NavbarComp: React.FC = () => {
                             <input type="number" id="presence_penalty" name="presence_penalty" placeholder={currPresencePenalty.toString()} onBlur={changePresencePenalty} />
                         </div>
                     </div>
+                    <div id="promptSettings">
+                        <div className="setting-prompt-div">
+                            <div id="promptOpt1" className="prompt-opt">
+                                <label className='poppins-regular' htmlFor="owl-checkbox">Owl</label>
+                                <CustomCheckbox 
+                                    id="owl-checkbox"
+                                    checked={owlActive}
+                                    onChange={handleOwlChange}
+                                    onLabel="ON"
+                                    offLabel="OFF"
+                                />
+                            </div>
+                            <div id="promptOpt2" className="prompt-opt">
+                                <label className='poppins-regular' htmlFor="optimus-checkbox">Optimus</label>
+                                <CustomCheckbox
+                                    id="optimus-checkbox"
+                                    checked={optimusActive}
+                                    onChange={handleOptimusChange}
+                                    onLabel="ON"
+                                    offLabel="OFF"
+                                />
+                            </div>
+                            <div id="promptOpt3" className="prompt-opt">
+                                <label className='poppins-regular' htmlFor="megatron-checkbox">Megatron</label>
+                                <CustomCheckbox
+                                    id="megatron-checkbox"
+                                    checked={megatronActive}
+                                    onChange={handleMegatronChange}
+                                    onLabel="ON"
+                                    offLabel="OFF"
+                                />
+                            </div>
+                            <div id="promptOpt4" className="prompt-opt">
+                                <label className='poppins-regular' htmlFor="naruto-checkbox">Naruto</label>
+                                <CustomCheckbox
+                                    id="naruto-checkbox"
+                                    checked={narutoActive}
+                                    onChange={handleNarutoChange}
+                                    onLabel="ON"
+                                    offLabel="OFF"
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <div id="settingsInfo">
                         <div id="aiConfigSettings" className="setting-info-div">
-                            <button className='poppins-regular' onClick={changeInfoCardVisibility}>Info<i className="fa-solid fa-circle-info"></i></button>
+                            <button className='poppins-regular' onClick={changeInfoCardVisibility}>Config Info<i className="fa-solid fa-circle-info"></i></button>
                         </div>
                     </div>
                 </div>

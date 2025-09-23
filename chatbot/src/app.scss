@@ -432,11 +432,12 @@ body {
                     border-top: 1px solid transparent;
                     border-radius: $mainBorderRadius;
                     transition: all 0.3s ease-in-out;
-                    overflow: hidden;
+                    overflow-x: hidden;
+                    overflow-y: scroll;
 
                     &.show {
                         @include reveal();
-                        max-height: 10em;
+                        max-height: 15em;
                         padding: 1rem;
                         margin-top: .5rem;
                         border-top-color: $navbarborder;
@@ -476,6 +477,158 @@ body {
                         input::-webkit-inner-spin-button {
                             -webkit-appearance: none;
                             margin: 0;
+                        }
+                    }
+
+                    #promptSettings {
+                        border-left: 0.5px dashed $navbarborder;
+                        border-right: 0.5px dashed $navbarborder;
+                        border-radius: $mainBorderRadius;
+                        padding: $navbarPadding;
+                        margin-top: 20px;
+
+                        .setting-prompt-div {
+                            @include flexContainerForSettings();
+
+                            .prompt-opt {
+                                flex: 1 1 10%;
+                                min-width: 50px;
+                                // border: 1px solid black;
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                justify-content:center;
+
+                                label {
+                                    font-size: 14px;
+                                    align-self: center;
+                                    margin-right: 10px;
+                                }
+
+                                .checkbox-wrapper-8 .tgl {
+                                    display: none;
+                                }
+
+                                .checkbox-wrapper-8 .tgl,
+                                .checkbox-wrapper-8 .tgl:after,
+                                .checkbox-wrapper-8 .tgl:before,
+                                .checkbox-wrapper-8 .tgl *,
+                                .checkbox-wrapper-8 .tgl *:after,
+                                .checkbox-wrapper-8 .tgl *:before,
+                                .checkbox-wrapper-8 .tgl+.tgl-btn {
+                                    box-sizing: border-box;
+                                }
+
+                                .checkbox-wrapper-8 .tgl::-moz-selection,
+                                .checkbox-wrapper-8 .tgl:after::-moz-selection,
+                                .checkbox-wrapper-8 .tgl:before::-moz-selection,
+                                .checkbox-wrapper-8 .tgl *::-moz-selection,
+                                .checkbox-wrapper-8 .tgl *:after::-moz-selection,
+                                .checkbox-wrapper-8 .tgl *:before::-moz-selection,
+                                .checkbox-wrapper-8 .tgl+.tgl-btn::-moz-selection,
+                                .checkbox-wrapper-8 .tgl::selection,
+                                .checkbox-wrapper-8 .tgl:after::selection,
+                                .checkbox-wrapper-8 .tgl:before::selection,
+                                .checkbox-wrapper-8 .tgl *::selection,
+                                .checkbox-wrapper-8 .tgl *:after::selection,
+                                .checkbox-wrapper-8 .tgl *:before::selection,
+                                .checkbox-wrapper-8 .tgl+.tgl-btn::selection {
+                                    background: none;
+                                }
+
+                                .checkbox-wrapper-8 .tgl+.tgl-btn {
+                                    outline: 0;
+                                    display: block;
+                                    width: 40px; // Same as setting input width
+                                    height: 25px; // Same as setting input height
+                                    position: relative;
+                                    cursor: pointer;
+                                    -webkit-user-select: none;
+                                    -moz-user-select: none;
+                                    -ms-user-select: none;
+                                    user-select: none;
+                                }
+
+                                .checkbox-wrapper-8 .tgl+.tgl-btn:after,
+                                .checkbox-wrapper-8 .tgl+.tgl-btn:before {
+                                    position: relative;
+                                    display: block;
+                                    content: "";
+                                    width: 50%;
+                                    height: 100%;
+                                }
+
+                                .checkbox-wrapper-8 .tgl+.tgl-btn:after {
+                                    left: 0;
+                                }
+
+                                .checkbox-wrapper-8 .tgl+.tgl-btn:before {
+                                    display: none;
+                                }
+
+                                .checkbox-wrapper-8 .tgl:checked+.tgl-btn:after {
+                                    left: 50%;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed+.tgl-btn {
+                                    overflow: hidden;
+                                    transform: skew(-10deg);
+                                    -webkit-backface-visibility: hidden;
+                                    backface-visibility: hidden;
+                                    transition: all 0.2s ease;
+                                    font-family: sans-serif;
+                                    background: $inputContainerButtonTextColor;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:after,
+                                .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:before {
+                                    transform: skew(10deg);
+                                    display: inline-block;
+                                    transition: all 0.2s ease;
+                                    width: 100%;
+                                    text-align: center;
+                                    position: absolute;
+                                    line-height: 25px;
+                                    font-weight: bold;
+                                    color: $inputContainerButtonBg;
+                                    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+                                    font-size: 10px;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:after {
+                                    left: 100%;
+                                    content: attr(data-tg-on);
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:before {
+                                    left: 0;
+                                    content: attr(data-tg-off);
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:active {
+                                    background: #888;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed+.tgl-btn:active:before {
+                                    left: -10%;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn {
+                                    background: $botMessageBg;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn:before {
+                                    left: -100%;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn:after {
+                                    left: 0;
+                                }
+
+                                .checkbox-wrapper-8 .tgl-skewed:checked+.tgl-btn:active:after {
+                                    left: 10%;
+                                }
+                            }
                         }
                     }
 
@@ -659,87 +812,87 @@ body {
                                         }
                                     }
 
-                                        .param-details {
-                                            .param-row {
+                                    .param-details {
+                                        .param-row {
+                                            display: flex;
+                                            flex-direction: column;
+                                            margin-bottom: clamp(0.75rem, 2vw, 1rem);
+                                            padding: clamp(0.5rem, 1.5vw, 0.75rem) 0;
+                                            border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+                                            &:first-child {
+                                                border-top: none;
+                                                padding-top: 0;
+                                            }
+
+                                            &:last-child {
+                                                margin-bottom: 0;
+                                                padding-bottom: 0;
+                                            }
+
+                                            .label {
+                                                font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+                                                font-weight: 700;
+                                                color: $inputContainerMainTextColor;
+                                                margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
+                                                text-transform: uppercase;
+                                                letter-spacing: clamp(0.3px, 0.1vw, 0.6px);
+                                                opacity: 0.8;
                                                 display: flex;
-                                                flex-direction: column;
-                                                margin-bottom: clamp(0.75rem, 2vw, 1rem);
-                                                padding: clamp(0.5rem, 1.5vw, 0.75rem) 0;
-                                                border-top: 1px solid rgba(255, 255, 255, 0.06);
+                                                align-items: center;
 
-                                                &:first-child {
-                                                    border-top: none;
-                                                    padding-top: 0;
+                                                @media screen and (max-width: 480px) {
+                                                    font-size: 0.7rem;
+                                                    letter-spacing: 0.3px;
                                                 }
 
-                                                &:last-child {
-                                                    margin-bottom: 0;
-                                                    padding-bottom: 0;
+                                                &::before {
+                                                    content: '▸';
+                                                    margin-right: clamp(0.3rem, 1vw, 0.5rem);
+                                                    color: $inputContainerSecondaryColor;
+                                                    font-weight: bold;
+                                                    font-size: clamp(0.7rem, 2vw, 0.9rem);
+                                                }
+                                            }
+
+                                            .info-prop {
+                                                font-size: clamp(0.8rem, 2vw, 0.95rem);
+                                                color: $inputContainerMainTextColor;
+                                                line-height: 1.5;
+                                                padding-left: clamp(0.75rem, 2vw, 1rem);
+
+                                                @media screen and (max-width: 480px) {
+                                                    font-size: 0.8rem;
+                                                    padding-left: 0.75rem;
                                                 }
 
-                                                .label {
-                                                    font-size: clamp(0.65rem, 1.8vw, 0.8rem);
-                                                    font-weight: 700;
-                                                    color: $inputContainerMainTextColor;
-                                                    margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
-                                                    text-transform: uppercase;
-                                                    letter-spacing: clamp(0.3px, 0.1vw, 0.6px);
-                                                    opacity: 0.8;
-                                                    display: flex;
-                                                    align-items: center;
+                                                &.description {
+                                                    font-style: italic;
+                                                    color: rgba(240, 240, 215, 0.9);
+                                                    line-height: 1.6;
+                                                }
+
+                                                &.range,
+                                                &.default-value,
+                                                &.example {
+                                                    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                                                    background-color: rgba(0, 0, 0, 0.3);
+                                                    color: $inputContainerSecondaryColor;
+                                                    padding: clamp(0.4rem, 1.2vw, 0.6rem) clamp(0.6rem, 1.5vw, 0.8rem);
+                                                    border-radius: 4px;
+                                                    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+                                                    border-left: clamp(2px, 0.5vw, 3px) solid $inputContainerSecondaryColor;
+                                                    display: inline-block;
+                                                    max-width: 100%;
+                                                    word-break: break-all;
+                                                    line-height: 1.4;
 
                                                     @media screen and (max-width: 480px) {
-                                                        font-size: 0.7rem;
-                                                        letter-spacing: 0.3px;
-                                                    }
-
-                                                    &::before {
-                                                        content: '▸';
-                                                        margin-right: clamp(0.3rem, 1vw, 0.5rem);
-                                                        color: $inputContainerSecondaryColor;
-                                                        font-weight: bold;
-                                                        font-size: clamp(0.7rem, 2vw, 0.9rem);
+                                                        font-size: 0.75rem;
+                                                        padding: 0.4rem 0.6rem;
+                                                        border-left-width: 2px;
                                                     }
                                                 }
-
-                                                .info-prop {
-                                                    font-size: clamp(0.8rem, 2vw, 0.95rem);
-                                                    color: $inputContainerMainTextColor;
-                                                    line-height: 1.5;
-                                                    padding-left: clamp(0.75rem, 2vw, 1rem);
-
-                                                    @media screen and (max-width: 480px) {
-                                                        font-size: 0.8rem;
-                                                        padding-left: 0.75rem;
-                                                    }
-
-                                                    &.description {
-                                                        font-style: italic;
-                                                        color: rgba(240, 240, 215, 0.9);
-                                                        line-height: 1.6;
-                                                    }
-
-                                                    &.range,
-                                                    &.default-value,
-                                                    &.example {
-                                                        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-                                                        background-color: rgba(0, 0, 0, 0.3);
-                                                        color: $inputContainerSecondaryColor;
-                                                        padding: clamp(0.4rem, 1.2vw, 0.6rem) clamp(0.6rem, 1.5vw, 0.8rem);
-                                                        border-radius: 4px;
-                                                        font-size: clamp(0.7rem, 1.8vw, 0.85rem);
-                                                        border-left: clamp(2px, 0.5vw, 3px) solid $inputContainerSecondaryColor;
-                                                        display: inline-block;
-                                                        max-width: 100%;
-                                                        word-break: break-all;
-                                                        line-height: 1.4;
-
-                                                        @media screen and (max-width: 480px) {
-                                                            font-size: 0.75rem;
-                                                            padding: 0.4rem 0.6rem;
-                                                            border-left-width: 2px;
-                                                        }
-                                                    }
                                             }
                                         }
                                     }
@@ -1205,7 +1358,9 @@ body {
                                     font-weight: bold;
                                 }
 
-                                tbody, thead, tr {
+                                tbody,
+                                thead,
+                                tr {
                                     display: table;
                                     width: 100%;
                                     table-layout: fixed;
@@ -1572,6 +1727,7 @@ body {
                                     opacity: 0;
                                     transform: translateY(-5px) scaleY(0.95);
                                 }
+
                                 to {
                                     opacity: 1;
                                     transform: translateY(0) scaleY(1);
@@ -1782,4 +1938,3 @@ body {
     }
 
 }
-

@@ -260,12 +260,13 @@ body {
   border-top: 1px solid transparent;
   border-radius: 10px;
   transition: all 0.3s ease-in-out;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu.show {
   opacity: 1;
   visibility: visible;
-  max-height: 10em;
+  max-height: 15em;
   padding: 1rem;
   margin-top: 0.5rem;
   border-top-color: #D0DDD0;
@@ -313,6 +314,140 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings {
+  border-left: 0.5px dashed #D0DDD0;
+  border-right: 0.5px dashed #D0DDD0;
+  border-radius: 10px;
+  padding: 5px 8px;
+  margin-top: 20px;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt {
+  flex: 1 1 10%;
+  min-width: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt label {
+  font-size: 14px;
+  align-self: center;
+  margin-right: 10px;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl {
+  display: none;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:after,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:before,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:after,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:before,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn {
+  box-sizing: border-box;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl::-moz-selection, #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:after::-moz-selection, #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:before::-moz-selection, #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *::-moz-selection, #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:after::-moz-selection, #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:before::-moz-selection, #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn::-moz-selection {
+  background: none;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl::-moz-selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:after::-moz-selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:before::-moz-selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *::-moz-selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:after::-moz-selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:before::-moz-selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn::-moz-selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl::selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:after::selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:before::selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *::selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:after::selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl *:before::selection,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn::selection {
+  background: none;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn {
+  outline: 0;
+  display: block;
+  width: 40px;
+  height: 25px;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn:after,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn:before {
+  position: relative;
+  display: block;
+  content: "";
+  width: 50%;
+  height: 100%;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn:after {
+  left: 0;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl + .tgl-btn:before {
+  display: none;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl:checked + .tgl-btn:after {
+  left: 50%;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed + .tgl-btn {
+  overflow: hidden;
+  transform: skew(-10deg);
+  backface-visibility: hidden;
+  transition: all 0.2s ease;
+  font-family: sans-serif;
+  background: #4A4947;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after,
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before {
+  transform: skew(10deg);
+  display: inline-block;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  line-height: 25px;
+  font-weight: bold;
+  color: #F0F0D7;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+  font-size: 10px;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:after {
+  left: 100%;
+  content: attr(data-tg-on);
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:before {
+  left: 0;
+  content: attr(data-tg-off);
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:active {
+  background: #888;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed + .tgl-btn:active:before {
+  left: -10%;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn {
+  background: #AAB99A;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:before {
+  left: -100%;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:after {
+  left: 0;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:active:after {
+  left: 10%;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsInfo {
   margin-top: 1em;
@@ -1021,7 +1156,9 @@ body {
   background-color: rgba(0, 0, 0, 0.05);
   font-weight: bold;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tbody, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table thead, #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tr {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tbody,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table thead,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tr {
   display: table;
   width: 100%;
   table-layout: fixed;

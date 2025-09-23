@@ -1,3 +1,6 @@
 {
-    "PERSONALITY": "answer like an owl"
+    "OWL": "answer like an owl",
+    "OPTIMUS": "talk like Optimus Prime",
+    "MEGATRON": "act like Megatron",
+    "NARUTO": "behave like Naruto"
 }
