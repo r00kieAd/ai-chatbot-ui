@@ -38,7 +38,7 @@ function App() {
 
   useEffect(() => {
     const checkScreenSize = () => {
-      const isMobile = window.innerWidth < 768;
+      const isMobile = window.innerWidth < 1100;
       console.log('Screen width:', window.innerWidth, 'isMobile:', isMobile);
       setIsMobileScreen(isMobile);
     };
