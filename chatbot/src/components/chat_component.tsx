@@ -19,6 +19,7 @@ const ChatBox: React.FC = () => {
                     botTime={chat.botTime}
                     llmModel={chat.llmModel}
                     isSecondOrLater={index >= 1}
+                    personality={chat.personality}
                 />
             ))}
         </div>

@@ -14,7 +14,7 @@ import Dropdown from './Dropdown';
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, setChatHistory, guestPromptCount, setGuestPromptCount } = useGlobal();
+    const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -61,7 +61,6 @@ const InputBox: React.FC = () => {
         fetchModels();
     }, [llmID]);
 
-    // Initialize first LLM selection
     useEffect(() => {
         const allLLMs: string[] = LLMs.ALL.map(e => e.name);
         if (allLLMs.length > 0 && !selectedLLM) {
@@ -70,10 +69,9 @@ const InputBox: React.FC = () => {
         }
     }, [selectedLLM]);
 
-    // Auto-select first model when models change
     useEffect(() => {
         if (models.length > 0) {
-            setSelectedModel(models[0]); // Always select first model when models change
+            setSelectedModel(models[0]);
         }
     }, [models]);
 
@@ -92,12 +90,13 @@ const InputBox: React.FC = () => {
                 userTime: userTime,
                 botMessage: '',
                 botTime: '',
-                llmModel: curr_client
+                llmModel: curr_client,
+                personality: personality
             }
         }));
 
         const initiatedBotTime = new Date().toLocaleTimeString();
-        if (guestPromptCount >= 2) {
+        if (guestPromptCount >= 2 && guestLogin) {
             setChatHistory(prev => ({
                 ...prev,
                 [chatKey]: {
@@ -108,9 +107,27 @@ const InputBox: React.FC = () => {
             }));
         } else {
             setGuestPromptCount(guestPromptCount + 1)
+            let promptPrefix = "Owl";
+            switch (personality) {
+                case PROMPTS.PERSONALITY[0].NAME:
+                    promptPrefix = PROMPTS.PERSONALITY[0].VALUE ? PROMPTS.PERSONALITY[0].VALUE : "Owl"
+                    break;
+                case PROMPTS.PERSONALITY[1].NAME:
+                    promptPrefix = PROMPTS.PERSONALITY[1].VALUE ? PROMPTS.PERSONALITY[1].VALUE : "Owl"
+                    break;
+                case PROMPTS.PERSONALITY[2].NAME:
+                    promptPrefix = PROMPTS.PERSONALITY[2].VALUE ? PROMPTS.PERSONALITY[2].VALUE : "Owl"
+                    break;
+                case PROMPTS.PERSONALITY[3].NAME:
+                    promptPrefix = PROMPTS.PERSONALITY[3].VALUE ? PROMPTS.PERSONALITY[3].VALUE : "Owl"
+                    break;
+                default:
+                    promptPrefix = "Owl"
+
+            }
             const response = await initiateAsk({
                 username: currUser,
-                prompt: `${PROMPTS.PERSONALITY} ${curr_prompt}`,
+                prompt: `${promptPrefix} ${curr_prompt}`,
                 client: curr_client.toLowerCase(),
                 model: curr_model.toLowerCase(),
                 top_k: curr_top_k,

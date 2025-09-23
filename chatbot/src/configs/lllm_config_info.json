@@ -1,6 +1,13 @@
 {
   "parameters": [
     {
+      "name": "Personality",
+      "description": "Changes the way the bot should behave. Currently only 4 options are available",
+      "range": "ON/OFF or TRUE/FALSE",
+      "default": "Owl",
+      "example": "All prompts prefixed by 'answer like an owl' text"
+    },
+    {
       "name": "max_output_tokens",
       "description": "Caps the number of tokens the model can generate in the output.",
       "range": "Integer (e.g., 1 - 8192 depending on model)",
