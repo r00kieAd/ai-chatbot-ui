@@ -44,7 +44,7 @@ $textAreaMaxHeight: var(--textAreaMaxHeight);
 $textAreaPadding: 3px;
 $textAreaFontSize: 15px;
 $textAreaLineHeight: 20px;
-$dropdownMinWidth: 75px;
+$dropdownMinWidth: 60px;
 $dropDownMaxWidth: 100px;
 $sendButtonWidth: 70px;
 $sendButtonHeight: 25px;
@@ -1443,39 +1443,139 @@ body {
                         }
 
                         .dropContainer {
-                            select {
+                            .custom-dropdown {
+                                position: relative;
                                 min-width: $dropdownMinWidth;
+                                width: 90px;
                                 max-width: $dropDownMaxWidth;
-                                overflow: hidden;
-                                border: none;
-                                border-top: 1px solid $inputContainerMainTextColor;
-                                border-bottom: 1px solid $inputContainerMainTextColor;
-                                color: $inputContainerSecondaryColor;
-                                border-radius: $mainBorderRadius;
-                                padding: 4px;
-                                outline: none;
-                                background: transparent;
-                                font-size: 14px;
 
                                 @media screen and (max-width: 500px) {
                                     margin: 5px 0;
                                     max-width: 70px;
                                 }
+
+                                .dropdown-trigger {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                    padding: 4px 4px 5px 6px;
+                                    background: transparent;
+                                    border: none;
+                                    border-top: 1px solid $inputContainerMainTextColor;
+                                    border-bottom: 1px solid $inputContainerMainTextColor;
+                                    border-radius: $mainBorderRadius;
+                                    cursor: pointer;
+                                    transition: all 0.3s ease;
+                                    font-size: 14px;
+                                    color: $inputContainerSecondaryColor;
+                                    min-height: auto;
+                                    box-sizing: border-box;
+                                    outline: none;
+                                    overflow: hidden;
+
+                                    .dropdown-value {
+                                        flex: 1;
+                                        text-align: left;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        white-space: nowrap;
+                                    }
+
+                                    .dropdown-arrow {
+                                        margin-left: 1px;
+                                        margin-right: 4px;
+                                        transition: transform 0.3s ease;
+                                        color: $inputContainerMainTextColor;
+                                        font-size: 10px;
+
+                                        &.rotated {
+                                            transform: rotate(180deg);
+                                        }
+                                    }
+                                }
+
+                                .dropdown-list {
+                                    position: absolute;
+                                    left: 0;
+                                    right: 0;
+                                    background: $inputContainerBoxBg;
+                                    border: 1px solid $inputContainerMainTextColor;
+                                    border-radius: $mainBorderRadius;
+                                    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+                                    z-index: 1000;
+                                    max-height: 300px;
+                                    overflow-y: auto;
+                                    list-style: none;
+                                    margin: 0;
+                                    padding: 2px 0;
+                                    animation: dropdownSlide 0.3s ease-out;
+
+                                    &.opens-down {
+                                        top: calc(100% + 2px);
+                                        transform-origin: top;
+                                    }
+
+                                    &.opens-up {
+                                        bottom: calc(100% + 2px);
+                                        transform-origin: bottom;
+                                    }
+
+                                    .dropdown-option {
+                                        padding: 6px;
+                                        cursor: pointer;
+                                        transition: all 0.2s ease;
+                                        color: $inputContainerSecondaryColor;
+                                        font-size: 14px;
+                                        border-radius: 5px;
+                                        margin: 2px 5px;
+
+                                        &:hover {
+                                            background: rgba(255, 255, 255, 0.1);
+                                        }
+
+                                        &.selected {
+                                            background: rgba(255, 255, 255, 0.15);
+                                            color: $inputContainerSecondaryColor;
+                                        }
+                                    }
+
+                                    // Custom scrollbar
+                                    &::-webkit-scrollbar {
+                                        width: 4px;
+                                    }
+
+                                    &::-webkit-scrollbar-track {
+                                        background: rgba(0, 0, 0, 0.05);
+                                        border-radius: 2px;
+                                    }
+
+                                    &::-webkit-scrollbar-thumb {
+                                        background: rgba(0, 0, 0, 0.2);
+                                        border-radius: 2px;
+
+                                        &:hover {
+                                            background: rgba(0, 0, 0, 0.3);
+                                        }
+                                    }
+                                }
+
+                                &.disabled {
+                                    .dropdown-trigger {
+                                        opacity: 0.6;
+                                        cursor: not-allowed;
+                                    }
+                                }
                             }
 
-                            .select-wrapper {
-                                position: relative;
-                                /* Essential for positioning the pseudo-element */
-                            }
-
-                            .select-wrapper::after {
-                                content: "▼";
-                                position: absolute;
-                                right: 2px;
-                                top: 50%;
-                                transform: translateY(-50%);
-                                pointer-events: none;
-                                color: $inputContainerMainTextColor
+                            @keyframes dropdownSlide {
+                                from {
+                                    opacity: 0;
+                                    transform: translateY(-5px) scaleY(0.95);
+                                }
+                                to {
+                                    opacity: 1;
+                                    transform: translateY(0) scaleY(1);
+                                }
                             }
                         }
                     }
@@ -1682,3 +1782,4 @@ body {
     }
 
 }
+

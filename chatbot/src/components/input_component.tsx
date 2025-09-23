@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from '../utils/global_context';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
@@ -10,6 +10,7 @@ import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
 import uploadFile from '../services/file_service';
 import clearAttachments from '../services/clear_attachments';
+import Dropdown from './Dropdown';
 
 const InputBox: React.FC = () => {
 
@@ -23,10 +24,10 @@ const InputBox: React.FC = () => {
     const [llmID, setllmID] = useState<string>("1");
     const [llms, setLlms] = useState<string[]>([]);
     const [models, setModels] = useState<string[]>([]);
+    const [selectedLLM, setSelectedLLM] = useState<string>("");
+    const [selectedModel, setSelectedModel] = useState<string>("");
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
-    const clientOption = useRef<HTMLSelectElement>(null);
-    const modelOption = useRef<HTMLSelectElement>(null);
 
     useEffect(() => {
         const handleAsk = async () => {
@@ -34,8 +35,8 @@ const InputBox: React.FC = () => {
                 setChatInitiated(true);
                 setAsked(false);
                 setInputVal(undefined);
-                const curr_client = clientOption.current ? clientOption.current.value : undefined;
-                const curr_model = modelOption.current ? modelOption.current?.value : undefined;
+                const curr_client = selectedLLM;
+                const curr_model = selectedModel;
                 const currentTextarea = document.querySelector('textarea') as HTMLTextAreaElement | null;
                 let curr_prompt_value = undefined;
                 if (currentTextarea) {
@@ -59,6 +60,22 @@ const InputBox: React.FC = () => {
         setLlms(allLLMs);
         fetchModels();
     }, [llmID]);
+
+    // Initialize first LLM selection
+    useEffect(() => {
+        const allLLMs: string[] = LLMs.ALL.map(e => e.name);
+        if (allLLMs.length > 0 && !selectedLLM) {
+            setSelectedLLM(allLLMs[0]);
+            setllmID("1");
+        }
+    }, [selectedLLM]);
+
+    // Auto-select first model when models change
+    useEffect(() => {
+        if (models.length > 0) {
+            setSelectedModel(models[0]); // Always select first model when models change
+        }
+    }, [models]);
 
     const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_top_k = 3, curr_use_rag = useRag) => {
         // alert(`curr user: ${currUser}`);
@@ -166,12 +183,15 @@ const InputBox: React.FC = () => {
         setModels(allModels);
     }
 
-    const changeModel = (event: React.FormEvent<HTMLSelectElement>) => {
-        const select = event.currentTarget;
-        const selectedOption = select.options[select.selectedIndex];
-        const selectedId = selectedOption.id;
-        setllmID(selectedId);
-    }
+    const handleLLMChange = (value: string, index: number) => {
+        setSelectedLLM(value);
+        setllmID((index + 1).toString());
+        setSelectedModel("");
+    };
+
+    const handleModelChange = (value: string) => {
+        setSelectedModel(value);
+    };
 
     const triggerSend = () => {
         if (!inputVal) {
@@ -225,18 +245,22 @@ const InputBox: React.FC = () => {
             <div id="toolBox">
                 <div id="leftCompartment">
                     <div id="llmDropContainer" className='dropContainer'>
-                        <select name="llmDrop" id="llmDrop" onChange={changeModel} className='pointer quicksand-light' ref={clientOption}>
-                            {llms.map((e, i) => (
-                                <option id={(i + 1).toString()} value={e} className='quicksand-msg'>{e}</option>
-                            ))}
-                        </select>
+                        <Dropdown
+                            options={llms}
+                            value={selectedLLM}
+                            onChange={handleLLMChange}
+                            placeholder="Select LLM"
+                            className="llm-dropdown"
+                        />
                     </div>
                     <div id="modelDropContainer" className='dropContainer'>
-                        <select name="modelDrop" id="modelDrop" className='pointer quicksand-light' ref={modelOption}>
-                            {models.map((e, i) => (
-                                <option key={i} value={e} className='quicksand-msg'>{e}</option>
-                            ))}
-                        </select>
+                        <Dropdown
+                            options={models}
+                            value={selectedModel}
+                            onChange={handleModelChange}
+                            placeholder="Select Model"
+                            className="model-dropdown"
+                        />
                     </div>
                 </div>
                 <div id="rightCompartment">
