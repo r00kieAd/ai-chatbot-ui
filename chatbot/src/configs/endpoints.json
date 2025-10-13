@@ -4,5 +4,7 @@
     "LOGIN": "/authenticate",
     "LOGOUT": "/logout",
     "CLEAR_DATA": "/clear-data",
-    "PING": "/start"
+    "PING": "/start",
+    "SETLLM": "/update_llm_choice",
+    "UPDATECONFIG": "/update_llm_settings"
 }

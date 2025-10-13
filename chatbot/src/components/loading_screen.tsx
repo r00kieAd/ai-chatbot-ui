@@ -1,7 +1,7 @@
 import Shuffle from "./shuffle_text";
 
 function Loading() {
-    const loadingText = "Smart Owl";
+    const loadingText = "loading_";
 
     return (
         <><div id="loadingScreen">

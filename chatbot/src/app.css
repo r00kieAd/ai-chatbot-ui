@@ -250,7 +250,8 @@ body {
   text-align: center;
   padding-top: 1px;
 }
-#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu {
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer {
+  position: relative;
   max-height: 0;
   visibility: hidden;
   opacity: 0;
@@ -261,15 +262,27 @@ body {
   border-radius: 10px;
   transition: all 0.3s ease-in-out;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
-#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu.show {
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer.show {
   opacity: 1;
   visibility: visible;
   max-height: 15em;
   padding: 1rem;
   margin-top: 0.5rem;
   border-top-color: #D0DDD0;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer .setting-loading-mask {
+  position: relative;
+  visibility: hidden;
+  opacity: 0;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer .setting-loading-mask.show {
+  opacity: 1;
+  visibility: visible;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu.blur {
+  filter: blur(6px);
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer {
   display: flex;

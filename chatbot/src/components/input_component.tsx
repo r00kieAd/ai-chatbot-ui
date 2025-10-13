@@ -6,15 +6,17 @@ import LLMs from '../configs/available_llm_models.json';
 import PROMPTS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
+import setLLMChoice from '../services/llm_choice';
 import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
 import uploadFile from '../services/file_service';
 import clearAttachments from '../services/clear_attachments';
-import Dropdown from './Dropdown';
+import Dropdown from './dropdown';
 
 const InputBox: React.FC = () => {
 
     const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality } = useGlobal();
+    const {setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig} = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -200,8 +202,26 @@ const InputBox: React.FC = () => {
         setModels(allModels);
     }
 
-    const handleLLMChange = (value: string, index: number) => {
+    const handleLLMChange = async (value: string, index: number) => {
         setSelectedLLM(value);
+        setUpdatingLLMConfig(true);
+        const res = await setLLMChoice({ username: currUser ? currUser : "dummy", llm: value, token: authToken ? authToken : "" });
+        if (res && res.status) {
+            setTemperature(res.resp.config.temp);
+            setTop_p(res.resp.config.top_p);
+            setTop_k(res.resp.config.top_k);
+            setMaxOutputToken(res.resp.config.output_tokens);
+            setFrequencyPenalty(res.resp.config.freq_penalty);
+            setPresencePenalty(res.resp.config.presence_penalty);
+        } else {
+            setTemperature(import.meta.env.VITE_DEFAULT_TEMP);
+            setTop_p(import.meta.env.VITE_DEFAULT_TEMP);
+            setTop_k(import.meta.env.VITE_DEFAULT_TEMP);
+            setMaxOutputToken(import.meta.env.VITE_DEFAULT_TEMP);
+            setFrequencyPenalty(import.meta.env.VITE_DEFAULT_TEMP);
+            setPresencePenalty(import.meta.env.VITE_DEFAULT_TEMP);
+        }
+        setUpdatingLLMConfig(false);
         setllmID((index + 1).toString());
         setSelectedModel("");
     };

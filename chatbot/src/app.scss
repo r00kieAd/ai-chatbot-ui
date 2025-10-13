@@ -422,7 +422,8 @@ body {
                     font-weight: 500;
                 }
 
-                #settingsMenu {
+                #settingsContainer {
+                    position: relative;
                     max-height: 0;
                     visibility: hidden;
                     opacity: 0;
@@ -433,7 +434,7 @@ body {
                     border-radius: $mainBorderRadius;
                     transition: all 0.3s ease-in-out;
                     overflow-x: hidden;
-                    overflow-y: scroll;
+                    overflow-y: hidden;
 
                     &.show {
                         @include reveal();
@@ -441,6 +442,28 @@ body {
                         padding: 1rem;
                         margin-top: .5rem;
                         border-top-color: $navbarborder;
+                    }
+
+                    .setting-loading-mask {
+                        position: relative;
+                        visibility: hidden;
+                        opacity: 0;
+
+                        &.show {
+                            @include reveal();
+                        }
+
+                        // #loadingScreen {
+                        //     color: ;
+                        // }
+                    }
+                }
+
+                #settingsMenu {
+
+
+                    &.blur {
+                        filter: blur(6px);
                     }
 
                     @mixin flexContainerForSettings ($justifyContent: space-between) {
@@ -497,7 +520,7 @@ body {
                                 display: flex;
                                 flex-direction: row;
                                 align-items: center;
-                                justify-content:center;
+                                justify-content: center;
 
                                 label {
                                     font-size: 14px;

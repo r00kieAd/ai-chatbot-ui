@@ -46,6 +46,8 @@ interface GlobalState {
     setGuestPromptCount: (value: number) => void;
     personality: string;
     setPersonality: (value: string) => void;
+    updatingLLMConfig: boolean;
+    setUpdatingLLMConfig: (value: boolean) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -68,6 +70,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [guestLogin, setGuestLogin] = useState<boolean>(false);
     const [guestPromptCount, setGuestPromptCount] = useState<number>(0);
     const [personality, setPersonality] = useState<string>(PROMPTS.PERSONALITY[0].NAME);
+    const [updatingLLMConfig, setUpdatingLLMConfig] = useState<boolean>(false);
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
         authorized, setAuthorized,
@@ -85,7 +88,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         currPresencePenalty, setPresencePenalty,
         guestLogin, setGuestLogin,
         guestPromptCount, setGuestPromptCount,
-        personality, setPersonality
+        personality, setPersonality,
+        updatingLLMConfig, setUpdatingLLMConfig
     }}>
         {children}
     </GlobalContext.Provider>
