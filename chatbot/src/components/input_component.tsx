@@ -11,7 +11,7 @@ import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
 import uploadFile from '../services/file_service';
 import clearAttachments from '../services/clear_attachments';
-import Dropdown from './dropdown';
+import Dropdown from './dropdown_d';
 
 const InputBox: React.FC = () => {
 
