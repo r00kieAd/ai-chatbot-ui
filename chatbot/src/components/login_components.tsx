@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
 import authorizationProcess from '../services/authorization_service';
+import setLLMChoice from '../services/llm_choice';
 import hello from '../assets/hello.png';
 import angry from '../assets/angry.png';
 import no from '../assets/no.png';
@@ -12,7 +13,8 @@ import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
 
 const LoginComp: React.FC = () => {
-    const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut } = useGlobal();
+    const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut, setUpdatingLLMConfig } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty } = useGlobal();
     const { guestLogin, setGuestLogin } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const singPoliceImage = useRef<HTMLSpanElement>(null);
@@ -275,15 +277,37 @@ const LoginComp: React.FC = () => {
         }
     };
 
-    const handleAuthSuccess = (response: any, username: string) => {
+    const defaultLLMChoice = async (username: string, llm: string, token: string) => {
+        setUpdatingLLMConfig(true);
+        const res = await setLLMChoice({ username: username, llm: llm, token: token });
+        if (res && res.status) {
+            setTemperature(res.resp.config.temp);
+            setTop_p(res.resp.config.top_p);
+            setTop_k(res.resp.config.top_k);
+            setMaxOutputToken(res.resp.config.output_tokens);
+            setFrequencyPenalty(res.resp.config.freq_penalty);
+            setPresencePenalty(res.resp.config.presence_penalty);
+        } else {
+            setTemperature(import.meta.env.VITE_DEFAULT_TEMP);
+            setTop_p(import.meta.env.VITE_DEFAULT_TEMP);
+            setTop_k(import.meta.env.VITE_DEFAULT_TEMP);
+            setMaxOutputToken(import.meta.env.VITE_DEFAULT_TEMP);
+            setFrequencyPenalty(import.meta.env.VITE_DEFAULT_TEMP);
+            setPresencePenalty(import.meta.env.VITE_DEFAULT_TEMP);
+        }
+        setUpdatingLLMConfig(false);
+    }
+
+    const handleAuthSuccess = async (response: any, username: string) => {
         if (happyPoliceDiv.current && okPoliceImage.current) {
             setCurrUser(username);
             happyPoliceDiv.current.style.display = "block";
             okPoliceImage.current.style.display = "block";
-            setTimeout(() => {
+            setTimeout(async () => {
                 if (h2Header.current) h2Header.current.innerText = "Logging in...";
                 fadeIn(happyPoliceDiv.current);
-            }, 200);
+                await defaultLLMChoice(username, "OpenAI", response.resp.token);
+            }, 500);
             setTimeout(() => {
                 setAuthorized(true);
                 sessionStorage.setItem(import.meta.env.VITE_SESSION_AUTH_VAR, "true");
