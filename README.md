@@ -453,11 +453,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] CSS architecture reorganization
 
 ### Upcoming Features
+- [ ] Conversational AI
 - [ ] Voice message support
 - [ ] Dark/light theme toggle  
 - [ ] Message search functionality
 - [ ] Export chat history
-- [ ] Multi-file upload support
 - [ ] Real-time typing indicators
 - [ ] Message reactions
 - [ ] Conversation templates
