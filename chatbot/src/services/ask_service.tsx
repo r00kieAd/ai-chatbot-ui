@@ -4,14 +4,13 @@ import axios from "axios";
 interface Params {
     username: string;
     prompt: string;
-    client: string;
+    instruction: string;
     model: string;
-    top_k: number;
     use_rag: boolean;
     token: string;
 };
 
-async function initiateAsk({ username, prompt, client, model, top_k, use_rag, token }: Params) {
+async function initiateAsk({ username, prompt, instruction, model, use_rag, token }: Params) {
     const base = import.meta.env.VITE_API_BASE_URL;
     const options = {
         method: 'POST',
@@ -24,9 +23,8 @@ async function initiateAsk({ username, prompt, client, model, top_k, use_rag, to
         data: {
             "username": username,
             "prompt": prompt,
-            "client": client,
+            "instruction": instruction,
             "model": model,
-            "top_k": top_k,
             "use_rag": use_rag
         }
     };

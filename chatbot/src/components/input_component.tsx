@@ -3,7 +3,7 @@ import { useGlobal } from '../utils/global_context';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
 import LLMs from '../configs/available_llm_models.json';
-import PROMPTS from '../configs/bot_prompts.json'
+import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
 import setLLMChoice from '../services/llm_choice';
@@ -77,7 +77,7 @@ const InputBox: React.FC = () => {
         }
     }, [models]);
 
-    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_top_k = 3, curr_use_rag = useRag) => {
+    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_use_rag = useRag) => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
@@ -109,30 +109,29 @@ const InputBox: React.FC = () => {
             }));
         } else {
             setGuestPromptCount(guestPromptCount + 1)
-            let promptPrefix = "Owl";
+            let personality_instruction = "Owl";
             switch (personality) {
-                case PROMPTS.PERSONALITY[0].NAME:
-                    promptPrefix = PROMPTS.PERSONALITY[0].VALUE ? PROMPTS.PERSONALITY[0].VALUE : "Owl"
+                case INSTRUCTIONS.PERSONALITY[0].NAME:
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[0].VALUE ? INSTRUCTIONS.PERSONALITY[0].VALUE : "Owl"
                     break;
-                case PROMPTS.PERSONALITY[1].NAME:
-                    promptPrefix = PROMPTS.PERSONALITY[1].VALUE ? PROMPTS.PERSONALITY[1].VALUE : "Owl"
+                case INSTRUCTIONS.PERSONALITY[1].NAME:
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[1].VALUE ? INSTRUCTIONS.PERSONALITY[1].VALUE : "Owl"
                     break;
-                case PROMPTS.PERSONALITY[2].NAME:
-                    promptPrefix = PROMPTS.PERSONALITY[2].VALUE ? PROMPTS.PERSONALITY[2].VALUE : "Owl"
+                case INSTRUCTIONS.PERSONALITY[2].NAME:
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[2].VALUE ? INSTRUCTIONS.PERSONALITY[2].VALUE : "Owl"
                     break;
-                case PROMPTS.PERSONALITY[3].NAME:
-                    promptPrefix = PROMPTS.PERSONALITY[3].VALUE ? PROMPTS.PERSONALITY[3].VALUE : "Owl"
+                case INSTRUCTIONS.PERSONALITY[3].NAME:
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[3].VALUE ? INSTRUCTIONS.PERSONALITY[3].VALUE : "Owl"
                     break;
                 default:
-                    promptPrefix = "Owl"
+                    personality_instruction = "Owl"
 
             }
             const response = await initiateAsk({
                 username: currUser,
-                prompt: `${promptPrefix} ${curr_prompt}`,
-                client: curr_client.toLowerCase(),
+                prompt: curr_prompt,
+                instruction: personality_instruction,
                 model: curr_model.toLowerCase(),
-                top_k: curr_top_k,
                 use_rag: curr_use_rag,
                 token: authToken ? authToken : 'null'
             });

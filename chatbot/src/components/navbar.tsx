@@ -221,7 +221,7 @@ const NavbarComp: React.FC = () => {
                     </div>
                 </div>
                 <div id="settingsContainer" ref={settingsDiv}>
-                    <div className={updatingLLMConfig ? "show" : "" + "setting-loading-mask"}>{<Loading />}</div>
+                    <div className={updatingLLMConfig ? "show" : "" + "setting-loading-mask"} style={{"display": updatingLLMConfig ? "block":"none"}}>{<Loading />}</div>
                     <div id="settingsMenu" className={updatingLLMConfig ? "blur" : ""} ref={settingsMenu}>
                         <div id="settingsItemsFlexContainer">
                             <div className="setting-item">
