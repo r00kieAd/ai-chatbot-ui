@@ -2,7 +2,7 @@
 
 A modern, feature-rich chatbot interface built with React, TypeScript, and Vite. This application provides a sleek user experience for interacting with multiple AI language models with support for file uploads, markdown rendering, and advanced animations.
 
-## 🚀 Features
+## Features
 
 - **Multi-LLM Support**: Interact with multiple AI language models (OpenAI, Anthropic, Google Gemini)
 - **Real-time Chat**: Progressive typing animations with markdown rendering
@@ -18,7 +18,7 @@ A modern, feature-rich chatbot interface built with React, TypeScript, and Vite.
 - **Viewport-Aware Dropdowns**: Custom dropdowns that automatically adjust positioning
 - **Error Handling**: Comprehensive error states and user feedback
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Frontend**: React 19, TypeScript, Vite
 - **Styling**: SCSS with CSS modules
@@ -28,51 +28,7 @@ A modern, feature-rich chatbot interface built with React, TypeScript, and Vite.
 - **Icons**: Flaticons, FontAwesome, React-bits
 - **Fonts**: Google Fonts (Poppins, Quicksand, Montserrat, Patrick Hand)
 
-## 📁 Project Structure
-
-```
-chatbot/
-├── src/
-│   ├── components/          # React components
-│   │   ├── attach_component.tsx      # File attachment handler
-│   │   ├── chat_component.tsx        # Main chat container
-│   │   ├── chat_message_component.tsx # Individual message display with avatar persistence
-│   │   ├── click_spark.tsx           # Click animation effect
-│   │   ├── custom_checkbox.tsx       # Reusable checkbox component with skewed styling
-│   │   ├── display_error.tsx         # Error state component
-│   │   ├── dropdown.tsx              # Custom dropdown with viewport-aware positioning
-│   │   ├── input_component.tsx       # Message input with custom dropdown controls
-│   │   ├── loading_screen.tsx        # Loading state with animations
-│   │   ├── login_components.tsx      # Authentication forms with guest access
-│   │   ├── navbar.tsx                # Navigation bar with personality settings
-│   │   ├── settings_info_card.tsx    # Settings information panel
-│   │   ├── shiny_text.tsx           # Animated text effect
-│   │   ├── shuffle_text.tsx         # GSAP text shuffle animation
-│   │   ├── silk_bg.tsx              # Animated background
-│   │   ├── split_text.tsx           # Character-by-character text animation
-│   │   └── typing_effect_component.tsx # Progressive typing with markdown
-│   ├── services/            # API service layer
-│   │   ├── ask_service.tsx           # Chat message API
-│   │   ├── authorization_service.tsx # User authentication
-│   │   ├── clear_attachments.tsx     # File cleanup utilities
-│   │   ├── file_service.tsx          # File upload handler
-│   │   ├── logout_service.tsx        # User logout
-│   │   └── ping_server.tsx           # Server health check
-│   ├── utils/               # Utility functions
-│   │   ├── global_context.tsx        # Global state management
-│   │   └── textarea_css_data.tsx     # Dynamic textarea styling
-│   ├── configs/             # Configuration files
-│   │   ├── available_llm_models.json # LLM provider configuration (OpenAI, Anthropic, Gemini)
-│   │   ├── bot_prompts.json          # AI personality configurations
-│   │   ├── endpoints.json            # API endpoint definitions
-│   │   └── lllm_config_info.json     # LLM configuration metadata
-│   ├── assets/              # Static assets
-│   └── types/               # TypeScript type definitions
-├── public/                  # Public assets
-└── package.json            # Dependencies and scripts
-```
-
-## 🎨 Components
+## Components
 
 ### Core Components
 
@@ -212,7 +168,7 @@ Server health monitoring for connection status.
 #### `clear_attachments.tsx`
 File management utilities for cleaning up uploaded attachments.
 
-## 🌟 Key Features
+## Key Features
 
 ### Smart Auto-scroll
 Automatically scrolls to new bot messages while preserving user scroll position.
@@ -274,7 +230,7 @@ Reusable, accessible components:
 - **Mobile-First Design**: Responsive components for all screen sizes
 - **TypeScript Integration**: Full type safety and developer experience
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -375,7 +331,7 @@ Configure AI personalities in `src/configs/bot_prompts.json`:
 }
 ```
 
-## 🎨 Attribution
+## Attribution
 
 ### Assets & Icons
 - **Icons**: [Flaticons](https://www.flaticon.com/) - Various UI icons and bot avatars
@@ -398,14 +354,14 @@ Configure AI personalities in `src/configs/bot_prompts.json`:
 - **TypeScript**: Type safety and development experience
 - **Vite**: Build tool and development server
 
-## 🔒 Security Features
+## Security Features
 
 - Secure session management with auto-logout
 - Token-based authentication
 - XSS protection through proper sanitization
 - CSRF protection through token validation
 
-## 🚀 Performance Optimizations
+## Performance Optimizations
 
 - Code splitting with React.lazy
 - Optimized re-renders with React.memo
@@ -413,14 +369,14 @@ Configure AI personalities in `src/configs/bot_prompts.json`:
 - Lazy loading of heavy components
 - Optimized bundle size with Vite
 
-## 📱 Browser Support
+## Browser Support
 
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
 - Edge 90+
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -428,45 +384,20 @@ Configure AI personalities in `src/configs/bot_prompts.json`:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🐛 Known Issues
+## Known Issues
 
 - Typing animation may occasionally flicker on very slow devices
 - File uploads > 10MB may timeout (configurable)
 - Safari may have minor CSS animation differences
 - Guest login may occasionally show undefined username (being addressed)
 - Mobile keyboard may affect dropdown positioning on some devices
-
-## 🔮 Roadmap
-
-### Completed ✅
-- [x] Custom dropdown components with viewport awareness
-- [x] Custom checkbox components with exclusive selection  
-- [x] AI personality system with avatar persistence
-- [x] Mobile-first responsive design
-- [x] Guest access with prompt monitoring
-- [x] Multi-LLM support (OpenAI, Anthropic, Google Gemini)
-- [x] Settings information panel
-- [x] CSS architecture reorganization
-
-### Upcoming Features
-- [ ] Conversational AI
-- [ ] Voice message support
-- [ ] Dark/light theme toggle  
-- [ ] Message search functionality
-- [ ] Export chat history
-- [ ] Real-time typing indicators
-- [ ] Message reactions
-- [ ] Conversation templates
-- [ ] Advanced RAG configuration
-- [ ] API rate limiting display
-
 ---
 
-## 📝 Recent Updates (September 2025)
+## Recent Updates (September 2025)
 
 ### Version 2.1.0 - Enhanced UI & Component Architecture
 - **Custom Component System**: Added reusable `Dropdown` and `CustomCheckbox` components
