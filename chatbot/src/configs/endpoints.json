@@ -6,5 +6,6 @@
     "CLEAR_DATA": "/clear-data",
     "PING": "/start",
     "SETLLM": "/update_llm_choice",
-    "UPDATECONFIG": "/update_llm_settings"
+    "UPDATECONFIG": "/update_llm_settings",
+    "ALL_MODELS": "/all_models"
 }

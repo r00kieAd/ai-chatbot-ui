@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGlobal } from '../utils/global_context';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
-import LLMs from '../configs/available_llm_models.json';
+// import LLMs from '../configs/available_llm_models.json';
 import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
@@ -15,8 +15,8 @@ import Dropdown from './dropdown_d';
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality } = useGlobal();
-    const {setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig} = useGlobal();
+    const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -58,13 +58,14 @@ const InputBox: React.FC = () => {
     }, [asked]);
 
     useEffect(() => {
-        const allLLMs: string[] = LLMs.ALL.map(e => e.name);
+        const allLLMs: string[] = availableModels.ALL.map(e => e.name);
+        // console.log(allLLMs);
         setLlms(allLLMs);
         fetchModels();
-    }, [llmID]);
+    }, [llmID, availableModels]);
 
     useEffect(() => {
-        const allLLMs: string[] = LLMs.ALL.map(e => e.name);
+        const allLLMs: string[] = availableModels.ALL.map(e => e.name);
         if (allLLMs.length > 0 && !selectedLLM) {
             setSelectedLLM(allLLMs[0]);
             setllmID("1");
@@ -184,20 +185,26 @@ const InputBox: React.FC = () => {
     };
 
     const fetchModels = () => {
+        if (!availableModels || Object.keys(availableModels).length === 0) {
+            setModels([]);
+            return;
+        }
 
         let allModels: string[] = [];
         switch (llmID) {
             case "1":
-                allModels = LLMs.M1.MODELS.map(e => e.model);
+                allModels = availableModels.A?.LIST?.map(e => e.model) ?? [];
                 break;
             case "2":
-                allModels = LLMs.M2.MODELS.map(e => e.model);
+                allModels = availableModels.M1?.LIST?.map(e => e.model) ?? [];
+                break;
+            case "3":
+                allModels = availableModels.M2?.LIST?.map(e => e.model) ?? [];
                 break;
             default:
-                allModels = ["none"];
+                allModels = ["none"]
                 break;
         }
-
         setModels(allModels);
     }
 

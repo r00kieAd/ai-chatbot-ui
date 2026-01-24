@@ -11,6 +11,29 @@ interface ChatMessage {
     personality?: string;
 }
 
+interface ModelList {
+    model: string;
+}
+
+interface ModelClientID {
+    id: string;
+    name: string;
+}
+
+interface ModelClient {
+    FOR: string;
+    LIST: ModelList[];
+    [key: string]: string | ModelList[];
+}
+
+interface AvailableModels {
+    ALL: ModelClientID[];
+    A: ModelClient;
+    M1: ModelClient;
+    M2: ModelClient;
+    [key: string]: ModelClientID[] | ModelClient;
+}
+
 interface GlobalState {
     serverOnline: boolean;
     setServerOnline: (value: boolean) => void;
@@ -48,6 +71,8 @@ interface GlobalState {
     setPersonality: (value: string) => void;
     updatingLLMConfig: boolean;
     setUpdatingLLMConfig: (value: boolean) => void;
+    availableModels: AvailableModels;
+    setAvailableModels: (value: AvailableModels | ((prev: AvailableModels) => AvailableModels)) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -71,6 +96,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [guestPromptCount, setGuestPromptCount] = useState<number>(0);
     const [personality, setPersonality] = useState<string>(PROMPTS.PERSONALITY[0].NAME);
     const [updatingLLMConfig, setUpdatingLLMConfig] = useState<boolean>(false);
+    const [availableModels, setAvailableModels] = useState<AvailableModels>({ALL: [],});
+
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
         authorized, setAuthorized,
@@ -89,7 +116,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         guestLogin, setGuestLogin,
         guestPromptCount, setGuestPromptCount,
         personality, setPersonality,
-        updatingLLMConfig, setUpdatingLLMConfig
+        updatingLLMConfig, setUpdatingLLMConfig,
+        availableModels, setAvailableModels
     }}>
         {children}
     </GlobalContext.Provider>
