@@ -71,8 +71,8 @@ interface GlobalState {
     setPersonality: (value: string) => void;
     updatingLLMConfig: boolean;
     setUpdatingLLMConfig: (value: boolean) => void;
-    availableModels: AvailableModels;
-    setAvailableModels: (value: AvailableModels | ((prev: AvailableModels) => AvailableModels)) => void;
+    availableModels: AvailableModels | null;
+    setAvailableModels: (value: AvailableModels | null | ((prev: AvailableModels | null) => AvailableModels | null)) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -96,7 +96,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [guestPromptCount, setGuestPromptCount] = useState<number>(0);
     const [personality, setPersonality] = useState<string>(PROMPTS.PERSONALITY[0].NAME);
     const [updatingLLMConfig, setUpdatingLLMConfig] = useState<boolean>(false);
-    const [availableModels, setAvailableModels] = useState<AvailableModels>({ALL: [],});
+    const [availableModels, setAvailableModels] = useState<AvailableModels | null>(null);
 
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,

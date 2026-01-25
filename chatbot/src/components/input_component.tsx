@@ -28,6 +28,7 @@ const InputBox: React.FC = () => {
     const [models, setModels] = useState<string[]>([]);
     const [selectedLLM, setSelectedLLM] = useState<string>("");
     const [selectedModel, setSelectedModel] = useState<string>("");
+    const [showModels, setShowModels] = useState<boolean>(false);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
 
@@ -58,14 +59,14 @@ const InputBox: React.FC = () => {
     }, [asked]);
 
     useEffect(() => {
-        const allLLMs: string[] = availableModels.ALL.map(e => e.name);
+        const allLLMs = availableModels?.ALL?.map(e => e.name) ?? [];
         // console.log(allLLMs);
         setLlms(allLLMs);
         fetchModels();
     }, [llmID, availableModels]);
 
     useEffect(() => {
-        const allLLMs: string[] = availableModels.ALL.map(e => e.name);
+        const allLLMs = availableModels?.ALL?.map(e => e.name) ?? [];
         if (allLLMs.length > 0 && !selectedLLM) {
             setSelectedLLM(allLLMs[0]);
             setllmID("1");
@@ -202,9 +203,10 @@ const InputBox: React.FC = () => {
                 allModels = availableModels.M2?.LIST?.map(e => e.model) ?? [];
                 break;
             default:
-                allModels = ["none"]
+                allModels = [];
                 break;
         }
+        setShowModels(allModels.length !== 0);
         setModels(allModels);
     }
 
@@ -297,13 +299,13 @@ const InputBox: React.FC = () => {
                         />
                     </div>
                     <div id="modelDropContainer" className='dropContainer'>
-                        <Dropdown
+                        {showModels && <Dropdown
                             options={models}
                             value={selectedModel}
                             onChange={handleModelChange}
                             placeholder="Select Model"
                             className="model-dropdown"
-                        />
+                        />}
                     </div>
                 </div>
                 <div id="rightCompartment">
