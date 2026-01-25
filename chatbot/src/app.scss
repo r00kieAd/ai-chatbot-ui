@@ -1626,7 +1626,16 @@ body {
                             flex-wrap: wrap;
                         }
 
+                        #modelDropContainer {
+                            visibility: hidden;
+                            opacity: 0;
+                            &.show {
+                                @include reveal();
+                            }
+                        }
+
                         .dropContainer {
+
                             .custom-dropdown {
                                 position: relative;
                                 min-width: $dropdownMinWidth;
@@ -1763,6 +1772,7 @@ body {
                                 }
                             }
                         }
+
                     }
 
                     #rightCompartment {

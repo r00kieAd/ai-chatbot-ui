@@ -38,8 +38,8 @@ const InputBox: React.FC = () => {
                 setChatInitiated(true);
                 setAsked(false);
                 setInputVal(undefined);
-                const curr_client = selectedLLM;
-                const curr_model = selectedModel;
+                const curr_client = selectedLLM ? selectedLLM : "Auto";
+                const curr_model = selectedModel ? selectedModel : "Auto";
                 const currentTextarea = document.querySelector('textarea') as HTMLTextAreaElement | null;
                 let curr_prompt_value = undefined;
                 if (currentTextarea) {
@@ -50,7 +50,7 @@ const InputBox: React.FC = () => {
                 if (curr_prompt_value && curr_client && curr_model) {
                     getAnswer(curr_prompt_value, curr_client, curr_model);
                 } else {
-                    // display error
+                    getAnswer(curr_prompt_value ? curr_prompt_value : "unparsable text", "Unknown", "Unknown", true);
                 }
             }
         };
@@ -79,7 +79,7 @@ const InputBox: React.FC = () => {
         }
     }, [models]);
 
-    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_use_rag = useRag) => {
+    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag) => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
@@ -106,6 +106,15 @@ const InputBox: React.FC = () => {
                 [chatKey]: {
                     ...prev[chatKey],
                     botMessage: `Your guest prompt count has reached it's limit of ${guestPromptCount}`,
+                    botTime: initiatedBotTime
+                }
+            }));
+        } else if (dispErrMsg) {
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    ...prev[chatKey],
+                    botMessage: "Unknown error occured",
                     botTime: initiatedBotTime
                 }
             }));
@@ -298,14 +307,14 @@ const InputBox: React.FC = () => {
                             className="llm-dropdown"
                         />
                     </div>
-                    <div id="modelDropContainer" className='dropContainer'>
-                        {showModels && <Dropdown
+                    <div id="modelDropContainer" className={showModels ? 'dropContainer show' : 'dropContainer'}>
+                        <Dropdown
                             options={models}
                             value={selectedModel}
                             onChange={handleModelChange}
                             placeholder="Select Model"
                             className="model-dropdown"
-                        />}
+                        />
                     </div>
                 </div>
                 <div id="rightCompartment">
