@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGlobal } from '../utils/global_context';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
-import LLMs from '../configs/available_llm_models.json';
+// import LLMs from '../configs/available_llm_models.json';
 import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
@@ -15,8 +15,8 @@ import Dropdown from './dropdown_d';
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality } = useGlobal();
-    const {setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig} = useGlobal();
+    const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -28,6 +28,7 @@ const InputBox: React.FC = () => {
     const [models, setModels] = useState<string[]>([]);
     const [selectedLLM, setSelectedLLM] = useState<string>("");
     const [selectedModel, setSelectedModel] = useState<string>("");
+    const [showModels, setShowModels] = useState<boolean>(false);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
 
@@ -37,8 +38,8 @@ const InputBox: React.FC = () => {
                 setChatInitiated(true);
                 setAsked(false);
                 setInputVal(undefined);
-                const curr_client = selectedLLM;
-                const curr_model = selectedModel;
+                const curr_client = selectedLLM ? selectedLLM : "Auto";
+                const curr_model = selectedModel ? selectedModel : "Auto";
                 const currentTextarea = document.querySelector('textarea') as HTMLTextAreaElement | null;
                 let curr_prompt_value = undefined;
                 if (currentTextarea) {
@@ -49,7 +50,7 @@ const InputBox: React.FC = () => {
                 if (curr_prompt_value && curr_client && curr_model) {
                     getAnswer(curr_prompt_value, curr_client, curr_model);
                 } else {
-                    // display error
+                    getAnswer(curr_prompt_value ? curr_prompt_value : "unparsable text", "Unknown", "Unknown", true);
                 }
             }
         };
@@ -58,13 +59,14 @@ const InputBox: React.FC = () => {
     }, [asked]);
 
     useEffect(() => {
-        const allLLMs: string[] = LLMs.ALL.map(e => e.name);
+        const allLLMs = availableModels?.ALL?.map(e => e.name) ?? [];
+        // console.log(allLLMs);
         setLlms(allLLMs);
         fetchModels();
-    }, [llmID]);
+    }, [llmID, availableModels]);
 
     useEffect(() => {
-        const allLLMs: string[] = LLMs.ALL.map(e => e.name);
+        const allLLMs = availableModels?.ALL?.map(e => e.name) ?? [];
         if (allLLMs.length > 0 && !selectedLLM) {
             setSelectedLLM(allLLMs[0]);
             setllmID("1");
@@ -77,7 +79,7 @@ const InputBox: React.FC = () => {
         }
     }, [models]);
 
-    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, curr_use_rag = useRag) => {
+    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag) => {
         // alert(`curr user: ${currUser}`);
         // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
@@ -104,6 +106,15 @@ const InputBox: React.FC = () => {
                 [chatKey]: {
                     ...prev[chatKey],
                     botMessage: `Your guest prompt count has reached it's limit of ${guestPromptCount}`,
+                    botTime: initiatedBotTime
+                }
+            }));
+        } else if (dispErrMsg) {
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    ...prev[chatKey],
+                    botMessage: "Unknown error occured",
                     botTime: initiatedBotTime
                 }
             }));
@@ -184,20 +195,27 @@ const InputBox: React.FC = () => {
     };
 
     const fetchModels = () => {
+        if (!availableModels || Object.keys(availableModels).length === 0) {
+            setModels([]);
+            return;
+        }
 
         let allModels: string[] = [];
         switch (llmID) {
             case "1":
-                allModels = LLMs.M1.MODELS.map(e => e.model);
+                allModels = availableModels.A?.LIST?.map(e => e.model) ?? [];
                 break;
             case "2":
-                allModels = LLMs.M2.MODELS.map(e => e.model);
+                allModels = availableModels.M1?.LIST?.map(e => e.model) ?? [];
+                break;
+            case "3":
+                allModels = availableModels.M2?.LIST?.map(e => e.model) ?? [];
                 break;
             default:
-                allModels = ["none"];
+                allModels = [];
                 break;
         }
-
+        setShowModels(allModels.length !== 0);
         setModels(allModels);
     }
 
@@ -289,7 +307,7 @@ const InputBox: React.FC = () => {
                             className="llm-dropdown"
                         />
                     </div>
-                    <div id="modelDropContainer" className='dropContainer'>
+                    <div id="modelDropContainer" className={showModels ? 'dropContainer show' : 'dropContainer'}>
                         <Dropdown
                             options={models}
                             value={selectedModel}

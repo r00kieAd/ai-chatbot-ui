@@ -1392,6 +1392,14 @@ body {
     flex-wrap: wrap;
   }
 }
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment #modelDropContainer {
+  visibility: hidden;
+  opacity: 0;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment #modelDropContainer.show {
+  opacity: 1;
+  visibility: visible;
+}
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown {
   position: relative;
   min-width: 60px;

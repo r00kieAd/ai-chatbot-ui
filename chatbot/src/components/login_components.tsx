@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
 import authorizationProcess from '../services/authorization_service';
+import getAllModels from '../services/get_models';
 import setLLMChoice from '../services/llm_choice';
 import hello from '../assets/hello.png';
 import angry from '../assets/angry.png';
@@ -14,7 +15,7 @@ import ShinyText from './shiny_text';
 
 const LoginComp: React.FC = () => {
     const { setAuthorized, setAuthToken, setCurrUser, loggedOut, setLoggedOut, setUpdatingLLMConfig } = useGlobal();
-    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setAvailableModels } = useGlobal();
     const { guestLogin, setGuestLogin } = useGlobal();
     const helloPoliceImage = useRef<HTMLSpanElement>(null);
     const singPoliceImage = useRef<HTMLSpanElement>(null);
@@ -298,6 +299,11 @@ const LoginComp: React.FC = () => {
         setUpdatingLLMConfig(false);
     }
 
+    const getAllAvailableModels = async (username: string, token: string) => {
+        const res = await getAllModels({user: username, token: token});
+        setAvailableModels(res.resp.models)
+    }
+
     const handleAuthSuccess = async (response: any, username: string) => {
         if (happyPoliceDiv.current && okPoliceImage.current) {
             setCurrUser(username);
@@ -307,6 +313,7 @@ const LoginComp: React.FC = () => {
                 if (h2Header.current) h2Header.current.innerText = "Logging in...";
                 fadeIn(happyPoliceDiv.current);
                 await defaultLLMChoice(username, "OpenAI", response.resp.token);
+                await getAllAvailableModels(username, response.resp.token);
             }, 500);
             setTimeout(() => {
                 setAuthorized(true);

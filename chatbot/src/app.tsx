@@ -140,7 +140,7 @@ function App() {
 
   const pingServer = async (): Promise<void> => {
     const response = await ping();
-    console.log(response);
+    // console.log(response);
     setTimeout(() => {
       try {
         if (response && response.status) {
