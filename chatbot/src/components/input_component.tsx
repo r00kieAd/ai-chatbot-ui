@@ -155,7 +155,8 @@ const InputBox: React.FC = () => {
                     [chatKey]: {
                         ...prev[chatKey],
                         botMessage: response.resp.response,
-                        botTime: botTime
+                        botTime: botTime,
+                        llmModel: `${response.resp.provider} | ${response.resp.model_used}`
                     }
                 }));
             } else if (response && response.statusCode < 500) {

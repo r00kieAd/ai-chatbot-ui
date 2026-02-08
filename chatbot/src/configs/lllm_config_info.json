@@ -4,8 +4,8 @@
       "name": "Personality",
       "description": "Changes the way the bot should behave. Currently only 4 options are available",
       "range": "ON/OFF or TRUE/FALSE",
-      "default": "Owl",
-      "example": "All prompts prefixed by 'answer like an owl' text"
+      "default": "LLM Default",
+      "example": "spot patterns and flaws quickly. Be concise, alert, and slightly stern. Insight over mysticism."
     },
     {
       "name": "max_output_tokens",

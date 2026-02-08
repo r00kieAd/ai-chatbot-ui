@@ -1177,6 +1177,7 @@ body {
   table-layout: fixed;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .bot-bubble {
+  min-width: 100px;
   padding-top: 20px;
   padding-bottom: 0px;
 }
@@ -1188,7 +1189,7 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time {
   font-size: 11px;
   color: #6b7280;
-  margin-left: 16px;
+  margin-left: 3px;
   opacity: 0.8;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message {

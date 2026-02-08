@@ -15,10 +15,10 @@ const NavbarComp: React.FC = () => {
     const settingsMenu = useRef<HTMLDivElement>(null);
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [infoCardVisible, setInfoCardVisible] = useState<boolean>(false);
-    const [owlActive, setOwlActive] = useState<boolean>(true);
-    const [ghostActive, setghostActive] = useState<boolean>(false);
-    const [megatronActive, setMegatronActive] = useState<boolean>(false);
-    const [narutoActive, setNarutoActive] = useState<boolean>(false);
+    const [personalityA, setpersonalityA] = useState<boolean>(false);
+    const [personalityB, setpersonalityB] = useState<boolean>(false);
+    const [personalityC, setpersonalityC] = useState<boolean>(false);
+    const [personalityD, setpersonalityD] = useState<boolean>(false);
     const configUnit = {
         A: "temperature",
         B: "top p",
@@ -30,7 +30,7 @@ const NavbarComp: React.FC = () => {
     type UnitKey = keyof typeof configUnit;
     type UnitValue = typeof configUnit[UnitKey];
     const getConfigUnit = (unit: UnitKey): UnitValue => { return configUnit[unit]}
-    const [trait, setTrait] = useState<string>(PROMPTS.PERSONALITY[0].TRAIT);
+    const [trait, setTrait] = useState<string>('');
     const {
         setAuthorized, authToken, currUser, setLoggedOut, setChatInitiated, setAuthToken, setCurrUser, setChatHistory, personality, setPersonality, setUpdatingLLMConfig, updatingLLMConfig
     } = useGlobal();
@@ -152,55 +152,63 @@ const NavbarComp: React.FC = () => {
     }
 
     // Exclusive checkbox handlers - only one can be true at a time
-    const handleOwlChange = (checked: boolean) => {
+    const handlePersonalityChangeA = (checked: boolean) => {
         if (checked) {
             setPersonality(PROMPTS.PERSONALITY[0].NAME);
             setTrait(PROMPTS.PERSONALITY[0].TRAIT);
-            setOwlActive(true);
-            setghostActive(false);
-            setMegatronActive(false);
-            setNarutoActive(false);
+            setpersonalityA(true);
+            setpersonalityB(false);
+            setpersonalityC(false);
+            setpersonalityD(false);
         } else {
-            setOwlActive(false);
+            setTrait('');
+            setPersonality('');
+            setpersonalityA(false);
         }
     };
 
-    const handleGhostChange = (checked: boolean) => {
+    const handlePersonalityChangeB = (checked: boolean) => {
         if (checked) {
             setPersonality(PROMPTS.PERSONALITY[1].NAME);
             setTrait(PROMPTS.PERSONALITY[1].TRAIT);
-            setOwlActive(false);
-            setghostActive(true);
-            setMegatronActive(false);
-            setNarutoActive(false);
+            setpersonalityA(false);
+            setpersonalityB(true);
+            setpersonalityC(false);
+            setpersonalityD(false);
         } else {
-            setghostActive(false);
+            setTrait('');
+            setPersonality('');
+            setpersonalityB(false);
         }
     };
 
-    const handleMegatronChange = (checked: boolean) => {
+    const handlePersonalityChangeC = (checked: boolean) => {
         if (checked) {
             setPersonality(PROMPTS.PERSONALITY[2].NAME);
             setTrait(PROMPTS.PERSONALITY[2].TRAIT);
-            setOwlActive(false);
-            setghostActive(false);
-            setMegatronActive(true);
-            setNarutoActive(false);
+            setpersonalityA(false);
+            setpersonalityB(false);
+            setpersonalityC(true);
+            setpersonalityD(false);
         } else {
-            setMegatronActive(false);
+            setTrait('');
+            setPersonality('');
+            setpersonalityC(false);
         }
     };
 
-    const handleNarutoChange = (checked: boolean) => {
+    const handlePersonalityChangeD = (checked: boolean) => {
         if (checked) {
             setPersonality(PROMPTS.PERSONALITY[3].NAME);
             setTrait(PROMPTS.PERSONALITY[3].TRAIT);
-            setOwlActive(false);
-            setghostActive(false);
-            setMegatronActive(false);
-            setNarutoActive(true);
+            setpersonalityA(false);
+            setpersonalityB(false);
+            setpersonalityC(false);
+            setpersonalityD(true);
         } else {
-            setNarutoActive(false);
+            setTrait('');
+            setPersonality('');
+            setpersonalityD(false);
         }
     };
 
@@ -226,67 +234,67 @@ const NavbarComp: React.FC = () => {
                         <div id="settingsItemsFlexContainer">
                             <div className="setting-item">
                                 <label className='poppins-regular' htmlFor="temperature">temperature</label>
-                                <input type="number" id="temperature" name="temperature" placeholder={currTemperature.toString()} onBlur={changeTemperature} />
+                                <input type="number" id="temperature" name="temperature" placeholder={currTemperature ? currTemperature.toString() : ""} onBlur={changeTemperature} />
                             </div>
                             <div className="setting-item">
                                 <label className='poppins-regular' htmlFor="top_p">top p</label>
-                                <input type="number" id="top_p" name="top_p" placeholder={currTop_p.toString()} onBlur={changeTop_p} />
+                                <input type="number" id="top_p" name="top_p" placeholder={currTop_p ? currTop_p.toString() : ""} onBlur={changeTop_p} />
                             </div>
                             <div className="setting-item">
                                 <label className='poppins-regular' htmlFor="top_k">top k</label>
-                                <input type="number" id="top_k" name="top_k" placeholder={currTop_k.toString()} onBlur={changeTop_k} />
+                                <input type="number" id="top_k" name="top_k" placeholder={currTop_k ? currTop_k.toString() : ""} onBlur={changeTop_k} />
                             </div>
                             <div className="setting-item">
                                 <label className='poppins-regular' htmlFor="max_output_tokens">max output tokens</label>
-                                <input type="number" id="max_output_tokens" name="max_output_tokens" placeholder={currMaxOutputToken.toString()} onBlur={changeMaxOutTokens} />
+                                <input type="number" id="max_output_tokens" name="max_output_tokens" placeholder={currMaxOutputToken ? currMaxOutputToken.toString(): ""} onBlur={changeMaxOutTokens} />
                             </div>
                             <div className="setting-item">
                                 <label className='poppins-regular' htmlFor="frequency_penalty">frequency penalty</label>
-                                <input type="number" id="frequency_penalty" name="frequency_penalty" placeholder={currFrequencyPenalty.toString()} onBlur={changeFrequencyPenalty} />
+                                <input type="number" id="frequency_penalty" name="frequency_penalty" placeholder={currFrequencyPenalty ? currFrequencyPenalty.toString(): ""} onBlur={changeFrequencyPenalty} />
                             </div>
                             <div className="setting-item">
                                 <label className='poppins-regular' htmlFor="presence_penalty">presence penalty</label>
-                                <input type="number" id="presence_penalty" name="presence_penalty" placeholder={currPresencePenalty.toString()} onBlur={changePresencePenalty} />
+                                <input type="number" id="presence_penalty" name="presence_penalty" placeholder={currPresencePenalty ? currPresencePenalty.toString(): ""} onBlur={changePresencePenalty} />
                             </div>
                         </div>
                         <div id="promptSettings">
                             <div className="setting-prompt-div">
                                 <div id="promptOpt1" className="prompt-opt">
-                                    <label className='poppins-regular' htmlFor="owl-checkbox">{PROMPTS.PERSONALITY[0].NAME}</label>
+                                    <label className='poppins-regular' htmlFor="personality_checkA">{PROMPTS.PERSONALITY[0].NAME}</label>
                                     <CustomCheckbox
-                                        id="owl-checkbox"
-                                        checked={owlActive}
-                                        onChange={handleOwlChange}
+                                        id="personality_checkA"
+                                        checked={personalityA}
+                                        onChange={handlePersonalityChangeA}
                                         onLabel="ON"
                                         offLabel="OFF"
                                     />
                                 </div>
                                 <div id="promptOpt2" className="prompt-opt">
-                                    <label className='poppins-regular' htmlFor="optimus-checkbox">{PROMPTS.PERSONALITY[1].NAME}</label>
+                                    <label className='poppins-regular' htmlFor="personality_checkB">{PROMPTS.PERSONALITY[1].NAME}</label>
                                     <CustomCheckbox
-                                        id="optimus-checkbox"
-                                        checked={ghostActive}
-                                        onChange={handleGhostChange}
+                                        id="personality_checkB"
+                                        checked={personalityB}
+                                        onChange={handlePersonalityChangeB}
                                         onLabel="ON"
                                         offLabel="OFF"
                                     />
                                 </div>
                                 <div id="promptOpt3" className="prompt-opt">
-                                    <label className='poppins-regular' htmlFor="megatron-checkbox">{PROMPTS.PERSONALITY[2].NAME}</label>
+                                    <label className='poppins-regular' htmlFor="personality_checkC">{PROMPTS.PERSONALITY[2].NAME}</label>
                                     <CustomCheckbox
-                                        id="megatron-checkbox"
-                                        checked={megatronActive}
-                                        onChange={handleMegatronChange}
+                                        id="personality_checkC"
+                                        checked={personalityC}
+                                        onChange={handlePersonalityChangeC}
                                         onLabel="ON"
                                         offLabel="OFF"
                                     />
                                 </div>
                                 <div id="promptOpt4" className="prompt-opt">
-                                    <label className='poppins-regular' htmlFor="naruto-checkbox">{PROMPTS.PERSONALITY[3].NAME}</label>
+                                    <label className='poppins-regular' htmlFor="personality_checkD">{PROMPTS.PERSONALITY[3].NAME}</label>
                                     <CustomCheckbox
-                                        id="naruto-checkbox"
-                                        checked={narutoActive}
-                                        onChange={handleNarutoChange}
+                                        id="personality_checkD"
+                                        checked={personalityD}
+                                        onChange={handlePersonalityChangeD}
                                         onLabel="ON"
                                         offLabel="OFF"
                                     />
