@@ -1,6 +1,6 @@
 import { createContext, useState, useContext } from "react";
 import type { ReactNode } from "react";
-import PROMPTS from '../configs/bot_prompts.json'
+// import PROMPTS from '../configs/bot_prompts.json'
 
 interface ChatMessage {
     userMessage: string;
