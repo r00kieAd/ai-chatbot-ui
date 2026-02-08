@@ -94,7 +94,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [currPresencePenalty, setPresencePenalty] = useState<number>(0);
     const [guestLogin, setGuestLogin] = useState<boolean>(false);
     const [guestPromptCount, setGuestPromptCount] = useState<number>(0);
-    const [personality, setPersonality] = useState<string>(PROMPTS.PERSONALITY[0].NAME);
+    const [personality, setPersonality] = useState<string>('');
     const [updatingLLMConfig, setUpdatingLLMConfig] = useState<boolean>(false);
     const [availableModels, setAvailableModels] = useState<AvailableModels | null>(null);
 

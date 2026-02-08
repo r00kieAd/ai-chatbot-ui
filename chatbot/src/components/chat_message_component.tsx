@@ -3,10 +3,12 @@ import { marked } from 'marked';
 import TypingEffect from './typing_effect_component';
 import owl from '../assets/owl.png';
 import ghost from '../assets/ghost.png';
-import doraemon from '../assets/doraemon.png';
-import megatron from '../assets/megatron.png';
+import hal_9000 from '../assets/hal_9000.png';
+import sherlock from '../assets/sherlock.png';
 import face from '../assets/face.png';
 import aicloud from '../assets/think.png';
+import google from '../assets/google.png';
+import openai from '../assets/openai.png';
 import { useGlobal } from '../utils/global_context';
 import PROMPTS from '../configs/bot_prompts.json'
 
@@ -29,14 +31,14 @@ const convertMarkdownToHTML = (text: string): string => {
     if (!text || text.trim() === '') {
         return '';
     }
-    
+
     try {
         const htmlOutput = marked(text) as string;
         console.log('Markdown conversion:', { input: text.substring(0, 100) + '...', output: htmlOutput.substring(0, 200) + '...' });
         return htmlOutput;
     } catch (error) {
         console.error('Markdown conversion failed:', error);
-        return `<p>${text}</p>`; 
+        return `<p>${text}</p>`;
     }
 };
 
@@ -48,10 +50,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     const userMessageDiv = useRef<HTMLDivElement>(null);
     const chatExchangeRef = useRef<HTMLDivElement>(null);
     const botMessageRef = useRef<HTMLDivElement>(null);
-    const {personality: globalPersonality} = useGlobal();
-    
-    // Use message-specific personality or fall back to global personality
-    const currentPersonality = messagePersonality || globalPersonality;
+    const { personality: globalPersonality } = useGlobal();
+    const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
+    const currentPersonality = fixedPersonality;
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -69,9 +70,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     useEffect(() => {
         if (isSecondOrLater && isNewMessage) {
             setTimeout(() => {
-                botMessageRef.current?.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'end' 
+                botMessageRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'end'
                 });
             }, 200);
         }
@@ -80,9 +81,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     useEffect(() => {
         if (isSecondOrLater && !botMessage && isNewMessage) {
             setTimeout(() => {
-                botMessageRef.current?.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'end' 
+                botMessageRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'end'
                 });
             }, 300);
         }
@@ -113,23 +114,23 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                     <div className="message-time montserrat-msg">{userTime}</div>
                 </div>
             </div>
-            
+
             <div className="chat-message bot-message" ref={botMessageRef}>
                 <div className={`message-avatar ${!botMessage ? 'loading' : ''}`}>
                     <img src={
                         botMessage ? currentPersonality == PROMPTS.PERSONALITY[0].NAME ? owl
-                        : currentPersonality == PROMPTS.PERSONALITY[1].NAME ? ghost
-                        : currentPersonality == PROMPTS.PERSONALITY[2].NAME ? megatron
-                        : currentPersonality == PROMPTS.PERSONALITY[3].NAME ? doraemon
-                        : owl : aicloud}
-                         alt={botMessage ? "Bot" : "Loading"} />
+                            : currentPersonality == PROMPTS.PERSONALITY[1].NAME ? ghost
+                                : currentPersonality == PROMPTS.PERSONALITY[2].NAME ? sherlock
+                                    : currentPersonality == PROMPTS.PERSONALITY[3].NAME ? hal_9000
+                                        : llmModel?.toLocaleLowerCase().includes("openai") ? openai : llmModel?.toLocaleLowerCase().includes("google") ? google : face : aicloud}
+                        alt={botMessage ? "Bot" : "Loading"} />
                 </div>
                 <div className="message-content">
                     {botMessage ? (
                         <>
                             <div className="message-bubble poppins-regular bot-bubble">
                                 {showTyping && !typingComplete ? (
-                                    <TypingEffect 
+                                    <TypingEffect
                                         text={botMessage}
                                         onComplete={handleTypingComplete}
                                     />
