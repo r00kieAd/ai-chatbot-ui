@@ -167,7 +167,8 @@ body {
   opacity: 0;
   position: fixed;
   display: flex;
-  justify-self: center;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1000;
   transition: all 0.5s ease-in-out;
 }
@@ -190,7 +191,7 @@ body {
   border-radius: 10px;
   width: 40rem;
   padding: 5px 8px;
-  margin-top: 10px;
+  margin: 10px auto 0 auto;
   color: #D0DDD0;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   transition: all 0.3s ease-in-out;
@@ -327,6 +328,9 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item input[type=number] {
+  -moz-appearance: textfield;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings {
   border-left: 0.5px dashed #D0DDD0;
@@ -486,13 +490,9 @@ body {
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard {
   display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: fixed;
-  width: 70vw;
-  max-height: 90vh;
+  position: relative;
+  width: 700px;
+  max-height: 60vh;
   z-index: 9999;
   background-color: #727D73;
   border: 1px solid #D0DDD0;
@@ -885,7 +885,7 @@ body {
   justify-content: space-around;
   cursor: pointer;
   justify-self: center;
-  margin: 10px 0;
+  margin: 10px auto;
   background-color: #EEEFE0;
   color: #4A4947;
 }
