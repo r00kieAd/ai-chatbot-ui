@@ -23,12 +23,15 @@ This is a basic, chatbot interface built with React, TypeScript, and Vite. This 
 - **Markdown**: Marked library
 - **Fonts**: Google Fonts (Poppins, Quicksand, Montserrat, Patrick Hand)
 
-## Core Components
+## Components
 
-### Chat Interface
-- Main chat container with message history
-- Individual message renderer with markdown support
-- Avatar persistence system (messages retain original bot avatar)
+### Core Components
+
+#### `chat_component.tsx`
+Main chat interface that renders message history and manages chat state.
+
+#### `chat_message_component.tsx`
+Individual message renderer with:
 - Auto-scroll to new messages
 - LLM model attribution per message
 
@@ -39,26 +42,120 @@ This is a basic, chatbot interface built with React, TypeScript, and Vite. This 
 - Progressive typing with markdown rendering
 
 ### UI Components
-- Loading screen with animated effects
-- Navigation bar with personality settings
-- Authentication interface with guest access
-- Error state display
-- Custom dropdown with viewport-aware positioning
-- Custom checkbox with exclusive selection
-- Settings information panel
 
-## Services
+#### `loading_screen.tsx`
+Elegant loading state with animated text shuffle effects.
 
-- **Chat Service**: Message submission to AI models with RAG support
-- **Authentication**: User login and secure token management
-- **File Service**: Multipart file uploads with progress tracking
-- **Logout Service**: Secure session termination
-- **Health Monitoring**: Server connection status
+#### `navbar.tsx`
+Navigation bar featuring:
+- User info and secure logout functionality
+- Personality settings panel with exclusive selection
+- Mobile burger menu for compact screens
+- Custom checkbox components for personality selection
+- Settings information panel with LLM configuration details
+
+#### `login_components.tsx`
+Authentication interface featuring:
+- Secure user login with form validation
+- Guest access with prompt count monitoring (2 prompts limit)
+- Mobile-responsive design
+- Error handling and user feedback
+
+#### `display_error.tsx`
+Error state display for connection issues and API errors.
+
+### Custom UI Components
+
+#### `dropdown.tsx`
+Reusable dropdown component with:
+- Viewport-aware positioning (opens up/down based on available space)
+- Auto-selection logic when options change
+- Keyboard navigation support (Enter, Escape, Arrow keys)
+- Click-outside-to-close functionality
+- Customizable styling and disabled states
+- TypeScript interfaces for type safety
+
+#### `custom_checkbox.tsx`
+Reusable checkbox component featuring:
+- Skewed styling design
+- Controlled component pattern
+- Customizable labels (ON/OFF text)
+- Disabled state support
+- Integration with SCSS styling system
+- Event handling for state changes
+
+#### `settings_info_card.tsx`
+Information panel component displaying:
+- LLM configuration details
+- Model availability and parameters
+- Interactive grid layout
+- Mobile-responsive design
+- Scrollable content area
+
+## 🔧 Services
+
+### API Services
+
+#### `ask_service.tsx`
+Handles chat message submission to AI models with support for:
+- Multiple LLM providers
+- RAG (Retrieval-Augmented Generation)
+- Configurable parameters (top_k, model selection)
+
+#### `authorization_service.tsx`
+User authentication service with secure token management.
+
+#### `file_service.tsx`
+File upload service supporting:
+- Multipart form data uploads
+- Authentication headers
+- Error handling and progress tracking
+
+#### `logout_service.tsx`
+Secure logout with server-side session termination.
+
+#### `ping_server.tsx`
+Server health monitoring for connection status.
+
+### Utility Services
+
+#### `clear_attachments.tsx`
+File management utilities for cleaning up uploaded attachments.
 
 ## Key Features
 
-### Avatar Persistence
-- Messages retain their original bot avatar even when personality changes
+### Smart Auto-scroll
+Automatically scrolls to new bot messages while preserving user scroll position.
+
+### Inactivity Logout
+Automatic logout after 60 seconds of inactivity with:
+- Mouse movement detection
+- Keyboard input monitoring
+- Tab visibility handling
+- Graceful session cleanup
+
+### Progressive Markdown Rendering
+Real-time markdown processing during typing animation with:
+- Code syntax highlighting
+- Table support
+- List rendering
+- Link handling
+
+### Multi-LLM Support
+Seamless switching between different AI models with provider-specific configurations:
+- **OpenAI**: GPT-4, GPT-3.5-turbo models
+- **Anthropic**: Claude models
+- **Google**: Gemini models with latest configurations
+
+### AI Personalities
+Choose from multiple bot personalities that affect conversation style:
+- **Owl**: Wise and analytical responses
+- **Ghost**: Mysterious and creative interactions  
+- **Megatron**: Powerful and direct communication
+- **Doraemon**: Friendly and helpful assistance
+
+### Avatar Persistence System
+Smart avatar management ensures:
 - New messages use currently selected personality
 - Consistent visual conversation timeline
 
@@ -103,11 +200,7 @@ VITE_SESSION_AUTH_VAR=your_session_variable_name
 npm run dev
 ```
 
-### Production Build
-```bash
-npm run build
-npm run preview
-```
+## Attribution
 
 ## Attribution
 
@@ -117,33 +210,19 @@ npm run preview
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+## Security Features
 
 ## License
 
-This project is licensed under the MIT License.
+## Performance Optimizations
 
 ## Known Issues
 
-- Typing animation may flicker on slow devices
-- Large file uploads may timeout
-- Guest login may occasionally show undefined username
-- Mobile keyboard may affect dropdown positioning
-- UI issues in Firefox like navbar and button alignment
+## Browser Support
 
 ## Roadmap
 
-### Completed
-- Custom dropdown and checkbox components
-- AI personality system with avatar persistence
-- Mobile-first responsive design
-- Guest access with prompt monitoring
-- Multi-LLM support
-- Settings information panel
+## Contributing
 
 ### In Development
 - Voice message support
@@ -155,4 +234,39 @@ This project is licensed under the MIT License.
 - Conversation templates
 - Advanced RAG configuration
 
-Built with React, TypeScript, and modern web technologies.
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Known Issues
+
+- Typing animation may occasionally flicker on very slow devices
+- File uploads > 10MB may timeout (configurable)
+- Safari may have minor CSS animation differences
+- Guest login may occasionally show undefined username (being addressed)
+- Mobile keyboard may affect dropdown positioning on some devices
+---
+
+## Recent Updates (September 2025)
+
+### Version 2.1.0 - Enhanced UI & Component Architecture
+- **Custom Component System**: Added reusable `Dropdown` and `CustomCheckbox` components
+- **Avatar Persistence**: Implemented smart avatar system preventing retroactive changes
+- **Mobile-First Design**: Comprehensive mobile responsiveness with burger menu navigation
+- **AI Personality System**: Multiple bot personalities with persistent avatar selection
+- **Google Gemini Integration**: Added support for Google's latest AI models
+- **Guest Access**: Limited free access for unauthenticated users (2 prompts)
+- **CSS Architecture**: Reorganized styling system for better maintainability
+- **Settings Panel**: Interactive information card with LLM configuration details
+- **Viewport-Aware Dropdowns**: Smart positioning based on screen real estate
+- **Enhanced Error Handling**: Improved user feedback and error state management
+
+### Component Architecture Improvements
+- **TypeScript Integration**: Full type safety across all custom components
+- **Accessibility Features**: ARIA labels, keyboard navigation, screen reader support
+- **Performance Optimizations**: Efficient re-renders and component lifecycle management
+- **Responsive Design Patterns**: Mobile-first approach with breakpoint-based styling
+
+---
+
+Built with :keyboard: using React, TypeScript, and modern web technologies.
