@@ -1,22 +1,18 @@
 # AI Chatbot UI
 
-A modern, feature-rich chatbot interface built with React, TypeScript, and Vite. This application provides a sleek user experience for interacting with multiple AI language models with support for file uploads, markdown rendering, and advanced animations.
+This is a basic, chatbot interface built with React, TypeScript, and Vite. This application provides a sleek user experience for interacting with multiple AI language models with support for file uploads, markdown rendering, and advanced animations.
 
 ## Features
 
-- **Multi-LLM Support**: Interact with multiple AI language models (OpenAI, Anthropic, Google Gemini)
+- **Multi-LLM Support**: Interact with OpenAI, Anthropic, and Google Gemini models
 - **Real-time Chat**: Progressive typing animations with markdown rendering
-- **AI Personalities**: Choose from multiple bot personalities (Owl, Ghost, Megatron, Doraemon) with avatar persistence
-- **Custom UI Components**: Reusable dropdown and checkbox components with modern styling
-- **File Upload**: Support for document attachments with RAG (Retrieval-Augmented Generation)
+- **AI Personalities**: Choose from multiple bot personalities with persistent avatars
+- **File Upload**: Document attachments with RAG support
 - **User Authentication**: Secure login with session management and guest access
-- **Auto-logout**: Inactivity-based session timeout (60s)
-- **Mobile-First Design**: Fully responsive interface with mobile-optimized components
+- **Auto-logout**: Inactivity-based session timeout
+- **Mobile-First Design**: Fully responsive interface
 - **Smooth Animations**: GSAP-powered text effects and transitions
-- **Auto-scroll**: Smart scrolling to new messages
-- **Avatar Persistence**: Chat messages maintain their original bot avatars even when personality settings change
-- **Viewport-Aware Dropdowns**: Custom dropdowns that automatically adjust positioning
-- **Error Handling**: Comprehensive error states and user feedback
+- **Custom Components**: Reusable dropdowns and checkboxes with viewport-aware positioning
 
 ## Tech Stack
 
@@ -25,7 +21,6 @@ A modern, feature-rich chatbot interface built with React, TypeScript, and Vite.
 - **Animations**: GSAP, CSS transitions
 - **HTTP Client**: Axios
 - **Markdown**: Marked library
-- **Icons**: Flaticons, FontAwesome, React-bits
 - **Fonts**: Google Fonts (Poppins, Quicksand, Montserrat, Patrick Hand)
 
 ## Components
@@ -39,53 +34,12 @@ Main chat interface that renders message history and manages chat state.
 Individual message renderer with:
 - Auto-scroll to new messages
 - LLM model attribution per message
-- Markdown support for rich text
-- Progressive typing animation
-- Avatar persistence (messages retain original bot avatar even when personality changes)
-- Personality-based avatar selection (Owl, Ghost, Megatron, Doraemon)
 
-#### `input_component.tsx`
-Message input interface featuring:
+### Input System
 - Dynamic textarea with auto-resize
 - Custom LLM and model selection dropdowns
-- File attachment support with drag-and-drop
-- Send button with click effects
-- Personality integration for message creation
-- Mobile-responsive design
-
-#### `typing_effect_component.tsx`
-Progressive character-by-character typing with:
-- Live markdown rendering
-- Stable partial content display
-- Code fence handling
-- Configurable typing speed (100 WPM default)
-
-### Animation Components
-
-#### `shuffle_text.tsx`
-GSAP-powered text shuffle animation with:
-- Character scrambling effects
-- Customizable animation modes
-- Scroll trigger support
-- Hover interactions
-
-#### `split_text.tsx`
-Character-by-character text reveals with:
-- Staggered animations
-- Configurable easing
-- Threshold-based triggers
-
-#### `shiny_text.tsx`
-Gradient text animation effect with:
-- Customizable colors and duration
-- Enable/disable states
-- Smooth transitions
-
-#### `click_spark.tsx`
-Click interaction enhancement with:
-- Particle burst effects
-- Configurable spark properties
-- Wrappable around any element
+- File attachment with drag-and-drop
+- Progressive typing with markdown rendering
 
 ### UI Components
 
@@ -203,186 +157,82 @@ Choose from multiple bot personalities that affect conversation style:
 ### Avatar Persistence System
 Smart avatar management ensures:
 - New messages use currently selected personality
-- Existing messages retain their original bot avatar
-- No retroactive changes to conversation history
 - Consistent visual conversation timeline
 
-### File Attachments
-Comprehensive file handling with:
-- Drag-and-drop file support
-- Upload progress tracking with bouncing animations
-- File type validation and error handling
-- Attachment count display with clear functionality
-- RAG (Retrieval-Augmented Generation) integration
-- Secure file cleanup services
-
-### Guest Access System
-Limited access for unauthenticated users:
-- 2 free prompts without registration
-- Prompt count monitoring and display
-- Session management for guest users
+### Guest Access
+- Two free prompts without registration
+- Prompt count monitoring
 - Seamless transition to full authentication
 
+### Multi-LLM Configuration
+- OpenAI: GPT-4, GPT-3.5-turbo models
+- Anthropic: Claude models
+- Google: Gemini models
+
 ### Custom Component Architecture
-Reusable, accessible components:
-- **Custom Dropdowns**: Viewport-aware positioning, keyboard navigation
-- **Custom Checkboxes**: Exclusive selection patterns, skewed styling
-- **Mobile-First Design**: Responsive components for all screen sizes
-- **TypeScript Integration**: Full type safety and developer experience
+- Reusable, accessible components with TypeScript
+- Viewport-aware positioning for dropdowns
+- Mobile-first responsive design
+- Keyboard navigation support
 
 ## Getting Started
 
 ### Prerequisites
-
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
-- Git
 
 ### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/r00kieAd/ai-chatbot-ui.git
-   cd ai-chatbot-ui/chatbot
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Setup**
-   Create a `.env` file in the chatbot directory:
-   ```env
-   VITE_API_BASE_URL=your_api_base_url
-   VITE_SESSION_AUTH_VAR=your_session_variable_name
-   ```
-
-4. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Build for production**
-   ```bash
-   npm run build
-   ```
-
-6. **Preview production build**
-   ```bash
-   npm run preview
-   ```
-
-### Configuration
-
-#### API Endpoints
-Update `src/configs/endpoints.json` with your API endpoints:
-```json
-{
-  "LOGIN": "/auth/login",
-  "LOGOUT": "/auth/logout", 
-  "ASK": "/chat/ask",
-  "UPLOAD": "/files/upload",
-  "PING": "/health"
-}
+```bash
+git clone https://github.com/r00kieAd/ai-chatbot-ui.git
+cd ai-chatbot-ui/chatbot
+npm install
 ```
 
-#### LLM Models
-Configure available models in `src/configs/available_llm_models.json`:
-```json
-{
-  "ALL": [
-    {"name": "OpenAI", "id": "1"},
-    {"name": "Anthropic", "id": "2"},
-    {"name": "Google", "id": "3"}
-  ],
-  "M1": {
-    "MODELS": [
-      {"model": "gpt-4o"},
-      {"model": "gpt-4o-mini"},
-      {"model": "gpt-3.5-turbo"}
-    ]
-  },
-  "M2": {
-    "MODELS": [
-      {"model": "claude-3-sonnet"},
-      {"model": "claude-3-haiku"}
-    ]
-  },
-  "M3": {
-    "MODELS": [
-      {"model": "gemini-pro"},
-      {"model": "gemini-pro-vision"}
-    ]
-  }
-}
+### Environment Setup
+Create a `.env` file:
+```
+VITE_API_BASE_URL=your_api_base_url
+VITE_SESSION_AUTH_VAR=your_session_variable_name
 ```
 
-#### Bot Personalities
-Configure AI personalities in `src/configs/bot_prompts.json`:
-```json
-{
-  "PERSONALITY": [
-    {"NAME": "Owl", "VALUE": "You are a wise and analytical assistant."},
-    {"NAME": "Ghost", "VALUE": "You are a mysterious and creative guide."},
-    {"NAME": "Megatron", "VALUE": "You are a powerful and direct advisor."},
-    {"NAME": "Doraemon", "VALUE": "You are a friendly and helpful companion."}
-  ]
-}
+### Development
+```bash
+npm run dev
 ```
 
 ## Attribution
 
-### Assets & Icons
-- **Icons**: [Flaticons](https://www.flaticon.com/) - Various UI icons and bot avatars
-- **Components**: [React-bits](https://react-bits.dev/) - Component patterns and utilities  
-- **Icons**: [FontAwesome](https://fontawesome.com/) - Dropdown arrows and navigation icons
-- **Bot Avatars**: Custom personality-based avatar system (Owl, Ghost, Megatron, Doraemon)
+## Attribution
 
-### Fonts
-- **Poppins**: Google Fonts - Primary UI font
-- **Quicksand**: Google Fonts - Secondary text
-- **Montserrat**: Google Fonts - Message timestamps
-- **Patrick Hand**: Google Fonts - User message styling
-- **Press Start 2P**: Google Fonts - Loading screen
-
-### Dependencies
-- **GSAP**: Animation library for text effects
-- **Marked**: Markdown parsing and rendering
-- **Axios**: HTTP client for API requests
-- **React**: UI framework
-- **TypeScript**: Type safety and development experience
-- **Vite**: Build tool and development server
-
-## Security Features
-
-- Secure session management with auto-logout
-- Token-based authentication
-- XSS protection through proper sanitization
-- CSRF protection through token validation
-
-## Performance Optimizations
-
-- Code splitting with React.lazy
-- Optimized re-renders with React.memo
-- Efficient scroll handling
-- Lazy loading of heavy components
-- Optimized bundle size with Vite
-
-## Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
+- Icons: Flaticons, FontAwesome, React-bits
+- Fonts: Google Fonts
+- Libraries: GSAP, Marked, Axios, React, TypeScript, Vite
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Security Features
+
+## License
+
+## Performance Optimizations
+
+## Known Issues
+
+## Browser Support
+
+## Roadmap
+
+## Contributing
+
+### In Development
+- Voice message support
+- Dark/light theme toggle
+- Message search functionality
+- Export chat history
+- Real-time typing indicators
+- Message reactions
+- Conversation templates
+- Advanced RAG configuration
 
 ## License
 
