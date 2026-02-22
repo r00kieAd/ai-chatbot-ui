@@ -14,7 +14,7 @@ function DisplayError({ errorMessage, smallerScreen = false }: Params) {
     const displayMessage = smallerScreen 
         ? "App is currently not ready for this screen, only available for laptop or larger screens."
         : (errorMessage || 'Unknown Error Occured');
-    
+    console.log(displayMessage)
     return (
         <>
             <div id="errDiv">

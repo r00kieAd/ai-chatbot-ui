@@ -29,7 +29,6 @@ async function ping() {
                 : undefined) ||
             axiosError?.message ||
             "Something went wrong";
-
         return {
             status: false,
             statusCode: axiosError?.response?.status || 500,
