@@ -244,9 +244,24 @@ body {
     z-index: 1;
     color: $loadingScreenTextColor;
 
-    .shuffle-parent {
+    .loading-block {
         @include centerElement();
-        display: inline-block;
+
+        .wait-text {
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
+            font-size: 20px;
+            &.show {
+                @include reveal();
+            }
+        }
+    }
+
+    .shuffle-parent {
+        position: relative;
+        display: flex;
+        justify-self: center;
         white-space: normal;
         word-wrap: break-word;
         will-change: transform;
@@ -301,7 +316,7 @@ body {
             font-size: clamp(16px, 2vw, 32px);
             text-align: center;
             // word-break: break-all;
-            text-align: left;
+            text-align: center;
         }
 
         ;
@@ -501,6 +516,7 @@ body {
                             -webkit-appearance: none;
                             margin: 0;
                         }
+
                         .setting-item input[type=number] {
                             -moz-appearance: textfield; // Firefox
                         }
@@ -1222,9 +1238,9 @@ body {
                             object-fit: cover;
                         }
 
-                        &.loading {
-                            animation: bounce 1.5s infinite;
-                        }
+                        // &.loading {
+                        //     animation: bounce 1.5s infinite;
+                        // }
                     }
 
                     .message-content {
@@ -1249,6 +1265,10 @@ body {
                             max-height: auto;
                             box-sizing: border-box;
                             display: block;
+
+                            .bot-wait-placeholder {
+                                display: inline-block;
+                            }
 
 
                             h1,
@@ -1634,6 +1654,7 @@ body {
                         #modelDropContainer {
                             visibility: hidden;
                             opacity: 0;
+
                             &.show {
                                 @include reveal();
                             }

@@ -45,14 +45,19 @@ const convertMarkdownToHTML = (text: string): string => {
 const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmModel, isSecondOrLater, personality: messagePersonality }) => {
     const [isNewMessage, setIsNewMessage] = useState(true);
     const [showTyping, setShowTyping] = useState(false);
-    const [typingComplete, setTypingComplete] = useState(false);
     const [firstMessage, setFirstMessage] = useState(true);
     const userMessageDiv = useRef<HTMLDivElement>(null);
     const chatExchangeRef = useRef<HTMLDivElement>(null);
     const botMessageRef = useRef<HTMLDivElement>(null);
-    const { personality: globalPersonality } = useGlobal();
+    const [localTypingComplete, setLocalTypingComplete] = useState<boolean>(false);
+    const { personality: globalPersonality, setTypingComplete } = useGlobal();
     const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
     const currentPersonality = fixedPersonality;
+
+
+    useEffect(() => {
+        setTypingComplete(localTypingComplete);
+    }, [localTypingComplete]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -61,7 +66,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
 
         if (botMessage) {
             setShowTyping(true);
-            setTypingComplete(false);
+            setLocalTypingComplete(false);
         }
 
         return () => clearTimeout(timer);
@@ -99,7 +104,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     }, [firstMessage])
 
     const handleTypingComplete = () => {
-        setTypingComplete(true);
+        setLocalTypingComplete(true);
     };
 
     return (
@@ -129,12 +134,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                     {botMessage ? (
                         <>
                             <div className="message-bubble poppins-regular bot-bubble">
-                                {showTyping && !typingComplete ? (
+                                {showTyping && !localTypingComplete ? (
                                     <TypingEffect
                                         text={botMessage}
                                         onComplete={handleTypingComplete}
                                     />
-                                ) : typingComplete ? (
+                                ) : localTypingComplete ? (
                                     <span dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
                                 ) : (
                                     <span>Loading...</span>
@@ -144,7 +149,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                         </>
                     ) : (
                         <div className="message-bubble">
-                            <em>thinking...</em>
+                            <em className='bot-wait-placeholder'>contemplating...<i className="fa-solid fa-burst fa-spin-pulse"></i></em>
                         </div>
                     )}
                 </div>

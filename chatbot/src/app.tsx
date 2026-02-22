@@ -151,7 +151,7 @@ function App() {
         } else {
           setServerOffline(true);
           setServerOnline(false);
-          setError("Server Offline, contact Admin");
+          setError(`${response.resp ? response.resp : "Server Error"}, contact Admin`);
           setHasPreviousError(true);
         }
       } catch (Exception) {
