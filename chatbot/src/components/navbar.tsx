@@ -222,8 +222,8 @@ const NavbarComp: React.FC = () => {
                     <div id="displayInfo" className='montserrat-msg' ref={infoDiv}>{trait} {personality.toUpperCase()}</div>
                     <div id="navbarLogout" className="navbar-item">
                         <button onClick={killSession} className='navbar-button poppins-regular'>
-                            <i className="fa-solid fa-skull icon-show"></i>
-                            <i className="fa-regular fa-hand-spock icon-hide"></i>
+                            <i className="fa-solid fa-arrow-right-from-bracket fa-fade icon-show"></i>
+                            <i className="fa-solid fa-arrow-right-from-bracket icon-hide"></i>
                             &nbsp;session
                         </button>
                     </div>

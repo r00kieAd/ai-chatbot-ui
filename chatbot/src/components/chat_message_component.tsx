@@ -1,16 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
 import TypingEffect from './typing_effect_component';
-import owl from '../assets/owl.png';
-import ghost from '../assets/ghost.png';
-import hal_9000 from '../assets/hal_9000.png';
-import sherlock from '../assets/sherlock.png';
-import face from '../assets/face.png';
-import aicloud from '../assets/think.png';
-import google from '../assets/google.png';
-import openai from '../assets/openai.png';
 import { useGlobal } from '../utils/global_context';
-import PROMPTS from '../configs/bot_prompts.json'
 
 marked.setOptions({
     breaks: true,
@@ -22,6 +13,7 @@ interface ChatMessageProps {
     userTime: string;
     botMessage: string;
     botTime: string;
+    llmprovider?: string;
     llmModel?: string;
     isSecondOrLater?: boolean;
     personality?: string;
@@ -34,7 +26,7 @@ const convertMarkdownToHTML = (text: string): string => {
 
     try {
         const htmlOutput = marked(text) as string;
-        console.log('Markdown conversion:', { input: text.substring(0, 100) + '...', output: htmlOutput.substring(0, 200) + '...' });
+        // console.log('Markdown conversion:', { input: text.substring(0, 100) + '...', output: htmlOutput.substring(0, 200) + '...' });
         return htmlOutput;
     } catch (error) {
         console.error('Markdown conversion failed:', error);
@@ -42,7 +34,7 @@ const convertMarkdownToHTML = (text: string): string => {
     }
 };
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmModel, isSecondOrLater, personality: messagePersonality }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmprovider, llmModel, isSecondOrLater }) => {
     const [isNewMessage, setIsNewMessage] = useState(true);
     const [showTyping, setShowTyping] = useState(false);
     const [firstMessage, setFirstMessage] = useState(true);
@@ -50,11 +42,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     const chatExchangeRef = useRef<HTMLDivElement>(null);
     const botMessageRef = useRef<HTMLDivElement>(null);
     const [localTypingComplete, setLocalTypingComplete] = useState<boolean>(false);
-    const { personality: globalPersonality, setTypingComplete } = useGlobal();
-    const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
-    const currentPersonality = fixedPersonality;
+    const { setTypingComplete } = useGlobal();
+    // const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
+    // const currentPersonality = fixedPersonality;
 
-
+    // console.log(llmprovider, llmModel);
     useEffect(() => {
         setTypingComplete(localTypingComplete);
     }, [localTypingComplete]);
@@ -110,9 +102,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     return (
         <div className={`chat-exchange ${isNewMessage ? 'new-message' : ''}`} ref={chatExchangeRef}>
             <div className="chat-message user-message" ref={userMessageDiv}>
-                <div className="message-avatar">
-                    <img src={face} alt="Face" />
-                </div>
                 <div className="message-content">
                     <div className="message-bubble patrick-hand-regular user-bubble" dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(userMessage) }}>
                     </div>
@@ -121,15 +110,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
             </div>
 
             <div className="chat-message bot-message" ref={botMessageRef}>
-                <div className={`message-avatar ${!botMessage ? 'loading' : ''}`}>
-                    <img src={
-                        botMessage ? currentPersonality == PROMPTS.PERSONALITY[0].NAME ? owl
-                            : currentPersonality == PROMPTS.PERSONALITY[1].NAME ? ghost
-                                : currentPersonality == PROMPTS.PERSONALITY[2].NAME ? sherlock
-                                    : currentPersonality == PROMPTS.PERSONALITY[3].NAME ? hal_9000
-                                        : llmModel?.toLocaleLowerCase().includes("openai") ? openai : llmModel?.toLocaleLowerCase().includes("google") ? google : face : aicloud}
-                        alt={botMessage ? "Bot" : "Loading"} />
-                </div>
                 <div className="message-content">
                     {botMessage ? (
                         <>
@@ -145,7 +125,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                     <span>Loading...</span>
                                 )}
                             </div>
-                            <div className="message-time montserrat-msg">from {llmModel || 'unknown'} at {botTime}</div>
+                            <div className="message-time montserrat-msg">
+                                from {
+                                llmprovider?.toLocaleLowerCase().includes("openai") ? <><i className="fa-brands fa-openai"></i></>:
+                                llmprovider?.toLocaleLowerCase().includes("google") ? <><i className="fa-brands fa-google"></i></> : <i className="fa-solid fa-circle-question"></i>}
+                                <span className='llm-model-name'>{` ${llmModel || 'unknown'}`} at {botTime}</span></div>
                         </>
                     ) : (
                         <div className="message-bubble">

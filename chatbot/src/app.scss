@@ -252,6 +252,7 @@ body {
             opacity: 0;
             transition: all 0.5s ease-in-out;
             font-size: 20px;
+
             &.show {
                 @include reveal();
             }
@@ -311,19 +312,25 @@ body {
         font-size: 10px;
 
         .errContainerChild {
-            width: fit-content;
+            width: 350px;
             height: auto;
             font-size: clamp(16px, 2vw, 32px);
             text-align: center;
             // word-break: break-all;
             text-align: center;
-        }
-
-        ;
+        };
 
         .errContainerChild1 img {
-            width: 300px;
+            width: 200px;
             height: auto;
+        };
+
+        #retryButton {
+            width: 30%;
+            margin-top: 10px;
+            button {
+                @include button($errorColor, 100%, 30px);
+            }
         }
     }
 }
@@ -1152,7 +1159,8 @@ body {
             position: relative;
             overflow: hidden;
             align-items: center;
-            width: 100%;
+            width: 90%;
+            justify-self: center;
             justify-content: center;
 
             &.show {
@@ -1178,7 +1186,7 @@ body {
                     display: none;
                 }
 
-                width: 100%;
+                width: 99%;
 
                 &.chat-visible {
                     display: block;
@@ -1221,26 +1229,6 @@ body {
 
                     &:last-child {
                         margin-bottom: 0;
-                    }
-
-                    .message-avatar {
-                        width: 32px;
-                        height: 32px;
-                        border-radius: 50%;
-                        margin-right: 12px;
-                        flex-shrink: 0;
-                        margin-top: 10px;
-
-                        img {
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 0%;
-                            object-fit: cover;
-                        }
-
-                        // &.loading {
-                        //     animation: bounce 1.5s infinite;
-                        // }
                     }
 
                     .message-content {
@@ -1428,24 +1416,22 @@ body {
                         }
 
                         .message-time {
-                            font-size: 11px;
+                            font-size: 10px;
                             color: #6b7280;
                             margin-left: 3px;
                             opacity: 0.8;
+                            line-height: 1;
+
+                            .fa-brands {
+                                font-size: 9px;
+                            }
                         }
                     }
 
                     &.user-message {
                         justify-content: flex-end;
 
-                        .message-avatar {
-                            order: 2;
-                            margin-right: 0;
-                            margin-left: 12px;
-                        }
-
                         .message-content {
-                            order: 1;
                             text-align: right;
                             display: flex;
                             flex-direction: column;
