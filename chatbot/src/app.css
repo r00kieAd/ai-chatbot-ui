@@ -155,16 +155,32 @@ body {
   font-size: 10px;
 }
 #errDiv .errorContainer .errContainerChild {
-  width: -moz-fit-content;
-  width: fit-content;
+  width: 350px;
   height: auto;
   font-size: clamp(16px, 2vw, 32px);
   text-align: center;
   text-align: center;
 }
 #errDiv .errorContainer .errContainerChild1 img {
-  width: 300px;
+  width: 200px;
   height: auto;
+}
+#errDiv .errorContainer #retryButton {
+  width: 30%;
+  margin-top: 10px;
+}
+#errDiv .errorContainer #retryButton button {
+  width: 100%;
+  height: 30px;
+  outline: none;
+  border: 1px solid #660B05;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
 }
 
 #parent {
@@ -969,7 +985,8 @@ body {
   position: relative;
   overflow: hidden;
   align-items: center;
-  width: 100%;
+  width: 90%;
+  justify-self: center;
   justify-content: center;
 }
 #parent #mainContainer #innerContainer.show {
@@ -992,7 +1009,7 @@ body {
   display: none;
 }
 #parent #mainContainer #innerContainer #chatContainer {
-  width: 100%;
+  width: 99%;
 }
 #parent #mainContainer #innerContainer #chatContainer.chat-visible {
   display: block;
@@ -1028,21 +1045,6 @@ body {
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message:last-child {
   margin-bottom: 0;
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin-right: 12px;
-  flex-shrink: 0;
-  margin-top: 10px;
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-avatar img {
-  width: 100%;
-  height: 100%;
-  border-radius: 0%;
-  -o-object-fit: cover;
-     object-fit: cover;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content {
   max-width: 70%;
@@ -1205,21 +1207,19 @@ body {
   line-height: 1;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time {
-  font-size: 11px;
+  font-size: 10px;
   color: #6b7280;
   margin-left: 3px;
   opacity: 0.8;
+  line-height: 1;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time .fa-brands {
+  font-size: 9px;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message {
   justify-content: flex-end;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-avatar {
-  order: 2;
-  margin-right: 0;
-  margin-left: 12px;
-}
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content {
-  order: 1;
   text-align: right;
   display: flex;
   flex-direction: column;

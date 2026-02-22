@@ -94,7 +94,8 @@ const InputBox: React.FC = () => {
                 userTime: userTime,
                 botMessage: '',
                 botTime: '',
-                llmModel: curr_client,
+                llmprovider: curr_client || 'Unknown',
+                llmModel: curr_model || 'Unknown',
                 personality: personality
             }
         }));
@@ -106,7 +107,8 @@ const InputBox: React.FC = () => {
                 [chatKey]: {
                     ...prev[chatKey],
                     botMessage: `Your guest prompt count has reached it's limit of ${guestPromptCount}`,
-                    botTime: initiatedBotTime
+                    botTime: initiatedBotTime,
+                    llmprovider: prev[chatKey]?.llmprovider || 'Unknown'
                 }
             }));
         } else if (dispErrMsg) {
@@ -115,27 +117,28 @@ const InputBox: React.FC = () => {
                 [chatKey]: {
                     ...prev[chatKey],
                     botMessage: "Unknown error occured",
-                    botTime: initiatedBotTime
+                    botTime: initiatedBotTime,
+                    llmprovider: prev[chatKey]?.llmprovider || 'Unknown'
                 }
             }));
         } else {
             setGuestPromptCount(guestPromptCount + 1)
-            let personality_instruction = "Owl";
+            let personality_instruction = "";
             switch (personality) {
                 case INSTRUCTIONS.PERSONALITY[0].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[0].VALUE ? INSTRUCTIONS.PERSONALITY[0].VALUE : "Owl"
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[0].VALUE ? INSTRUCTIONS.PERSONALITY[0].VALUE : "Answer factually"
                     break;
                 case INSTRUCTIONS.PERSONALITY[1].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[1].VALUE ? INSTRUCTIONS.PERSONALITY[1].VALUE : "Owl"
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[1].VALUE ? INSTRUCTIONS.PERSONALITY[1].VALUE : "Answer factually"
                     break;
                 case INSTRUCTIONS.PERSONALITY[2].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[2].VALUE ? INSTRUCTIONS.PERSONALITY[2].VALUE : "Owl"
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[2].VALUE ? INSTRUCTIONS.PERSONALITY[2].VALUE : "Answer factually"
                     break;
                 case INSTRUCTIONS.PERSONALITY[3].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[3].VALUE ? INSTRUCTIONS.PERSONALITY[3].VALUE : "Owl"
+                    personality_instruction = INSTRUCTIONS.PERSONALITY[3].VALUE ? INSTRUCTIONS.PERSONALITY[3].VALUE : "Answer factually"
                     break;
                 default:
-                    personality_instruction = "Owl"
+                    personality_instruction = "Answer factually"
 
             }
             const response = await initiateAsk({
@@ -156,7 +159,8 @@ const InputBox: React.FC = () => {
                         ...prev[chatKey],
                         botMessage: response.resp.response,
                         botTime: botTime,
-                        llmModel: `${response.resp.provider} | ${response.resp.model_used}`
+                        llmprovider: response.resp.provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
+                        llmModel: response.resp.model_used || prev[chatKey]?.llmModel || curr_model || 'Unknown'
                     }
                 }));
             } else if (response && response.statusCode < 500) {

@@ -7,6 +7,7 @@ interface ChatMessage {
     userTime: string;
     botMessage: string;
     botTime: string;
+    llmprovider: string;
     llmModel?: string;
     personality?: string;
 }
