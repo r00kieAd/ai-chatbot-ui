@@ -316,7 +316,7 @@ body {
             font-size: clamp(16px, 2vw, 32px);
             text-align: center;
             // word-break: break-all;
-            text-align: left;
+            text-align: center;
         }
 
         ;
@@ -1238,9 +1238,9 @@ body {
                             object-fit: cover;
                         }
 
-                        &.loading {
-                            animation: bounce 1.5s infinite;
-                        }
+                        // &.loading {
+                        //     animation: bounce 1.5s infinite;
+                        // }
                     }
 
                     .message-content {
@@ -1265,6 +1265,10 @@ body {
                             max-height: auto;
                             box-sizing: border-box;
                             display: block;
+
+                            .bot-wait-placeholder {
+                                display: inline-block;
+                            }
 
 
                             h1,

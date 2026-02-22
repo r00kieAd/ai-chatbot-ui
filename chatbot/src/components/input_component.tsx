@@ -16,7 +16,7 @@ import Dropdown from './dropdown_d';
 const InputBox: React.FC = () => {
 
     const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels } = useGlobal();
-    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, typingComplete } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -327,7 +327,7 @@ const InputBox: React.FC = () => {
                     </div>
                     <div id="sendContainer">
                         <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-                            <button className='button send-button pointer quicksand-light' onClick={triggerSend} disabled={!enableAskButton}>
+                            <button className='button send-button pointer quicksand-light' onClick={triggerSend} disabled={!enableAskButton && !typingComplete}>
                                 <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class' /></span>
                                 <span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span>
                             </button>
