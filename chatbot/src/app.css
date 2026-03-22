@@ -1074,6 +1074,16 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble .bot-wait-placeholder {
   display: inline-block;
 }
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble .bot-message-text {
+  display: inline;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble .bot-streaming-spinner {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 8px;
+  font-size: 0.9rem;
+  color: #4A4947;
+}
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h1,
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h2,
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h3,
@@ -1603,6 +1613,7 @@ body {
   justify-content: space-around;
   cursor: pointer;
   border-color: #D0DDD0;
+  height: 30px;
   padding: 2px 10px;
   background-color: #AAB99A;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
@@ -1628,10 +1639,9 @@ body {
   -webkit-text-fill-color: initial;
   background: none;
 }
-#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-img img {
-  margin-top: 4px;
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer i {
   margin-left: 5px;
-  width: 20px;
+  line-height: 1;
 }
 #parent #mainContainer.show {
   opacity: 1;

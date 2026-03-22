@@ -10,6 +10,8 @@ interface ChatMessage {
     llmprovider: string;
     llmModel?: string;
     personality?: string;
+    isStreaming?: boolean;
+    streamId?: string;
 }
 
 interface ModelList {

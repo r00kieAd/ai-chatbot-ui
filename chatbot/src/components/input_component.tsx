@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
 import send from '../assets/send.png';
 import attach from '../assets/document.png';
 // import LLMs from '../configs/available_llm_models.json';
 import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
-import initiateAsk from '../services/ask_service';
+import initiateAsk, { AskResponsePayload, AskSuccessPayload } from '../services/ask_service';
+import stopStream from '../services/stop_service';
 import setLLMChoice from '../services/llm_choice';
 import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
@@ -13,10 +14,12 @@ import uploadFile from '../services/file_service';
 import clearAttachments from '../services/clear_attachments';
 import Dropdown from './dropdown_d';
 
+const isAskSuccessPayload = (value: AskResponsePayload | undefined): value is AskSuccessPayload => typeof value === 'object' && value !== null;
+
 const InputBox: React.FC = () => {
 
     const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels } = useGlobal();
-    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, typingComplete } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, setTypingComplete } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -29,6 +32,10 @@ const InputBox: React.FC = () => {
     const [selectedLLM, setSelectedLLM] = useState<string>("");
     const [selectedModel, setSelectedModel] = useState<string>("");
     const [showModels, setShowModels] = useState<boolean>(false);
+    const [streamActive, setStreamActive] = useState(false);
+    const [activeStreamId, setActiveStreamId] = useState<string | undefined>(undefined);
+    const stopRequestedRef = useRef(false);
+    const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
 
@@ -80,10 +87,10 @@ const InputBox: React.FC = () => {
     }, [models]);
 
     const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag) => {
-        // alert(`curr user: ${currUser}`);
-        // alert(`curr prompt: ${curr_prompt}`);
         if (!currUser) return;
+        stopRequestedRef.current = false;
         setEnableAskButton(false);
+        setTypingComplete(false);
         const chatKey = Date.now().toString();
         const userTime = new Date().toLocaleTimeString();
 
@@ -96,94 +103,249 @@ const InputBox: React.FC = () => {
                 botTime: '',
                 llmprovider: curr_client || 'Unknown',
                 llmModel: curr_model || 'Unknown',
-                personality: personality
+                personality: personality,
+                isStreaming: true,
+                streamId: undefined
             }
         }));
 
-        const initiatedBotTime = new Date().toLocaleTimeString();
-        if (guestPromptCount >= 2 && guestLogin) {
-            setChatHistory(prev => ({
-                ...prev,
-                [chatKey]: {
-                    ...prev[chatKey],
-                    botMessage: `Your guest prompt count has reached it's limit of ${guestPromptCount}`,
-                    botTime: initiatedBotTime,
-                    llmprovider: prev[chatKey]?.llmprovider || 'Unknown'
-                }
-            }));
-        } else if (dispErrMsg) {
-            setChatHistory(prev => ({
-                ...prev,
-                [chatKey]: {
-                    ...prev[chatKey],
-                    botMessage: "Unknown error occured",
-                    botTime: initiatedBotTime,
-                    llmprovider: prev[chatKey]?.llmprovider || 'Unknown'
-                }
-            }));
-        } else {
-            setGuestPromptCount(guestPromptCount + 1)
-            let personality_instruction = "";
-            switch (personality) {
-                case INSTRUCTIONS.PERSONALITY[0].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[0].VALUE ? INSTRUCTIONS.PERSONALITY[0].VALUE : "Answer factually"
-                    break;
-                case INSTRUCTIONS.PERSONALITY[1].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[1].VALUE ? INSTRUCTIONS.PERSONALITY[1].VALUE : "Answer factually"
-                    break;
-                case INSTRUCTIONS.PERSONALITY[2].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[2].VALUE ? INSTRUCTIONS.PERSONALITY[2].VALUE : "Answer factually"
-                    break;
-                case INSTRUCTIONS.PERSONALITY[3].NAME:
-                    personality_instruction = INSTRUCTIONS.PERSONALITY[3].VALUE ? INSTRUCTIONS.PERSONALITY[3].VALUE : "Answer factually"
-                    break;
-                default:
-                    personality_instruction = "Answer factually"
-
-            }
-            const response = await initiateAsk({
-                username: currUser,
-                prompt: curr_prompt,
-                instruction: personality_instruction,
-                model: curr_model.toLowerCase(),
-                use_rag: curr_use_rag,
-                token: authToken ? authToken : 'null'
-            });
-
-            const botTime = new Date().toLocaleTimeString();
-
-            if (response && response.status) {
+        try {
+            const initiatedBotTime = new Date().toLocaleTimeString();
+            if (guestPromptCount >= 2 && guestLogin) {
                 setChatHistory(prev => ({
                     ...prev,
                     [chatKey]: {
                         ...prev[chatKey],
-                        botMessage: response.resp.response,
-                        botTime: botTime,
-                        llmprovider: response.resp.provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
-                        llmModel: response.resp.model_used || prev[chatKey]?.llmModel || curr_model || 'Unknown'
+                        botMessage: `Your guest prompt count has reached it's limit of ${guestPromptCount}`,
+                        botTime: initiatedBotTime,
+                        llmprovider: prev[chatKey]?.llmprovider || 'Unknown',
+                        isStreaming: false,
+                        streamId: undefined
                     }
                 }));
-            } else if (response && response.statusCode < 500) {
+            } else if (dispErrMsg) {
                 setChatHistory(prev => ({
                     ...prev,
                     [chatKey]: {
                         ...prev[chatKey],
-                        botMessage: `Error ${response.statusCode}: ${response.resp}`,
-                        botTime: botTime
+                        botMessage: "Unknown error occured",
+                        botTime: initiatedBotTime,
+                        llmprovider: prev[chatKey]?.llmprovider || 'Unknown',
+                        isStreaming: false,
+                        streamId: undefined
                     }
                 }));
             } else {
-                setChatHistory(prev => ({
-                    ...prev,
-                    [chatKey]: {
-                        ...prev[chatKey],
-                        botMessage: `Server Error ${response?.statusCode}: ${response?.resp || 'Unknown error'}`,
-                        botTime: botTime
+                setGuestPromptCount(guestPromptCount + 1)
+                let personality_instruction = "";
+                switch (personality) {
+                    case INSTRUCTIONS.PERSONALITY[0].NAME:
+                        personality_instruction = INSTRUCTIONS.PERSONALITY[0].VALUE ? INSTRUCTIONS.PERSONALITY[0].VALUE : "Answer factually"
+                        break;
+                    case INSTRUCTIONS.PERSONALITY[1].NAME:
+                        personality_instruction = INSTRUCTIONS.PERSONALITY[1].VALUE ? INSTRUCTIONS.PERSONALITY[1].VALUE : "Answer factually"
+                        break;
+                    case INSTRUCTIONS.PERSONALITY[2].NAME:
+                        personality_instruction = INSTRUCTIONS.PERSONALITY[2].VALUE ? INSTRUCTIONS.PERSONALITY[2].VALUE : "Answer factually"
+                        break;
+                    case INSTRUCTIONS.PERSONALITY[3].NAME:
+                        personality_instruction = INSTRUCTIONS.PERSONALITY[3].VALUE ? INSTRUCTIONS.PERSONALITY[3].VALUE : "Answer factually"
+                        break;
+                    default:
+                        personality_instruction = "Answer factually"
+
+                }
+                setStreamActive(true);
+                setActiveStreamId(undefined);
+                const response = await initiateAsk({
+                    username: currUser,
+                    prompt: curr_prompt,
+                    instruction: personality_instruction,
+                    model: curr_model.toLowerCase(),
+                    use_rag: curr_use_rag,
+                    token: authToken ? authToken : 'null'
+                });
+
+                const botTime = new Date().toLocaleTimeString();
+
+                if (response && response.status) {
+                    const reader = response.reader;
+                    if (reader) {
+                        readerRef.current = reader;
+                        const decoder = new TextDecoder();
+                        let accumulated = '';
+                        let eventBuffer = '';
+
+                        const pushMessageChunk = (text: string) => {
+                            if (!text) return;
+                            accumulated += text;
+                            setChatHistory(prev => {
+                                const existing = prev[chatKey];
+                                if (!existing) return prev;
+                                return {
+                                    ...prev,
+                                    [chatKey]: {
+                                        ...existing,
+                                        botMessage: accumulated,
+                                        isStreaming: true
+                                    }
+                                };
+                            });
+                        };
+
+                        const processBlock = (block: string) => {
+                            if (!block.trim()) return;
+                            const lines = block.split(/\r?\n/);
+                            let currentEvent: string | null = null;
+                            const dataLines: string[] = [];
+                            for (const rawLine of lines) {
+                                if (!rawLine) continue;
+                                if (rawLine.startsWith('event:')) {
+                                    currentEvent = rawLine.slice(6).trim();
+                                    continue;
+                                }
+                                if (rawLine.startsWith('data:')) {
+                                    let payload = rawLine.slice(5);
+                                    if (payload.startsWith(' ') && payload.length > 1) {
+                                        payload = payload.slice(1);
+                                    }
+                                    dataLines.push(payload);
+                                }
+                            }
+
+                            const combinedData = dataLines.join('\n');
+                            if (currentEvent === 'stream_id') {
+                                const streamId = combinedData.trim();
+                                if (streamId) {
+                                    setActiveStreamId(streamId);
+                                    setChatHistory(prev => ({
+                                        ...prev,
+                                        [chatKey]: {
+                                            ...prev[chatKey],
+                                            streamId: streamId
+                                        }
+                                    }));
+                                }
+                            } else if (currentEvent === 'metadata') {
+                                if (combinedData) {
+                                    try {
+                                        const metadata = JSON.parse(combinedData);
+                                        const provider = typeof metadata.provider === 'string' ? metadata.provider : undefined;
+                                        const modelUsed = typeof metadata.model_used === 'string' ? metadata.model_used : undefined;
+                                        setChatHistory(prev => ({
+                                            ...prev,
+                                            [chatKey]: {
+                                                ...prev[chatKey],
+                                                llmprovider: provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
+                                                llmModel: modelUsed || prev[chatKey]?.llmModel || curr_model || 'Unknown'
+                                            }
+                                        }));
+                                    } catch (error) {
+                                        console.warn('Metadata parse error', error);
+                                    }
+                                }
+                            } else if (currentEvent === 'completion') {
+                                return;
+                            } else if (combinedData) {
+                                pushMessageChunk(combinedData);
+                            }
+                        };
+
+                        try {
+                            while (true) {
+                                if (stopRequestedRef.current) break;
+                                const { value, done } = await reader.read();
+                                if (stopRequestedRef.current || done) break;
+                                if (!value) continue;
+                                const chunkText = decoder.decode(value, { stream: true });
+                                eventBuffer += chunkText;
+                                const segments = eventBuffer.split(/\n\n/);
+                                eventBuffer = segments.pop() ?? '';
+                                segments.forEach(processBlock);
+                            }
+                            if (eventBuffer) {
+                                processBlock(eventBuffer);
+                                eventBuffer = '';
+                            }
+                        } finally {
+                            reader.releaseLock();
+                            readerRef.current = null;
+                        }
+
+                        setChatHistory(prev => {
+                            const existing = prev[chatKey];
+                            if (!existing) return prev;
+                            return {
+                                ...prev,
+                                [chatKey]: {
+                                    ...existing,
+                                    botMessage: accumulated,
+                                    botTime: botTime,
+                                    isStreaming: false
+                                }
+                            };
+                        });
+                    } else if (response.resp) {
+                        const responsePayload = response.resp;
+                        const payloadIsObject = isAskSuccessPayload(responsePayload);
+                        const message = typeof responsePayload === 'string'
+                            ? responsePayload
+                            : payloadIsObject
+                                ? responsePayload.response ?? ''
+                                : '';
+                        const provider = payloadIsObject ? responsePayload.provider : undefined;
+                        const modelUsed = payloadIsObject ? responsePayload.model_used : undefined;
+                        setChatHistory(prev => ({
+                            ...prev,
+                            [chatKey]: {
+                                ...prev[chatKey],
+                                botMessage: message,
+                                botTime: botTime,
+                                llmprovider: provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
+                                llmModel: modelUsed || prev[chatKey]?.llmModel || curr_model || 'Unknown',
+                                isStreaming: false
+                            }
+                        }));
+                    } else {
+                        setChatHistory(prev => ({
+                            ...prev,
+                            [chatKey]: {
+                                ...prev[chatKey],
+                                botMessage: '',
+                                botTime: botTime,
+                                isStreaming: false
+                            }
+                        }));
                     }
-                }));
+                } else if (response && response.statusCode && response.statusCode < 500) {
+                    setChatHistory(prev => ({
+                        ...prev,
+                        [chatKey]: {
+                            ...prev[chatKey],
+                            botMessage: `Error ${response.statusCode}: ${response.resp}`,
+                            botTime: botTime,
+                            isStreaming: false
+                        }
+                    }));
+                } else {
+                    setChatHistory(prev => ({
+                        ...prev,
+                        [chatKey]: {
+                            ...prev[chatKey],
+                            botMessage: `Server Error ${response?.statusCode}: ${response?.resp || 'Unknown error'}`,
+                            botTime: botTime,
+                            isStreaming: false
+                        }
+                    }));
+                }
             }
+        } finally {
+            setEnableAskButton(true);
+            setTypingComplete(true);
+            setStreamActive(false);
+            stopRequestedRef.current = false;
+            setActiveStreamId(undefined);
         }
-        setEnableAskButton(true);
     }
 
 
@@ -259,6 +421,31 @@ const InputBox: React.FC = () => {
         setAsked(true);
     }
 
+    const handleStopClick = async () => {
+        if (!activeStreamId) return;
+        stopRequestedRef.current = true;
+        readerRef.current?.cancel();
+        try {
+            const resp = await stopStream(activeStreamId);
+            if (!resp.status) {
+                console.warn('Stop request failed', resp.resp);
+            }
+        } catch (error) {
+            console.warn('Stop request error', error);
+        } finally {
+            setStreamActive(false);
+            setActiveStreamId(undefined);
+        }
+    };
+
+    const handleButtonClick = () => {
+        if (streamActive && activeStreamId) {
+            void handleStopClick();
+        } else {
+            triggerSend();
+        }
+    };
+
     const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setUploading(true);
         const file = e.target.files?.[0];
@@ -331,10 +518,24 @@ const InputBox: React.FC = () => {
                     </div>
                     <div id="sendContainer">
                         <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-                            <button className='button send-button pointer quicksand-light' onClick={triggerSend} disabled={!enableAskButton && !typingComplete}>
-                                <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class' /></span>
-                                <span className='button-img'><img src={send} alt="Send Transfer" id="fileTransferGif" /></span>
-                            </button>
+                        {(() => {
+                            const isButtonDisabled = !enableAskButton && !streamActive;
+                            return (
+                                <button className='button send-button pointer quicksand-light' onClick={handleButtonClick} disabled={isButtonDisabled}>
+                                    {streamActive ? (
+                                        <>
+                                            <span className='button-text'><ShinyText text="Stop" disabled={true} speed={3} className='custom-class' /></span>
+                                            &nbsp;<i className="fa-solid fa-circle-stop"></i>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class' /></span>
+                                            <i className="fa-regular fa-paper-plane"></i>
+                                        </>
+                                    )}
+                                </button>
+                            );
+                        })()}
                         </ClickSpark>
 
                     </div>

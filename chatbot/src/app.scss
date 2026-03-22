@@ -318,16 +318,21 @@ body {
             text-align: center;
             // word-break: break-all;
             text-align: center;
-        };
+        }
+
+        ;
 
         .errContainerChild1 img {
             width: 200px;
             height: auto;
-        };
+        }
+
+        ;
 
         #retryButton {
             width: 30%;
             margin-top: 10px;
+
             button {
                 @include button($errorColor, 100%, 30px);
             }
@@ -1258,6 +1263,18 @@ body {
                                 display: inline-block;
                             }
 
+                            .bot-message-text {
+                                display: inline;
+                            }
+
+                            .bot-streaming-spinner {
+                                display: inline-flex;
+                                align-items: center;
+                                margin-right: 8px;
+                                font-size: 0.9rem;
+                                color: $botMessageColor;
+                            }
+
 
                             h1,
                             h2,
@@ -1855,6 +1872,8 @@ body {
                             button {
                                 @include button($inputContainerMainTextColor);
                                 border-color: $inputContainerMainTextColor;
+                                // border: 10px solid black;
+                                height: 30px;
                                 padding: 2px 10px;
                                 // background-color: $inputContainerMainTextColor;
                                 background-color: $botMessageBg;
@@ -1874,12 +1893,9 @@ body {
                                 }
                             }
 
-                            .button-img {
-                                img {
-                                    margin-top: 4px;
-                                    margin-left: 5px;
-                                    width: 20px;
-                                }
+                            i {
+                                margin-left: 5px;
+                                line-height: 1;
                             }
                         }
                     }
