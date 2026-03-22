@@ -7,5 +7,6 @@
     "PING": "/start",
     "SETLLM": "/update_llm_choice",
     "UPDATECONFIG": "/update_llm_settings",
-    "ALL_MODELS": "/all_models"
+    "ALL_MODELS": "/all_models",
+    "STOP": "/stop"
 }

@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
-import TypingEffect from './typing_effect_component';
-import { useGlobal } from '../utils/global_context';
 
 marked.setOptions({
     breaks: true,
@@ -17,6 +15,7 @@ interface ChatMessageProps {
     llmModel?: string;
     isSecondOrLater?: boolean;
     personality?: string;
+    isStreaming?: boolean;
 }
 
 const convertMarkdownToHTML = (text: string): string => {
@@ -34,32 +33,21 @@ const convertMarkdownToHTML = (text: string): string => {
     }
 };
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmprovider, llmModel, isSecondOrLater }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmprovider, llmModel, isSecondOrLater, isStreaming = false }) => {
     const [isNewMessage, setIsNewMessage] = useState(true);
-    const [showTyping, setShowTyping] = useState(false);
     const [firstMessage, setFirstMessage] = useState(true);
     const userMessageDiv = useRef<HTMLDivElement>(null);
     const chatExchangeRef = useRef<HTMLDivElement>(null);
     const botMessageRef = useRef<HTMLDivElement>(null);
-    const [localTypingComplete, setLocalTypingComplete] = useState<boolean>(false);
-    const { setTypingComplete } = useGlobal();
     // const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
     // const currentPersonality = fixedPersonality;
 
     // console.log(llmprovider, llmModel);
     useEffect(() => {
-        setTypingComplete(localTypingComplete);
-    }, [localTypingComplete]);
-
-    useEffect(() => {
+        if (!botMessage) return;
         const timer = setTimeout(() => {
             setIsNewMessage(false);
         }, 1000);
-
-        if (botMessage) {
-            setShowTyping(true);
-            setLocalTypingComplete(false);
-        }
 
         return () => clearTimeout(timer);
     }, [botMessage]);
@@ -95,10 +83,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
         }
     }, [firstMessage])
 
-    const handleTypingComplete = () => {
-        setLocalTypingComplete(true);
-    };
-
     return (
         <div className={`chat-exchange ${isNewMessage ? 'new-message' : ''}`} ref={chatExchangeRef}>
             <div className="chat-message user-message" ref={userMessageDiv}>
@@ -114,16 +98,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                     {botMessage ? (
                         <>
                             <div className="message-bubble poppins-regular bot-bubble">
-                                {showTyping && !localTypingComplete ? (
-                                    <TypingEffect
-                                        text={botMessage}
-                                        onComplete={handleTypingComplete}
-                                    />
-                                ) : localTypingComplete ? (
-                                    <span dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
-                                ) : (
-                                    <span>Loading...</span>
+                                {isStreaming && (
+                                    <span className='bot-streaming-spinner'><i className="fa-solid fa-burst fa-spin-pulse"></i></span>
                                 )}
+                                <span className='bot-message-text' dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
                             </div>
                             <div className="message-time montserrat-msg">
                                 from {
