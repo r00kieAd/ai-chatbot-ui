@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
-import send from '../assets/send.png';
 import attach from '../assets/document.png';
 // import LLMs from '../configs/available_llm_models.json';
 import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
-import initiateAsk, { AskResponsePayload, AskSuccessPayload } from '../services/ask_service';
+import initiateAsk from '../services/ask_service';
+import type { AskResponsePayload, AskSuccessPayload } from '../services/ask_service';
 import stopStream from '../services/stop_service';
 import setLLMChoice from '../services/llm_choice';
 import ClickSpark from './click_spark';
