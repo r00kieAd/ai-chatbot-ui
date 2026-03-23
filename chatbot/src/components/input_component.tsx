@@ -259,7 +259,7 @@ const InputBox: React.FC = () => {
                                 if (!value) continue;
                                 const chunkText = decoder.decode(value, { stream: true });
                                 eventBuffer += chunkText;
-                                const segments = eventBuffer.split(/\n\n/);
+                                const segments = eventBuffer.split(/\r?\n\r?\n/);
                                 eventBuffer = segments.pop() ?? '';
                                 segments.forEach(processBlock);
                             }
