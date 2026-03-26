@@ -1,16 +1,14 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { useGlobal } from '../utils/global_context';
 import ChatMessage from './chat_message_component';
 
 const ChatBox: React.FC = () => {
     const { chatHistory } = useGlobal();
-    const chatContainerRef = useRef<HTMLDivElement>(null);
-    
     const chatEntries = Object.entries(chatHistory);
 
     return (
-        <div className="chat-box" ref={chatContainerRef}>
-            {chatEntries.map(([key, chat], index) => (
+        <div className="chat-box">
+            {chatEntries.map(([key, chat]) => (
                 <ChatMessage 
                     key={key} 
                     userMessage={chat.userMessage}
@@ -20,7 +18,6 @@ const ChatBox: React.FC = () => {
                     llmprovider={chat.llmprovider}
                     llmModel={chat.llmModel}
                     isStreaming={chat.isStreaming}
-                    isSecondOrLater={index >= 1}
                     personality={chat.personality}
                 />
             ))}

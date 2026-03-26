@@ -1226,6 +1226,7 @@ body {
 
                 .chat-message {
                     display: flex;
+                    flex-direction: column;
                     align-items: flex-start;
                     margin-bottom: 12px;
                     width: 100%;
@@ -1236,200 +1237,210 @@ body {
                         margin-bottom: 0;
                     }
 
+                    .message-bubble {
+                        padding: 10px 16px;
+                        border-radius: 18px;
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                        white-space: pre-wrap;
+                        font-size: 15px;
+                        line-height: 1.4;
+                        margin: 5px 0;
+                        max-width: 100%;
+                        width: fit-content;
+                        min-height: 0.5rem;
+                        max-height: auto;
+                        box-sizing: border-box;
+                        display: block;
+
+                        .bot-wait-placeholder {
+                            display: inline-block;
+                            .bot-wait-placeholder-text {
+                                font-size: 10px;
+                                color: #6b7280;
+                            }
+                        }
+
+                        .bot-message-text {
+                            display: inline;
+                        }
+
+                        .bot-streaming-spinner {
+                            display: inline-flex;
+                            align-items: center;
+                            margin-right: 8px;
+                            font-size: 0.9rem;
+                            color: $botMessageColor;
+                        }
+
+                        h1,
+                        h2,
+                        h3,
+                        h4,
+                        h5,
+                        h6 {
+                            margin: 8px 0 4px 0;
+                            font-weight: bold;
+                            line-height: 1.1;
+                        }
+
+                        h1 {
+                            font-size: 18px;
+                        }
+
+                        h2 {
+                            font-size: 16px;
+                        }
+
+                        h3 {
+                            font-size: 15px;
+                        }
+
+                        h4,
+                        h5,
+                        h6 {
+                            font-size: 14px;
+                        }
+
+                        p {
+                            margin: 4px 0;
+
+                            &:first-child {
+                                margin-top: 0;
+                            }
+
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
+                        }
+
+                        strong {
+                            font-weight: bold;
+                        }
+
+                        em {
+                            font-style: italic;
+                        }
+
+                        code {
+                            background-color: rgba(0, 0, 0, 0.1);
+                            padding: 2px 4px;
+                            border-radius: 3px;
+                            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                            font-size: 13px;
+                        }
+
+                        pre {
+                            background-color: rgba(0, 0, 0, 0.05);
+                            padding: 8px 12px;
+                            border-radius: 6px;
+                            margin: 8px 0;
+                            overflow-x: auto;
+                            max-width: 100%;
+                            white-space: pre-wrap;
+                            word-break: break-all;
+
+                            code {
+                                background: none;
+                                padding: 0;
+                                font-size: 13px;
+                                white-space: pre-wrap;
+                                word-break: break-all;
+                            }
+                        }
+
+                        ul,
+                        ol {
+                            margin: 6px 0;
+                            padding-left: 20px;
+                            max-width: 100%;
+                            word-break: break-word;
+
+                            li {
+                                margin: 2px 0;
+                                word-break: break-word;
+                                overflow-wrap: break-word;
+                            }
+                        }
+
+                        blockquote {
+                            border-left: 4px solid #666;
+                            margin: 8px 0;
+                            padding: 8px 12px;
+                            background-color: rgba(0, 0, 0, 0.05);
+                            font-style: italic;
+                            max-width: 100%;
+                            word-break: break-word;
+                            overflow-wrap: break-word;
+                        }
+
+                        a {
+                            color: inherit;
+                            text-decoration: underline;
+                            opacity: 0.9;
+
+                            &:hover {
+                                opacity: 1;
+                            }
+                        }
+
+                        table {
+                            border-collapse: collapse;
+                            margin: 8px 0;
+                            width: 100%;
+                            max-width: 100%;
+                            overflow-x: auto;
+                            display: block;
+                            white-space: nowrap;
+
+                            th,
+                            td {
+                                border: 1px solid rgba(0, 0, 0, 0.2);
+                                padding: 6px 8px;
+                                text-align: left;
+                                word-break: break-word;
+                                white-space: normal;
+                            }
+
+                            th {
+                                background-color: rgba(0, 0, 0, 0.05);
+                                font-weight: bold;
+                            }
+
+                            tbody,
+                            thead,
+                            tr {
+                                display: table;
+                                width: 100%;
+                                table-layout: fixed;
+                            }
+                        }
+                    }
+
+                    .bot-bubble {
+                        min-width: 100px;
+                        padding-top: 20px;
+                        padding-bottom: 0px;
+                    }
+
+                    .user-bubble {
+                        padding-bottom: 0px;
+                        text-align: left;
+                        line-height: 1;
+                    }
+
                     .message-content {
                         max-width: 70%;
                         word-wrap: break-word;
                         overflow-wrap: break-word;
                         height: fit-content;
                         min-height: unset;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
 
-                        .message-bubble {
-                            padding: 10px 16px;
-                            border-radius: 18px;
-                            word-wrap: break-word;
-                            overflow-wrap: break-word;
-                            white-space: pre-wrap;
-                            font-size: 15px;
-                            line-height: 1.4;
-                            margin: 5px 0;
-                            max-width: 100%;
-                            width: fit-content;
-                            min-height: 0.5rem;
-                            max-height: auto;
-                            box-sizing: border-box;
-                            display: block;
-
-                            .bot-wait-placeholder {
-                                display: inline-block;
-                            }
-
-                            .bot-message-text {
-                                display: inline;
-                            }
-
-                            .bot-streaming-spinner {
-                                display: inline-flex;
-                                align-items: center;
-                                margin-right: 8px;
-                                font-size: 0.9rem;
-                                color: $botMessageColor;
-                            }
-
-
-                            h1,
-                            h2,
-                            h3,
-                            h4,
-                            h5,
-                            h6 {
-                                margin: 8px 0 4px 0;
-                                font-weight: bold;
-                                line-height: 1.1;
-                            }
-
-                            h1 {
-                                font-size: 18px;
-                            }
-
-                            h2 {
-                                font-size: 16px;
-                            }
-
-                            h3 {
-                                font-size: 15px;
-                            }
-
-                            h4,
-                            h5,
-                            h6 {
-                                font-size: 14px;
-                            }
-
-                            p {
-                                margin: 4px 0;
-
-                                &:first-child {
-                                    margin-top: 0;
-                                }
-
-                                &:last-child {
-                                    margin-bottom: 0;
-                                }
-                            }
-
-                            strong {
-                                font-weight: bold;
-                            }
-
-                            em {
-                                font-style: italic;
-                            }
-
-                            code {
-                                background-color: rgba(0, 0, 0, 0.1);
-                                padding: 2px 4px;
-                                border-radius: 3px;
-                                font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-                                font-size: 13px;
-                            }
-
-                            pre {
-                                background-color: rgba(0, 0, 0, 0.05);
-                                padding: 8px 12px;
-                                border-radius: 6px;
-                                margin: 8px 0;
-                                overflow-x: auto;
-                                max-width: 100%;
-                                white-space: pre-wrap;
-                                word-break: break-all;
-
-                                code {
-                                    background: none;
-                                    padding: 0;
-                                    font-size: 13px;
-                                    white-space: pre-wrap;
-                                    word-break: break-all;
-                                }
-                            }
-
-                            ul,
-                            ol {
-                                margin: 6px 0;
-                                padding-left: 20px;
-                                max-width: 100%;
-                                word-break: break-word;
-
-                                li {
-                                    margin: 2px 0;
-                                    word-break: break-word;
-                                    overflow-wrap: break-word;
-                                }
-                            }
-
-                            blockquote {
-                                border-left: 4px solid #666;
-                                margin: 8px 0;
-                                padding: 8px 12px;
-                                background-color: rgba(0, 0, 0, 0.05);
-                                font-style: italic;
-                                max-width: 100%;
-                                word-break: break-word;
-                                overflow-wrap: break-word;
-                            }
-
-                            a {
-                                color: inherit;
-                                text-decoration: underline;
-                                opacity: 0.9;
-
-                                &:hover {
-                                    opacity: 1;
-                                }
-                            }
-
-                            table {
-                                border-collapse: collapse;
-                                margin: 8px 0;
-                                width: 100%;
-                                max-width: 100%;
-                                overflow-x: auto;
-                                display: block;
-                                white-space: nowrap;
-
-                                th,
-                                td {
-                                    border: 1px solid rgba(0, 0, 0, 0.2);
-                                    padding: 6px 8px;
-                                    text-align: left;
-                                    word-break: break-word;
-                                    white-space: normal;
-                                }
-
-                                th {
-                                    background-color: rgba(0, 0, 0, 0.05);
-                                    font-weight: bold;
-                                }
-
-                                tbody,
-                                thead,
-                                tr {
-                                    display: table;
-                                    width: 100%;
-                                    table-layout: fixed;
-                                }
-                            }
-                        }
-
-                        .bot-bubble {
-                            min-width: 100px;
-                            padding-top: 20px;
-                            padding-bottom: 0px;
-                        }
-
-                        .user-bubble {
-                            padding-bottom: 0px;
-                            text-align: left;
-                            line-height: 1;
+                        .copy-msg {
+                            cursor: pointer;
                         }
 
                         .message-time {
@@ -1446,7 +1457,49 @@ body {
                     }
 
                     &.user-message {
-                        justify-content: flex-end;
+                        align-items: flex-end;
+
+                        .message-bubble {
+                            align-self: flex-end;
+                            color: $userMessageColor;
+                            border-bottom-right-radius: 4px;
+                            height: fit-content;
+                            background-color: $userMessageBg;
+                            box-shadow: $box-shadow;
+                            overflow: hidden;
+                            word-break: break-word;
+                            hyphens: auto;
+
+                            code {
+                                background-color: rgba(255, 255, 255, 0.2);
+                                color: rgba(255, 255, 255, 0.95);
+                            }
+
+                            pre {
+                                background-color: rgba(255, 255, 255, 0.15);
+                            }
+
+                            blockquote {
+                                border-left-color: rgba(255, 255, 255, 0.4);
+                            }
+
+                            table th,
+                            table td {
+                                border-color: rgba(255, 255, 255, 0.3);
+                            }
+
+                            table th {
+                                background-color: rgba(255, 255, 255, 0.15);
+                            }
+
+                            a {
+                                color: rgba(255, 255, 255, 0.9);
+
+                                &:hover {
+                                    color: white;
+                                }
+                            }
+                        }
 
                         .message-content {
                             text-align: right;
@@ -1454,47 +1507,6 @@ body {
                             flex-direction: column;
                             align-items: flex-end;
                             height: auto;
-
-                            .message-bubble {
-                                color: $userMessageColor;
-                                border-bottom-right-radius: 4px;
-                                height: fit-content;
-                                background-color: $userMessageBg;
-                                box-shadow: $box-shadow;
-                                overflow: hidden;
-                                word-break: break-word;
-                                hyphens: auto;
-
-                                code {
-                                    background-color: rgba(255, 255, 255, 0.2);
-                                    color: rgba(255, 255, 255, 0.95);
-                                }
-
-                                pre {
-                                    background-color: rgba(255, 255, 255, 0.15);
-                                }
-
-                                blockquote {
-                                    border-left-color: rgba(255, 255, 255, 0.4);
-                                }
-
-                                table th,
-                                table td {
-                                    border-color: rgba(255, 255, 255, 0.3);
-                                }
-
-                                table th {
-                                    background-color: rgba(255, 255, 255, 0.15);
-                                }
-
-                                a {
-                                    color: rgba(255, 255, 255, 0.9);
-
-                                    &:hover {
-                                        color: white;
-                                    }
-                                }
-                            }
 
                             .message-time {
                                 margin-left: 0;
@@ -1505,48 +1517,60 @@ body {
                     }
 
                     &.bot-message {
-                        justify-content: flex-start;
+                        align-items: flex-start;
 
-                        .message-content {
+                        .message-bubble {
+                            align-self: flex-start;
+                            // background-color: $botMessageBg;
+                            background: transparent;
+                            max-width: 70rem;
+                            color: $botMessageColor;
+                            border-bottom-left-radius: 4px;
+                            // box-shadow: $box-shadow;
+                            overflow: hidden;
+                            word-break: break-word;
+                            hyphens: auto;
+
+                            code {
+                                background-color: rgba(0, 0, 0, 0.15);
+                            }
+
+                            pre {
+                                background-color: rgba(0, 0, 0, 0.1);
+                            }
+
+                            blockquote {
+                                border-left-color: rgba(0, 0, 0, 0.3);
+                            }
+
+                            table th,
+                            table td {
+                                border-color: rgba(0, 0, 0, 0.3);
+                            }
+
+                            table th {
+                                background-color: rgba(0, 0, 0, 0.1);
+                            }
+                        }
+
+                        .parent-bot-bubble {
                             display: flex;
-                            flex-direction: column;
-                            align-items: flex-start;
-                            height: fit-content;
-                            min-height: unset;
+                            flex-direction: row;
+                            justify-content:flex-start;
+                            align-items: center;
+                            margin-bottom: 10px;
 
-                            .message-bubble {
-                                background-color: $botMessageBg;
-                                color: $botMessageColor;
-                                border-bottom-left-radius: 4px;
-                                box-shadow: $box-shadow;
-                                overflow: hidden;
-                                word-break: break-word;
-                                hyphens: auto;
-
-                                code {
-                                    background-color: rgba(0, 0, 0, 0.15);
-                                }
-
-                                pre {
-                                    background-color: rgba(0, 0, 0, 0.1);
-                                }
-
-                                blockquote {
-                                    border-left-color: rgba(0, 0, 0, 0.3);
-                                }
-
-                                table th,
-                                table td {
-                                    border-color: rgba(0, 0, 0, 0.3);
-                                }
-
-                                table th {
-                                    background-color: rgba(0, 0, 0, 0.1);
-                                }
+                            .message-content {
+                                display: flex;
+                                flex-direction: column;
+                                align-items: flex-start;
+                                height: fit-content;
+                                min-height: unset;
                             }
                         }
                     }
                 }
+
 
                 // .user-message {
                 //     margin-top: 30px;

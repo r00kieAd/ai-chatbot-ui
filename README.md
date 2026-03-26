@@ -1,3 +1,5 @@
+<img src="./chatbot/public/logo_burst.png" width="200"/>
+
 # AI Chatbot UI
 
 This is a casually built basic chatbot interface built with React, TypeScript, and Vite. This application provides a sleek user experience for interacting with multiple AI language models with support for file uploads, markdown rendering, and advanced animations. It connects to llm router for llm communication and tools.

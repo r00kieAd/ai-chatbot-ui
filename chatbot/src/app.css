@@ -1036,6 +1036,7 @@ body {
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   margin-bottom: 12px;
   width: 100%;
@@ -1046,15 +1047,7 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message:last-child {
   margin-bottom: 0;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content {
-  max-width: 70%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  height: -moz-fit-content;
-  height: fit-content;
-  min-height: unset;
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble {
   padding: 10px 16px;
   border-radius: 18px;
   word-wrap: break-word;
@@ -1071,66 +1064,70 @@ body {
   box-sizing: border-box;
   display: block;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble .bot-wait-placeholder {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-wait-placeholder {
   display: inline-block;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble .bot-message-text {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-wait-placeholder .bot-wait-placeholder-text {
+  font-size: 10px;
+  color: #6b7280;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-message-text {
   display: inline;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble .bot-streaming-spinner {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-streaming-spinner {
   display: inline-flex;
   align-items: center;
   margin-right: 8px;
   font-size: 0.9rem;
   color: #4A4947;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h1,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h2,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h3,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h4,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h5,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h6 {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h1,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h2,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h3,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h4,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h5,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h6 {
   margin: 8px 0 4px 0;
   font-weight: bold;
   line-height: 1.1;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h1 {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h1 {
   font-size: 18px;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h2 {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h2 {
   font-size: 16px;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h3 {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h3 {
   font-size: 15px;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h4,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h5,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble h6 {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h4,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h5,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h6 {
   font-size: 14px;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble p {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble p {
   margin: 4px 0;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble p:first-child {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble p:first-child {
   margin-top: 0;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble p:last-child {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble p:last-child {
   margin-bottom: 0;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble strong {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble strong {
   font-weight: bold;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble em {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble em {
   font-style: italic;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble code {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble code {
   background-color: rgba(0, 0, 0, 0.1);
   padding: 2px 4px;
   border-radius: 3px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 13px;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble pre {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble pre {
   background-color: rgba(0, 0, 0, 0.05);
   padding: 8px 12px;
   border-radius: 6px;
@@ -1140,27 +1137,27 @@ body {
   white-space: pre-wrap;
   word-break: break-all;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble pre code {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble pre code {
   background: none;
   padding: 0;
   font-size: 13px;
   white-space: pre-wrap;
   word-break: break-all;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ul,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ol {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble ul,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble ol {
   margin: 6px 0;
   padding-left: 20px;
   max-width: 100%;
   word-break: break-word;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ul li,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble ol li {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble ul li,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble ol li {
   margin: 2px 0;
   word-break: break-word;
   overflow-wrap: break-word;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble blockquote {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble blockquote {
   border-left: 4px solid #666;
   margin: 8px 0;
   padding: 8px 12px;
@@ -1170,15 +1167,15 @@ body {
   word-break: break-word;
   overflow-wrap: break-word;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble a {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble a {
   color: inherit;
   text-decoration: underline;
   opacity: 0.9;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble a:hover {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble a:hover {
   opacity: 1;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble table {
   border-collapse: collapse;
   margin: 8px 0;
   width: 100%;
@@ -1187,34 +1184,48 @@ body {
   display: block;
   white-space: nowrap;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table th,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table td {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble table th,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble table td {
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 6px 8px;
   text-align: left;
   word-break: break-word;
   white-space: normal;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table th {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble table th {
   background-color: rgba(0, 0, 0, 0.05);
   font-weight: bold;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tbody,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table thead,
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-bubble table tr {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble table tbody,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble table thead,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble table tr {
   display: table;
   width: 100%;
   table-layout: fixed;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .bot-bubble {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .bot-bubble {
   min-width: 100px;
   padding-top: 20px;
   padding-bottom: 0px;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .user-bubble {
+#parent #mainContainer #innerContainer #chatContainer .chat-message .user-bubble {
   padding-bottom: 0px;
   text-align: left;
   line-height: 1;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content {
+  max-width: 70%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  height: -moz-fit-content;
+  height: fit-content;
+  min-height: unset;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .copy-msg {
+  cursor: pointer;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time {
   font-size: 10px;
@@ -1227,16 +1238,10 @@ body {
   font-size: 9px;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message {
-  justify-content: flex-end;
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
   align-items: flex-end;
-  height: auto;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble {
+  align-self: flex-end;
   color: #4A4947;
   border-bottom-right-radius: 4px;
   height: -moz-fit-content;
@@ -1247,28 +1252,35 @@ body {
   word-break: break-word;
   hyphens: auto;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble code {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble code {
   background-color: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.95);
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble pre {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble pre {
   background-color: rgba(255, 255, 255, 0.15);
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble blockquote {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble blockquote {
   border-left-color: rgba(255, 255, 255, 0.4);
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble table th,
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble table td {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble table th,
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble table td {
   border-color: rgba(255, 255, 255, 0.3);
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble table th {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble table th {
   background-color: rgba(255, 255, 255, 0.15);
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble a {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble a {
   color: rgba(255, 255, 255, 0.9);
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-bubble a:hover {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble a:hover {
   color: white;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: auto;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-content .message-time {
   margin-left: 0;
@@ -1276,40 +1288,48 @@ body {
   text-align: right;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message {
-  justify-content: flex-start;
+  align-items: flex-start;
 }
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content {
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble {
+  align-self: flex-start;
+  background: transparent;
+  max-width: 70rem;
+  color: #4A4947;
+  border-bottom-left-radius: 4px;
+  overflow: hidden;
+  word-break: break-word;
+  hyphens: auto;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble code {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble pre {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble blockquote {
+  border-left-color: rgba(0, 0, 0, 0.3);
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble table th,
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble table td {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble table th {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .parent-bot-bubble {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 10px;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .parent-bot-bubble .message-content {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   height: -moz-fit-content;
   height: fit-content;
   min-height: unset;
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble {
-  background-color: #AAB99A;
-  color: #4A4947;
-  border-bottom-left-radius: 4px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  overflow: hidden;
-  word-break: break-word;
-  hyphens: auto;
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble code {
-  background-color: rgba(0, 0, 0, 0.15);
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble pre {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble blockquote {
-  border-left-color: rgba(0, 0, 0, 0.3);
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble table th,
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble table td {
-  border-color: rgba(0, 0, 0, 0.3);
-}
-#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-content .message-bubble table th {
-  background-color: rgba(0, 0, 0, 0.1);
 }
 #parent #mainContainer #innerContainer #welcomeMessage {
   position: absolute;
