@@ -1,4 +1,6 @@
-<img src="./chatbot/public/logo_burst.png" width="200"/>
+<img src="./chatbot/public/logo.svg" width="200"/>
+
+<br>
 
 # AI Chatbot UI
 
