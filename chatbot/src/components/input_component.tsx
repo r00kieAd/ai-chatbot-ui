@@ -175,6 +175,12 @@ const InputBox: React.FC = () => {
                         const decoder = new TextDecoder();
                         let accumulated = '';
                         let eventBuffer = '';
+                        let chunkCount = 0;
+                        const streamLog = (label: string, detail = '') => {
+                            if (!import.meta.env.DEV) return;
+                            const stamp = new Date().toISOString();
+                            console.debug(`[sse ${stamp}] ${label}${detail ? ` ${detail}` : ''}`);
+                        };
 
                         const pushMessageChunk = (text: string) => {
                             if (!text) return;
@@ -191,12 +197,13 @@ const InputBox: React.FC = () => {
                                     }
                                 };
                             });
+                            streamLog('append', `chunkLen=${text.length} totalLen=${accumulated.length}`);
                         };
 
                         const processBlock = (block: string) => {
                             if (!block.trim()) return;
                             const lines = block.split(/\r?\n/);
-                            let currentEvent: string | null = null;
+                            let currentEvent = 'message';
                             const dataLines: string[] = [];
                             for (const rawLine of lines) {
                                 if (!rawLine) continue;
@@ -214,6 +221,7 @@ const InputBox: React.FC = () => {
                             }
 
                             const combinedData = dataLines.join('\n');
+                            streamLog('event', `${currentEvent} dataLen=${combinedData.length}`);
                             if (currentEvent === 'stream_id') {
                                 const streamId = combinedData.trim();
                                 if (streamId) {
@@ -258,12 +266,21 @@ const InputBox: React.FC = () => {
                                 if (stopRequestedRef.current || done) break;
                                 if (!value) continue;
                                 const chunkText = decoder.decode(value, { stream: true });
+                                chunkCount += 1;
+                                streamLog('chunk', `#${chunkCount} bytes=${value.byteLength} chars=${chunkText.length}`);
                                 eventBuffer += chunkText;
                                 const segments = eventBuffer.split(/\r?\n\r?\n/);
                                 eventBuffer = segments.pop() ?? '';
                                 segments.forEach(processBlock);
                             }
+                            const finalChunk = decoder.decode();
+                            if (finalChunk) {
+                                chunkCount += 1;
+                                streamLog('decoder-flush', `#${chunkCount} chars=${finalChunk.length}`);
+                                eventBuffer += finalChunk;
+                            }
                             if (eventBuffer) {
+                                streamLog('tail-buffer', `len=${eventBuffer.length}`);
                                 processBlock(eventBuffer);
                                 eventBuffer = '';
                             }

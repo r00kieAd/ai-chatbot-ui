@@ -37,7 +37,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     const [firstMessage, setFirstMessage] = useState(true);
     const userMessageDiv = useRef<HTMLDivElement>(null);
     const chatExchangeRef = useRef<HTMLDivElement>(null);
-    const [displayedBotMessage, setDisplayedBotMessage] = useState('');
+    const botMessageRef = useRef<HTMLDivElement>(null);
     // const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
     // const currentPersonality = fixedPersonality;
 
@@ -61,46 +61,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     }, [firstMessage])
 
     useEffect(() => {
-        if (!isStreaming) {
-            setDisplayedBotMessage(botMessage || '');
-            return;
-        }
-
-        if (!botMessage) {
-            setDisplayedBotMessage('');
-            return;
-        }
-
-        if (displayedBotMessage === botMessage) {
-            return;
-        }
-
-        const remaining = botMessage.length - displayedBotMessage.length;
-        if (remaining <= 0) {
-            setDisplayedBotMessage(botMessage);
-            return;
-        }
-
-        const chunkSize = Math.min(Math.max(1, Math.ceil(remaining / 3)), 6);
-        const timer = setTimeout(() => {
-            setDisplayedBotMessage(prev => {
-                const nextSegment = botMessage.slice(prev.length, prev.length + chunkSize);
-                return prev + nextSegment;
-            });
-        }, 30);
-
-        return () => clearTimeout(timer);
-    }, [botMessage, displayedBotMessage, isStreaming]);
-
-    useEffect(() => {
         if (!userMessage && !botMessage) return;
-        chatExchangeRef.current?.scrollIntoView({
+        botMessageRef.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
     }, [userMessage, botMessage]);
 
-    const placeholderVisible = !displayedBotMessage && !botMessage;
+    const placeholderVisible = !botMessage;
     const placeholderText = !isStreaming && placeholderVisible ? 'contemplating...' : '';
     const placeholderIconClass = `fa-solid fa-burst${isStreaming ? ' fa-spin-pulse' : ''}`;
 
@@ -176,7 +144,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                 </div>
             </div>
 
-            <div className="chat-message bot-message">
+            <div className="chat-message bot-message" ref={botMessageRef}>
                 <div className="message-bubble poppins-regular bot-bubble">
                     {placeholderVisible ? (
                         <em className='bot-wait-placeholder'>
@@ -185,7 +153,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                         </em>
                     ) : (
                         <>
-                            {displayedBotMessage && (
+                            {botMessage && (
                                 <>
                                     <div className="parent-bot-bubble">
                                         <span className='bot-streaming-spinner'><i className={placeholderIconClass}></i></span>
@@ -201,7 +169,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                             )}
                                         </div>
                                     </div>
-                                    <span className='bot-message-text' dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(displayedBotMessage) }} />
+                                    <span className='bot-message-text' dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
                                 </>
                             )}
                         </>
