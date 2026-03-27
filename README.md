@@ -1,4 +1,4 @@
-<img src="./chatbot/public/logo.svg" width="200"/>
+<img src="./chatbot/public/logo.png" width="64"/>
 
 <br>
 
