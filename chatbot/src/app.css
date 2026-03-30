@@ -746,39 +746,23 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40rem;
+  width: min(50rem, 92vw);
   height: auto;
-  border: 1px solid #727D73;
-  border-radius: 10px;
-  padding: 25px;
+  padding: 0;
   transition: all 0.5s ease-in;
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-in;
-  background-color: #727D73;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: transparent;
 }
 #parent #loginContainer #loginParent.show {
   opacity: 1;
   visibility: visible;
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 768px) {
   #parent #loginContainer #loginParent {
-    min-width: 90%;
-  }
-}
-@media screen and (min-width: 501px) and (max-width: 899px) {
-  #parent #loginContainer #loginParent {
-    min-width: 80%;
-  }
-}
-@media screen and (max-width: 500px) {
-  #parent #loginContainer #loginParent {
-    width: auto;
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: none;
+    width: calc(100vw - 32px);
+    max-width: 100%;
   }
 }
 #parent #loginContainer #loginParent #containerOne {
@@ -786,79 +770,120 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: inherit;
+  width: 100%;
+  border: 1px solid #727D73;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #EEEFE0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  min-height: 26rem;
 }
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 768px) {
   #parent #loginContainer #loginParent #containerOne {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    min-height: auto;
   }
 }
 #parent #loginContainer #loginParent #containerOne .compartment {
-  margin: 5px 40px;
+  margin: 0;
   width: 100%;
-}
-@media screen and (max-width: 1200px) {
-  #parent #loginContainer #loginParent #containerOne .compartment {
-    margin: 10px;
-  }
-}
-#parent #loginContainer #loginParent #containerOne .compartment {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  padding: clamp(24px, 3vw, 44px);
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 {
+  background-color: #727D73;
+  color: #EEEFE0;
+  flex: 0 0 40%;
+}
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne .compartment-1 {
+    order: 2;
+    flex: 1 1 auto;
+  }
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel {
+  width: 100%;
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel h3 {
+  margin: 0 0 12px 0;
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 500;
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel p {
+  margin: 0 0 18px 0;
+  font-size: clamp(12px, 1.1vw, 14px);
+  color: rgba(238, 239, 224, 0.85);
+  line-height: 1.5;
+  max-width: 28rem;
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel .guestButton {
+  width: 15rem;
+  height: 44px;
+  outline: none;
+  border: 1px solid rgba(238, 239, 224, 0.55);
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  background-color: transparent;
+  color: #EEEFE0;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 1px;
+  transition: all 0.2s ease-in-out;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv {
-  position: relative;
-  width: 100%;
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel .guestButton:hover {
+  background-color: #EEEFE0;
+  color: #727D73;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div {
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.5s ease-in-out;
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel .guestButton {
+    width: 100%;
+  }
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police {
-  display: none;
+#parent #loginContainer #loginParent #containerOne .compartment-2 {
+  background-color: #EEEFE0;
+  color: #4A4947;
+  flex: 1 1 auto;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police img {
-  width: 100%;
-}
-#parent #loginContainer #loginParent #containerOne #policeDiv .show {
-  opacity: 1;
-  visibility: visible;
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne .compartment-2 {
+    order: 1;
+  }
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
-  line-height: 1px;
   position: relative;
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-in-out;
   width: 100%;
-  color: #EEEFE0;
-  padding: 5px;
+  color: #4A4947;
+  padding: 0;
+  margin-bottom: 18px;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
-  max-width: 17rem;
-  font-size: clamp(16px, 1.5vw, 20px);
-  line-height: 1.5;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 0 0 8px 0;
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #660B05;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders span.sec-head {
   width: inherit;
   font-size: clamp(10px, 1vw, 12px);
-  line-height: 1;
+  line-height: 1.4;
   word-wrap: break-word;
   color: #AAB99A;
-}
-#parent #loginContainer #loginParent #containerOne #loginHeaders {
-  margin-bottom: 10px;
 }
 @media screen and (max-width: 500px) {
   #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
@@ -885,6 +910,15 @@ body {
   width: 100%;
   justify-content: center;
 }
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer {
+  width: 100%;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput {
   width: 99.5%;
   height: 25px;
@@ -904,9 +938,20 @@ body {
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::placeholder {
   color: #AAB99A;
 }
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput {
+  width: 100%;
+  border-bottom-color: rgba(74, 73, 71, 0.35);
+  color: #4A4947;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::-moz-placeholder {
+  color: rgba(74, 73, 71, 0.55);
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::placeholder {
+  color: rgba(74, 73, 71, 0.55);
+}
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] {
-  width: 5rem;
-  height: 30px;
+  width: 7rem;
+  height: 44px;
   outline: none;
   border: 1px solid transparent;
   border-radius: 10px;
@@ -916,10 +961,14 @@ body {
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
-  justify-self: center;
-  margin: 10px auto;
-  background-color: #EEEFE0;
+  justify-self: flex-end;
+  margin: 6px 0 0 auto;
+  background-color: #AAB99A;
   color: #4A4947;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] .shiny-text {
   display: inline-block;
@@ -930,6 +979,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   animation: shine 5s linear infinite;
+  margin: 0 5px;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] .shiny-text.disabled {
   display: inline-block;
@@ -938,28 +988,52 @@ body {
   -webkit-text-fill-color: initial;
   background: none;
 }
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-status {
+  font-size: 12px;
+  color: #AAB99A;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  min-height: 18px;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-status.show {
+  opacity: 1;
+  visibility: visible;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-error {
+  font-size: 12px;
+  color: #660B05;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  min-height: 18px;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-error.show {
+  opacity: 1;
+  visibility: visible;
+}
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err {
+  display: block;
   font-size: 11px;
   visibility: hidden;
   color: #660B05;
   margin: 3px 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  min-height: 14px;
 }
-#parent #loginContainer #loginParent #containerOne #loginForm #guestOptions button {
-  margin: 10px 0;
-  width: 100%;
-  height: 30px;
-  outline: none;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: transparent;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  cursor: pointer;
-  padding: 10px;
-  background-color: #EEEFE0;
-  color: #4A4947;
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err.show {
+  opacity: 1;
+  visibility: visible;
 }
 #parent #mainContainer {
   visibility: hidden;

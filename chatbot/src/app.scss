@@ -965,115 +965,132 @@ body {
     #loginContainer {
         #loginParent {
             @include centerElement();
-            width: $loginContainerWidth;
+            width: min(50rem, 92vw);
             height: auto;
-            border: 1px solid $parentBgColor;
-            border-radius: $mainBorderRadius;
-            padding: $loginContainerPadding;
+            padding: 0;
             transition: all 0.5s ease-in;
             visibility: hidden;
             opacity: 0;
             transition: all 0.5s ease-in;
-            background-color: $parentBgColor;
-            box-shadow: $box-shadow;
+            background-color: transparent;
 
             &.show {
                 @include reveal()
             }
 
-            @media screen and (max-width: 900px) {
-                min-width: 90%;
-            }
-
-            @media screen and (min-width: 501px) and (max-width: 899px) {
-                min-width: 80%;
-            }
-
-            @media screen and (max-width: 500px) {
-                width: auto;
-                @include de-centerElement();
+            @media screen and (max-width: 768px) {
+                width: calc(100vw - 32px);
+                max-width: 100%;
             }
 
             #containerOne {
-                @include flex-space-between(inherit, row);
+                @include flex-space-between(100%, row);
+                border: 1px solid $parentBgColor;
+                border-radius: $mainBorderRadius;
+                overflow: hidden;
+                background-color: $loginContainerPrimaryColor;
+                box-shadow: $box-shadow;
+                min-height: 26rem;
 
-                @media screen and (max-width: 700px) {
+                @media screen and (max-width: 768px) {
                     @include flex-space-between(100%, column);
+                    min-height: auto;
                 }
 
                 .compartment {
-                    margin: 5px 40px;
+                    margin: 0;
                     width: 100%;
-
-                    @media screen and (max-width: 1200px) {
-                        margin: 10px;
-                    }
 
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
-                    align-items: center;
+                    align-items: flex-start;
+                    padding: clamp(24px, 3vw, 44px);
                 }
 
-                // .compartment-1 {
-                //     border-right: 1px solid $loginContainerSecondaryColor;
-                //     // border-radius: $mainBorderRadius;
-                //     // padding-right: 50px;
-                // }
+                .compartment-1 {
+                    background-color: $parentBgColor;
+                    color: $loginContainerPrimaryColor;
+                    flex: 0 0 40%;
 
-                #policeDiv {
-                    position: relative;
-                    width: 100%;
+                    @media screen and (max-width: 768px) {
+                        order: 2;
+                        flex: 1 1 auto;
+                    }
 
-                    .intro-img-div {
-                        opacity: 0;
-                        visibility: hidden;
-                        transition: all 0.5s ease-in-out;
+                    .guestPanel {
+                        width: 100%;
 
-                        .police {
-                            display: none;
+                        h3 {
+                            margin: 0 0 12px 0;
+                            font-size: clamp(18px, 2vw, 26px);
+                            font-weight: 500;
+                        }
 
-                            img {
+                        p {
+                            margin: 0 0 18px 0;
+                            font-size: clamp(12px, 1.1vw, 14px);
+                            color: rgba($loginContainerPrimaryColor, 0.85);
+                            line-height: 1.5;
+                            max-width: 28rem;
+                        }
+
+                        .guestButton {
+                            @include button(rgba($loginContainerPrimaryColor, 0.55), 15rem, 44px);
+                            background-color: transparent;
+                            color: $loginContainerPrimaryColor;
+                            justify-content: center;
+                            gap: 10px;
+                            letter-spacing: 1px;
+                            transition: all 0.2s ease-in-out;
+
+                            &:hover {
+                                background-color: $loginContainerPrimaryColor;
+                                color: $parentBgColor;
+                            }
+
+                            @media screen and (max-width: 768px) {
                                 width: 100%;
-
                             }
                         }
                     }
+                }
 
-                    .show {
-                        @include reveal()
+                .compartment-2 {
+                    background-color: $loginContainerPrimaryColor;
+                    color: $loginContainerButtonTextColor;
+                    flex: 1 1 auto;
+
+                    @media screen and (max-width: 768px) {
+                        order: 1;
                     }
                 }
 
                 #loginHeaders {
-                    line-height: 1px;
                     position: relative;
                     visibility: hidden;
                     opacity: 0;
                     transition: all 0.5s ease-in-out;
                     width: 100%;
-                    color: $loginContainerPrimaryColor;
-                    padding: 5px;
+                    color: $loginContainerButtonTextColor;
+                    padding: 0;
+                    margin-bottom: 18px;
 
                     h2 {
-                        max-width: 17rem;
-                        font-size: clamp(16px, 1.5vw, 20px);
-                        line-height: 1.5;
-                        display: block;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
+                        margin: 0 0 8px 0;
+                        font-size: clamp(18px, 1.6vw, 22px);
+                        font-weight: 500;
+                        letter-spacing: 2px;
+                        color: $errorColor;
                     }
 
                     span.sec-head {
                         width: inherit;
                         font-size: clamp(10px, 1vw, 12px);
-                        line-height: 1.0;
+                        line-height: 1.4;
                         word-wrap: break-word;
                         color: $loginContainerSecondaryColor;
                     }
-
-                    margin-bottom: 10px;
 
                     @media screen and (max-width: 500px) {
                         h2 {
@@ -1102,19 +1119,41 @@ body {
                     justify-content: center;
 
                     #formContainer {
+                        width: 100%;
+
+                        form {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 14px;
+                        }
+
                         input.keyinput {
                             @include loginInputStyle();
+                            width: 100%;
+                            border-bottom-color: rgba($loginContainerButtonTextColor, 0.35);
+                            color: $loginContainerButtonTextColor;
+                        }
+
+                        input.keyinput::placeholder {
+                            color: rgba($loginContainerButtonTextColor, 0.55);
                         }
 
                         button[type=submit] {
-                            @include button($loginContainerButtonBorder, 5rem, 30px);
-                            justify-self: center;
-                            margin: 10px auto;
-                            background-color: $loginContainerPrimaryColor;
+                            @include button($loginContainerButtonBorder, 7rem, 44px);
+                            justify-self: flex-end;
+                            margin: 6px 0 0 auto;
+                            background-color: $loginContainerSecondaryColor;
                             color: $loginContainerButtonTextColor;
+
+                            display: flex;
+                            flex-direction: row;
+                            justify-content: center;
+                            align-items: center;
 
                             .shiny-text {
                                 @include shiny-text($font-color: $loginContainerButtonTextColor);
+                                margin: 0 5px;
                             }
 
                             .shiny-text.disabled {
@@ -1122,21 +1161,54 @@ body {
                             }
                         }
 
-                        .err {
-                            font-size: 11px;
+                        @media screen and (max-width: 768px) {
+                            button[type=submit] {
+                                width: 100%;
+                                margin-left: 0;
+                            }
+                        }
+
+                        .login-status {
+                            font-size: 12px;
+                            color: $loginContainerSecondaryColor;
+                            line-height: 1.4;
+                            opacity: 0;
                             visibility: hidden;
+                            transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+                            min-height: 18px;
+
+                            &.show {
+                                @include reveal();
+                            }
+                        }
+
+                        .login-error {
+                            font-size: 12px;
+                            color: $errorColor;
+                            line-height: 1.4;
+                            opacity: 0;
+                            visibility: hidden;
+                            transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+                            min-height: 18px;
+
+                            &.show {
+                                @include reveal();
+                            }
+                        }
+
+                        .err {
+                            display: block;
+                            font-size: 11px;
                             color: $errorColor;
                             margin: 3px 0;
-                        }
-                    }
+                            opacity: 0;
+                            visibility: hidden;
+                            transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+                            min-height: 14px;
 
-                    #guestOptions {
-                        button {
-                            margin: 10px 0;
-                            @include button($loginContainerButtonBorder, 100%, 30px);
-                            padding: 10px;
-                            background-color: $loginContainerPrimaryColor;
-                            color: $loginContainerButtonTextColor;
+                            &.show {
+                                @include reveal();
+                            }
                         }
                     }
                 }

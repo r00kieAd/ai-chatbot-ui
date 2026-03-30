@@ -3,7 +3,7 @@ import Shuffle from "./shuffle_text";
 
 function Loading() {
     const loadingText = "loading_";
-    const waitText = "please wait, this may take up to 50s";
+    const waitText = "please wait, this may take up to 60s";
     const wait_span = useRef<HTMLSpanElement>(null);
 
     useEffect(() => {
