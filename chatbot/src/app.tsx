@@ -238,12 +238,12 @@ function App() {
       </div>
 
       {!serverOnline && !serverOffline && <Loading />}
-      {!serverOnline && serverOffline && error && <DisplayError errorMessage={error} />}
-      {serverOnline && !serverOffline && isMobileScreen && !hasPreviousError && (
+      {!serverOnline && serverOffline && <DisplayError errorMessage={error} />}
+      {/* {serverOnline && !serverOffline && isMobileScreen && !hasPreviousError && (
         <div style={{ width: '100vw', height: '100vh'}}>
           <DisplayError errorMessage={undefined} smallerScreen={true} />
         </div>
-      )}
+      )} */}
       {serverOnline && !serverOffline && (
         <div id="parent">
           <div id='navbarContainer' ref={navbarDiv1}>
@@ -260,7 +260,7 @@ function App() {
                 <ChatBox />
               </div>
               <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
-                {currUser && <SplitText
+                {currUser && !isMobileScreen && !hasPreviousError && <SplitText
                   text={welcomeMessage}
                   className="text-2xl font-semibold text-center"
                   delay={100}

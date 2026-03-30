@@ -74,6 +74,176 @@ body {
   min-height: 100%;
 }
 
+#configInfoRoot {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #727D73;
+  color: #D0DDD0;
+}
+
+#configInfoHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: #727D73;
+  border-bottom: 1px solid #D0DDD0;
+}
+#configInfoHeader .configInfoTitle {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.9px;
+  color: #F0F0D7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#configInfoHeader .configInfoClose {
+  width: auto;
+  height: 36px;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  padding: 0 12px;
+  color: #D0DDD0;
+  justify-content: center;
+  border: 1px solid rgba(208, 221, 208, 0.55);
+}
+#configInfoHeader .configInfoClose:hover {
+  color: #F0F0D7;
+}
+
+#configInfoMain {
+  flex: 1;
+  overflow: auto;
+  padding: clamp(12px, 3vw, 24px);
+}
+#configInfoMain #settingsInfoParentDiv {
+  max-height: none;
+  height: auto;
+  overflow: visible;
+  padding: 0;
+}
+#configInfoMain #settingInfoChildDiv {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+#configInfoMain #settingInfoChildDiv .settings-info-header {
+  text-align: left;
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  padding: clamp(0.9rem, 2.5vw, 1.2rem);
+  border: 1px solid rgba(208, 221, 208, 0.6);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.12);
+}
+#configInfoMain #settingInfoChildDiv .settings-info-header h3 {
+  margin: 0 0 0.35rem 0;
+  font-size: clamp(1.05rem, 2.4vw, 1.45rem);
+  color: #F0F0D7;
+  letter-spacing: 1px;
+}
+#configInfoMain #settingInfoChildDiv .settings-info-header p {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+  opacity: 0.9;
+  color: rgba(208, 221, 208, 0.95);
+}
+#configInfoMain #settingInfoChildDiv .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(0.9rem, 2.2vw, 1.2rem);
+}
+#configInfoMain #settingInfoChildDiv .info-div {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(208, 221, 208, 0.75);
+  border-radius: 10px;
+  padding: clamp(1rem, 2.4vw, 1.35rem);
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  position: relative;
+}
+#configInfoMain #settingInfoChildDiv .info-div::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #F0F0D7, rgba(240, 240, 215, 0));
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  opacity: 0.85;
+}
+#configInfoMain #settingInfoChildDiv .info-div:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 0, 0, 0.14);
+  border-color: #F0F0D7;
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-header {
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid rgba(208, 221, 208, 0.35);
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-header .param-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #F0F0D7;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-details .param-row {
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(208, 221, 208, 0.22);
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-details .param-row:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-details .param-row .label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: rgba(208, 221, 208, 0.9);
+  margin-bottom: 0.35rem;
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-details .param-row .info-prop {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #D0DDD0;
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-details .param-row .info-prop.description {
+  color: rgba(208, 221, 208, 0.95);
+  font-style: italic;
+}
+#configInfoMain #settingInfoChildDiv .info-div .param-details .param-row .info-prop.range, #configInfoMain #settingInfoChildDiv .info-div .param-details .param-row .info-prop.default-value, #configInfoMain #settingInfoChildDiv .info-div .param-details .param-row .info-prop.example {
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  background-color: rgba(0, 0, 0, 0.28);
+  color: #F0F0D7;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid rgba(208, 221, 208, 0.35);
+  display: inline-block;
+  max-width: 100%;
+  word-break: break-word;
+}
+
 #pageLiveBg {
   z-index: -1;
   position: fixed;
@@ -224,6 +394,11 @@ body {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   transition: all 0.3s ease-in-out;
 }
+@media screen and (max-width: 768px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer {
+    width: 99vw;
+  }
+}
 #parent #navbarContainer #navbarController #innerNavbarContainer #mainNavbarMenu {
   display: flex;
   justify-content: space-between;
@@ -278,9 +453,17 @@ body {
   max-width: 50%;
   text-align: center;
   padding-top: 1px;
+  font-size: 15px;
+}
+@media screen and (max-width: 768px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #mainNavbarMenu #displayInfo {
+    font-size: 10px;
+  }
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer {
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
   max-height: 0;
   visibility: hidden;
   opacity: 0;
@@ -296,10 +479,15 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer.show {
   opacity: 1;
   visibility: visible;
-  max-height: 15em;
+  max-height: min(75vh, 36rem);
   padding: 1rem;
   margin-top: 0.5rem;
   border-top-color: #D0DDD0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #D0DDD0 transparent;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer .setting-loading-mask {
   position: relative;
@@ -310,6 +498,23 @@ body {
   opacity: 1;
   visibility: visible;
 }
+@media screen and (max-width: 768px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer {
+    padding: 0 0.75rem;
+  }
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer.show {
+    padding: 0.75rem;
+    max-height: min(75vh, 28rem);
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer.show {
+    max-height: min(65vh, 32rem);
+  }
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu {
+  width: 100%;
+}
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu.blur {
   filter: blur(6px);
 }
@@ -319,18 +524,22 @@ body {
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item {
   flex: 1 1 30%;
-  min-width: 50px;
+  min-width: 220px;
   display: flex;
   flex-direction: row;
-  align-items: last baseline;
+  align-items: baseline;
   justify-content: space-between;
+  gap: 10px;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item label {
   font-size: 14px;
   align-self: center;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item input {
   width: 40px;
@@ -352,6 +561,10 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item input:focus {
   border-bottom: 0.5px solid #F0F0D7;
 }
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item input {
+  width: clamp(84px, 10vw, 120px);
+  text-align: right;
+}
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item input::-webkit-outer-spin-button,
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -359,6 +572,26 @@ body {
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item input[type=number] {
   -moz-appearance: textfield;
+}
+@media screen and (max-width: 768px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer {
+    gap: 0.75rem;
+  }
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item label {
+    font-size: 13px;
+  }
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item input {
+    width: clamp(96px, 35vw, 160px);
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsItemsFlexContainer .setting-item {
+    flex: 1 1 45%;
+  }
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings {
   border-left: 0.5px dashed #D0DDD0;
@@ -375,17 +608,19 @@ body {
   justify-content: space-between;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt {
-  flex: 1 1 10%;
-  min-width: 50px;
+  flex: 1 1 45%;
+  min-width: 220px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt label {
   font-size: 14px;
   align-self: center;
   margin-right: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl {
   display: none;
@@ -494,6 +729,29 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt .checkbox-wrapper-8 .tgl-skewed:checked + .tgl-btn:active:after {
   left: 10%;
 }
+@media screen and (max-width: 768px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings {
+    border-left: none;
+    border-right: none;
+    margin-top: 14px;
+  }
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div {
+    gap: 0.75rem;
+  }
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt label {
+    font-size: 13px;
+    margin-right: 12px;
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #promptSettings .setting-prompt-div .prompt-opt {
+    flex: 1 1 100%;
+  }
+}
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsMenu #settingsInfo {
   margin-top: 1em;
   display: flex;
@@ -519,7 +777,7 @@ body {
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard {
   display: none;
   position: relative;
-  width: 700px;
+  width: min(700px, 96vw);
   max-height: 60vh;
   z-index: 9999;
   background-color: #727D73;
@@ -527,6 +785,11 @@ body {
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px;
   overflow: hidden;
+}
+@media screen and (max-width: 768px) {
+  #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard {
+    max-height: 75vh;
+  }
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #infoCard .close-info-card {
   position: absolute;
@@ -746,39 +1009,23 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40rem;
+  width: min(50rem, 92vw);
   height: auto;
-  border: 1px solid #727D73;
-  border-radius: 10px;
-  padding: 25px;
+  padding: 0;
   transition: all 0.5s ease-in;
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-in;
-  background-color: #727D73;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: transparent;
 }
 #parent #loginContainer #loginParent.show {
   opacity: 1;
   visibility: visible;
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 700px) {
   #parent #loginContainer #loginParent {
-    min-width: 90%;
-  }
-}
-@media screen and (min-width: 501px) and (max-width: 899px) {
-  #parent #loginContainer #loginParent {
-    min-width: 80%;
-  }
-}
-@media screen and (max-width: 500px) {
-  #parent #loginContainer #loginParent {
-    width: auto;
-    position: relative;
-    top: 0;
-    left: 0;
-    transform: none;
+    width: calc(100vw - 32px);
+    max-width: 100%;
   }
 }
 #parent #loginContainer #loginParent #containerOne {
@@ -786,79 +1033,122 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: inherit;
+  width: 100%;
+  border: 1px solid #727D73;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #EEEFE0;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  min-height: 26rem;
 }
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 768px) {
   #parent #loginContainer #loginParent #containerOne {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    min-height: auto;
   }
 }
 #parent #loginContainer #loginParent #containerOne .compartment {
-  margin: 5px 40px;
+  margin: 0;
   width: 100%;
-}
-@media screen and (max-width: 1200px) {
-  #parent #loginContainer #loginParent #containerOne .compartment {
-    margin: 10px;
-  }
-}
-#parent #loginContainer #loginParent #containerOne .compartment {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+  padding: clamp(24px, 3vw, 44px);
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 {
+  background-color: #727D73;
+  color: #EEEFE0;
+  flex: 0 0 40%;
+  height: 22rem;
+}
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne .compartment-1 {
+    order: 2;
+    flex: 1 1 auto;
+    height: auto;
+  }
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel {
+  width: 100%;
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel h3 {
+  margin: 0 0 12px 0;
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 500;
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel p {
+  margin: 0 0 18px 0;
+  font-size: clamp(12px, 1.1vw, 14px);
+  color: rgba(238, 239, 224, 0.85);
+  line-height: 1.5;
+  max-width: 28rem;
+}
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel .guestButton {
+  width: 15rem;
+  height: 44px;
+  outline: none;
+  border: 1px solid rgba(238, 239, 224, 0.55);
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  background-color: transparent;
+  color: #EEEFE0;
+  justify-content: center;
+  gap: 10px;
+  letter-spacing: 1px;
+  transition: all 0.2s ease-in-out;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv {
-  position: relative;
-  width: 100%;
+#parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel .guestButton:hover {
+  background-color: #EEEFE0;
+  color: #727D73;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div {
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.5s ease-in-out;
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne .compartment-1 .guestPanel .guestButton {
+    width: 100%;
+  }
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police {
-  display: none;
+#parent #loginContainer #loginParent #containerOne .compartment-2 {
+  background-color: #EEEFE0;
+  color: #4A4947;
+  flex: 1 1 auto;
 }
-#parent #loginContainer #loginParent #containerOne #policeDiv .intro-img-div .police img {
-  width: 100%;
-}
-#parent #loginContainer #loginParent #containerOne #policeDiv .show {
-  opacity: 1;
-  visibility: visible;
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne .compartment-2 {
+    order: 1;
+  }
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders {
-  line-height: 1px;
   position: relative;
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-in-out;
   width: 100%;
-  color: #EEEFE0;
-  padding: 5px;
+  color: #4A4947;
+  padding: 0;
+  margin-bottom: 18px;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
-  max-width: 17rem;
-  font-size: clamp(16px, 1.5vw, 20px);
-  line-height: 1.5;
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin: 0 0 8px 0;
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: #727D73;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders span.sec-head {
   width: inherit;
   font-size: clamp(10px, 1vw, 12px);
-  line-height: 1;
+  line-height: 1.4;
   word-wrap: break-word;
   color: #AAB99A;
-}
-#parent #loginContainer #loginParent #containerOne #loginHeaders {
-  margin-bottom: 10px;
 }
 @media screen and (max-width: 500px) {
   #parent #loginContainer #loginParent #containerOne #loginHeaders h2 {
@@ -885,6 +1175,15 @@ body {
   width: 100%;
   justify-content: center;
 }
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer {
+  width: 100%;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput {
   width: 99.5%;
   height: 25px;
@@ -904,9 +1203,20 @@ body {
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::placeholder {
   color: #AAB99A;
 }
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput {
+  width: 100%;
+  border-bottom-color: rgba(74, 73, 71, 0.35);
+  color: #4A4947;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::-moz-placeholder {
+  color: rgba(74, 73, 71, 0.55);
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer input.keyinput::placeholder {
+  color: rgba(74, 73, 71, 0.55);
+}
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] {
-  width: 5rem;
-  height: 30px;
+  width: 7rem;
+  height: 44px;
   outline: none;
   border: 1px solid transparent;
   border-radius: 10px;
@@ -916,10 +1226,14 @@ body {
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
-  justify-self: center;
-  margin: 10px auto;
-  background-color: #EEEFE0;
+  justify-self: flex-end;
+  margin: 6px 0 0 auto;
+  background-color: #AAB99A;
   color: #4A4947;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] .shiny-text {
   display: inline-block;
@@ -930,6 +1244,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   animation: shine 5s linear infinite;
+  margin: 0 5px;
 }
 #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] .shiny-text.disabled {
   display: inline-block;
@@ -938,28 +1253,51 @@ body {
   -webkit-text-fill-color: initial;
   background: none;
 }
-#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err {
-  font-size: 11px;
+@media screen and (max-width: 768px) {
+  #parent #loginContainer #loginParent #containerOne #loginForm #formContainer button[type=submit] {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-status {
+  font-size: 12px;
+  color: #AAB99A;
+  line-height: 1.4;
+  opacity: 0;
   visibility: hidden;
+  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  min-height: 18px;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-status.show {
+  opacity: 1;
+  visibility: visible;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-error {
+  font-size: 12px;
+  color: #660B05;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  min-height: 18px;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .login-error.show {
+  opacity: 1;
+  visibility: visible;
+}
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err {
+  display: block;
+  font-size: 11px;
   color: #660B05;
   margin: 3px 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease-in-out, visibility 0.25s ease-in-out;
+  min-height: 14px;
 }
-#parent #loginContainer #loginParent #containerOne #loginForm #guestOptions button {
-  margin: 10px 0;
-  width: 100%;
-  height: 30px;
-  outline: none;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: transparent;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  cursor: pointer;
-  padding: 10px;
-  background-color: #EEEFE0;
-  color: #4A4947;
+#parent #loginContainer #loginParent #containerOne #loginForm #formContainer .err.show {
+  opacity: 1;
+  visibility: visible;
 }
 #parent #mainContainer {
   visibility: hidden;
@@ -989,6 +1327,11 @@ body {
   margin: 0 auto;
   justify-content: center;
 }
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer {
+    width: 100%;
+  }
+}
 #parent #mainContainer #innerContainer.show {
   display: block;
 }
@@ -1010,6 +1353,11 @@ body {
 }
 #parent #mainContainer #innerContainer #chatContainer {
   width: 99%;
+}
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer #chatContainer {
+    width: 100vw;
+  }
 }
 #parent #mainContainer #innerContainer #chatContainer.chat-visible {
   display: block;
@@ -1252,6 +1600,11 @@ body {
   word-break: break-word;
   hyphens: auto;
 }
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble {
+    margin-right: 20px;
+  }
+}
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble code {
   background-color: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.95);
@@ -1357,6 +1710,11 @@ body {
   transition: all 0.6s ease-in-out;
   background-color: #727D73;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer #inputContainer {
+    width: 100%;
+  }
 }
 #parent #mainContainer #innerContainer #inputContainer.chat-initiated {
   position: relative;
@@ -1487,6 +1845,11 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-trigger .dropdown-value {
+    font-size: 10px;
+  }
+}
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-trigger .dropdown-arrow {
   margin-left: 1px;
   margin-right: 4px;
@@ -1536,6 +1899,11 @@ body {
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list .dropdown-option.selected {
   background: rgba(255, 255, 255, 0.15);
   color: #F0F0D7;
+}
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list .dropdown-option {
+    font-size: 10px;
+  }
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #leftCompartment .dropContainer .custom-dropdown .dropdown-list::-webkit-scrollbar {
   width: 4px;
@@ -1638,9 +2006,19 @@ body {
   background-color: #AAB99A;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer button {
+    width: auto;
+  }
+}
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text {
   color: #F0F0D7;
   font-weight: 500;
+}
+@media screen and (max-width: 768px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text {
+    display: none;
+  }
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer .button-text .shiny-text {
   display: inline-block;
