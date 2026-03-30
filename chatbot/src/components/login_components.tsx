@@ -30,6 +30,7 @@ const LoginComp: React.FC = () => {
     const [enableInput, setEnableInput] = useState<boolean>(false);
     const [statusMessage, setStatusMessage] = useState<string | undefined>(undefined);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+    const placeholderIconClass = `fa-solid fa-burst${!enableInput ? ' fa-spin-pulse' : ''}`;
 
     function fadeOut(el: HTMLElement | null) {
         if (!el) return;
@@ -270,7 +271,7 @@ const LoginComp: React.FC = () => {
                     </div>
                     <div className="compartment-2 compartment">
                         <div id="loginHeaders" className='poppins-regular' ref={loginHeaderDiv}>
-                            <h2>LOGIN</h2>
+                            <h2>LOGIN&nbsp;<i className={placeholderIconClass}></i></h2>
                             <span ref={ninjaIcon}><i className="fa-solid fa-user-ninja"></i></span><span className='sec-head'>&nbsp;&nbsp;Enter your account details below...</span>
                         </div>
                         <div id="loginForm">

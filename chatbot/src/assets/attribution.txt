@@ -1,3 +1,4 @@
+Icons by Font Awesome (https://fontawesome.com)
 <a href="https://lordicon.com/">Animated icons by Lordicon.com</a>
 <a href="https://www.flaticon.com/free-icons/error" title="error icons">Error icons created by muhrzkifauzi - Flaticon</a>
 <a href="https://www.flaticon.com/free-icons/attachment" title="attachment icons">Attachment icons created by kliwir art - Flaticon</a>

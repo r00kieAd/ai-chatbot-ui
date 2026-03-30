@@ -260,7 +260,7 @@ function App() {
                 <ChatBox />
               </div>
               <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
-                {currUser && !isMobileScreen && <SplitText
+                {currUser && !isMobileScreen && !hasPreviousError && <SplitText
                   text={welcomeMessage}
                   className="text-2xl font-semibold text-center"
                   delay={100}

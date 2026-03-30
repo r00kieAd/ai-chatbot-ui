@@ -30,6 +30,8 @@ function DisplayError({ errorMessage, smallerScreen = false }: Params) {
                     <div className='errContainerChild errContainerChild2 poppins-regular'>
                         {displayMessage}
                     </div>
+                    <br />
+                    <span>OR, try reloading the page...</span>
                     <div id="retryButton" className="errContainerChild">
                         <button onClick={reloadPage}>Retry</button>
                     </div>

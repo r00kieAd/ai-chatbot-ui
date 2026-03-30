@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import { useGlobal } from '../utils/global_context';
 import initiateLogout from '../services/logout_service';
 import llmConfig from '../services/llm_config';
@@ -14,7 +15,6 @@ const NavbarComp: React.FC = () => {
     const settingsDiv = useRef<HTMLDivElement>(null);
     const settingsMenu = useRef<HTMLDivElement>(null);
     const [settingsOpen, setSettingsOpen] = useState(false);
-    const [infoCardVisible, setInfoCardVisible] = useState<boolean>(false);
     const [personalityA, setpersonalityA] = useState<boolean>(false);
     const [personalityB, setpersonalityB] = useState<boolean>(false);
     const [personalityC, setpersonalityC] = useState<boolean>(false);
@@ -60,7 +60,7 @@ const NavbarComp: React.FC = () => {
                     info = "session cleared with error";
                 }
                 console.warn(info);
-            } catch (error) {
+            } catch {
                 console.warn("files weren't cleared");
             }
 
@@ -147,9 +147,52 @@ const NavbarComp: React.FC = () => {
         }
     };
 
-    function changeInfoCardVisibility() {
-        setInfoCardVisible(!infoCardVisible);
-    }
+    const openConfigInfoTab = () => {
+        const newWindow = window.open('', '_blank');
+        if (!newWindow) return;
+
+        newWindow.document.open();
+        newWindow.document.write(`<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LLM Config Info</title>
+  </head>
+  <body style="margin:0;">
+    <div id="config-info-mount"></div>
+  </body>
+</html>`);
+        newWindow.document.close();
+
+        const targetHead = newWindow.document.head;
+        document.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
+            targetHead.appendChild(node.cloneNode(true));
+        });
+
+        const mountNode = newWindow.document.getElementById('config-info-mount');
+        if (!mountNode) return;
+
+        const root = createRoot(mountNode);
+        const closeTab = () => {
+            root.unmount();
+            newWindow.close();
+        };
+
+        root.render(
+            <div id="configInfoRoot">
+                <div id="configInfoHeader">
+                    <div className="configInfoTitle poppins-regular">LLM Config Info</div>
+                    <button className="configInfoClose poppins-regular" onClick={closeTab} aria-label="Close">
+                        Close
+                    </button>
+                </div>
+                <div id="configInfoMain">
+                    <SettingInfoCard />
+                </div>
+            </div>
+        );
+    };
 
     // Exclusive checkbox handlers - only one can be true at a time
     const handlePersonalityChangeA = (checked: boolean) => {
@@ -229,7 +272,12 @@ const NavbarComp: React.FC = () => {
                     </div>
                 </div>
                 <div id="settingsContainer" ref={settingsDiv}>
-                    <div className={updatingLLMConfig ? "show" : "" + "setting-loading-mask"} style={{"display": updatingLLMConfig ? "block":"none"}}>{<Loading />}</div>
+                    <div
+                        className={`setting-loading-mask${updatingLLMConfig ? ' show' : ''}`}
+                        style={{ display: updatingLLMConfig ? "block" : "none" }}
+                    >
+                        {<Loading />}
+                    </div>
                     <div id="settingsMenu" className={updatingLLMConfig ? "blur" : ""} ref={settingsMenu}>
                         <div id="settingsItemsFlexContainer">
                             <div className="setting-item">
@@ -303,14 +351,12 @@ const NavbarComp: React.FC = () => {
                         </div>
                         <div id="settingsInfo">
                             <div id="aiConfigSettings" className="setting-info-div">
-                                <button className='poppins-regular' onClick={changeInfoCardVisibility}>Config Info<i className="fa-solid fa-circle-info"></i></button>
+                                <button className='poppins-regular' onClick={openConfigInfoTab}>
+                                    Config Info<i className="fa-solid fa-circle-info"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div id="infoCard" style={{ display: infoCardVisible && settingsOpen ? "block" : "none" }}>
-                    <button className="close-info-card" onClick={changeInfoCardVisibility}><i className="fa-solid fa-circle-xmark"></i></button>
-                    <SettingInfoCard />
                 </div>
             </div>
         </>
