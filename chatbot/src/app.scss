@@ -1929,6 +1929,11 @@ body {
                                 align-items: flex-start;
                                 height: fit-content;
                                 min-height: unset;
+
+                                .message-time {
+                                    width: 25rem;
+                                    min-width: 25rem;
+                                }
                             }
                         }
                     }

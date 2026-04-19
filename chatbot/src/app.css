@@ -1684,6 +1684,10 @@ body {
   height: fit-content;
   min-height: unset;
 }
+#parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .parent-bot-bubble .message-content .message-time {
+  width: 25rem;
+  min-width: 25rem;
+}
 #parent #mainContainer #innerContainer #welcomeMessage {
   position: absolute;
   top: 50%;
