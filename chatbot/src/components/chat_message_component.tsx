@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
+const LordIcon = 'lord-icon' as any;
+
+declare global {
+    interface Window {
+        hljs?: { highlightElement: (el: HTMLElement) => void };
+    }
+}
 
 marked.setOptions({
     breaks: true,
@@ -38,6 +45,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     const userMessageDiv = useRef<HTMLDivElement>(null);
     const chatExchangeRef = useRef<HTMLDivElement>(null);
     const botMessageRef = useRef<HTMLDivElement>(null);
+    // isStreaming = true;
     // const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
     // const currentPersonality = fixedPersonality;
 
@@ -68,17 +76,77 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
         });
     }, [userMessage, botMessage]);
 
+    useLayoutEffect(() => {
+        const root = chatExchangeRef.current;
+        if (!root) return;
+
+        const preEls = Array.from(root.querySelectorAll('pre'));
+        for (const preEl of preEls) {
+            const codeEl = preEl.querySelector('code');
+            if (!codeEl) continue;
+
+            const parent = preEl.parentElement;
+            const alreadyWrapped = parent?.classList?.contains('code-block');
+            const wrapper = alreadyWrapped ? parent! : document.createElement('div');
+
+            if (!alreadyWrapped) {
+                wrapper.className = 'code-block';
+                preEl.replaceWith(wrapper);
+                wrapper.appendChild(preEl);
+            }
+
+            if (!wrapper.querySelector('.copy-code-btn')) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'copy-code-btn';
+                btn.setAttribute('aria-label', 'Copy code');
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+                wrapper.appendChild(btn);
+            }
+        }
+
+        if (window.hljs?.highlightElement) {
+            const codeBlocks = Array.from(root.querySelectorAll('pre code')) as HTMLElement[];
+            for (const codeEl of codeBlocks) {
+                if (codeEl.classList.contains('hljs')) continue;
+                window.hljs.highlightElement(codeEl);
+            }
+        }
+    }, [userMessage, botMessage, isStreaming, isNewMessage]);
+
+    useEffect(() => {
+        const root = chatExchangeRef.current;
+        if (!root) return;
+
+        const handleClick = (ev: MouseEvent) => {
+            const target = ev.target as HTMLElement | null;
+            if (!target) return;
+
+            const btn = target.closest('.copy-code-btn') as HTMLElement | null;
+            if (!btn) return;
+
+            const wrapper = btn.closest('.code-block') as HTMLElement | null;
+            const codeEl = wrapper?.querySelector('pre code') as HTMLElement | null;
+            if (!codeEl) return;
+
+            triggerIconFade(btn);
+            writeToClipboard((codeEl.textContent ?? '').trimEnd()).catch(() => undefined);
+        };
+
+        root.addEventListener('click', handleClick);
+        return () => root.removeEventListener('click', handleClick);
+    }, []);
+
     const placeholderVisible = !botMessage;
-    const placeholderText = !isStreaming && placeholderVisible ? 'contemplating...' : '';
-    const placeholderIconClass = `fa-solid fa-burst${isStreaming ? ' fa-spin-pulse' : ''}`;
+    const lordIconSrc = 'https://cdn.lordicon.com/wpequvda.json';
+    const lordIconTrigger = placeholderVisible || isStreaming ? 'loop' : 'in';
+    const lordIconState = 'loop-jab';
 
     const triggerIconFade = (container: HTMLElement) => {
         const icon = container.querySelector('i');
         if (!icon) return;
 
         icon.classList.remove('fa-beat');
-        // Force a reflow so repeated rapid clicks retrigger the animation.
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         icon.getBoundingClientRect().width;
         icon.classList.add('fa-beat');
         window.setTimeout(() => icon.classList.remove('fa-beat'), 600);
@@ -148,15 +216,31 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                 <div className="message-bubble poppins-regular bot-bubble">
                     {placeholderVisible ? (
                         <em className='bot-wait-placeholder'>
-                            {placeholderText}
-                            <i className={placeholderIconClass}></i>&nbsp;<span className='bot-wait-placeholder-text'>contemplating...</span>
+                            <span className='bot-streaming-spinner'>
+                                <LordIcon
+                                    key={lordIconTrigger}
+                                    src={lordIconSrc}
+                                    trigger={lordIconTrigger}
+                                    state={lordIconState}
+                                    style={{ width: '20px', height: '20px' }}
+                                />
+                            </span>
+                            <span className='bot-wait-placeholder-text'>contemplating...</span>
                         </em>
                     ) : (
                         <>
                             {botMessage && (
                                 <>
                                     <div className="parent-bot-bubble">
-                                        <span className='bot-streaming-spinner'><i className={placeholderIconClass}></i></span>
+                                        <span className='bot-streaming-spinner'>
+                                            <LordIcon
+                                                key={lordIconTrigger}
+                                                src={lordIconSrc}
+                                                trigger={lordIconTrigger}
+                                                state={lordIconState}
+                                                style={{ width: '20px', height: '20px' }}
+                                            />
+                                        </span>
                                         <div className="message-content">
                                             {botMessage && !isStreaming && (
                                                 <div className="message-time montserrat-msg">
@@ -169,7 +253,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                             )}
                                         </div>
                                     </div>
-                                    <span className='bot-message-text' dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
+                                    <div className='bot-message-text' dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
                                 </>
                             )}
                         </>

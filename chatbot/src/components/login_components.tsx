@@ -5,6 +5,7 @@ import getAllModels from '../services/get_models';
 import setLLMChoice from '../services/llm_choice';
 import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
+const LordIcon = 'lord-icon' as any;
 
 type AuthParams = {
     username: string;
@@ -30,7 +31,9 @@ const LoginComp: React.FC = () => {
     const [enableInput, setEnableInput] = useState<boolean>(false);
     const [statusMessage, setStatusMessage] = useState<string | undefined>(undefined);
     const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
-    const placeholderIconClass = `fa-solid fa-burst${!enableInput ? ' fa-spin-pulse' : ''}`;
+    const lordIconSrc = 'https://cdn.lordicon.com/wpequvda.json';
+    const lordIconTrigger = enableInput ? 'in' : 'loop';
+    const lordIconState = 'loop-jab';
 
     function fadeOut(el: HTMLElement | null) {
         if (!el) return;
@@ -271,7 +274,16 @@ const LoginComp: React.FC = () => {
                     </div>
                     <div className="compartment-2 compartment">
                         <div id="loginHeaders" className='poppins-regular' ref={loginHeaderDiv}>
-                            <h2>LOGIN&nbsp;<i className={placeholderIconClass}></i></h2>
+                            <h2>
+                                LOGIN&nbsp;
+                                <LordIcon
+                                    key={lordIconTrigger}
+                                    src={lordIconSrc}
+                                    trigger={lordIconTrigger}
+                                    state={lordIconState}
+                                    style={{ width: '21px', height: '21px' }}
+                                />
+                            </h2>
                             <span ref={ninjaIcon}><i className="fa-solid fa-user-ninja"></i></span><span className='sec-head'>&nbsp;&nbsp;Enter your account details below...</span>
                         </div>
                         <div id="loginForm">

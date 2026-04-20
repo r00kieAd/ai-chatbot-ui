@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from '../utils/global_context';
-import attach from '../assets/paper-clip.png';
+// import attach from '../assets/paper-clip.png';
 // import LLMs from '../configs/available_llm_models.json';
 import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
@@ -13,6 +13,7 @@ import ShinyText from './shiny_text';
 import uploadFile from '../services/file_service';
 import clearAttachments from '../services/clear_attachments';
 import Dropdown from './dropdown_d';
+const LordIcon = 'lord-icon' as any;
 
 const isAskSuccessPayload = (value: AskResponsePayload | undefined): value is AskSuccessPayload => typeof value === 'object' && value !== null;
 
@@ -38,6 +39,8 @@ const InputBox: React.FC = () => {
     const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
+    const attachmentIconSrc = 'https://cdn.lordicon.com/kydcudfv.json';
+    const attachmentIconTrigger = uploading ? 'loop' : 'loop-on-hover';
 
     useEffect(() => {
         const handleAsk = async () => {
@@ -528,31 +531,41 @@ const InputBox: React.FC = () => {
                 </div>
                 <div id="rightCompartment">
                     <div id="fileContainer">
-                        <label htmlFor="attachment" className='pointer'><span className={'attach-img' + (uploading ? ' bounceAnimation' : '')}><img src={attach} alt="File Attach" id="fileTransferGif" /></span></label>
+                        <label htmlFor="attachment" className='pointer'><span className={'attach-img' + (uploading ? ' bounceAnimation' : '')}>
+                            <LordIcon
+                                key={attachmentIconTrigger}
+                                src={attachmentIconSrc}
+                                trigger={attachmentIconTrigger}
+                                target={uploading ? undefined : '#fileContainer'}
+                                colors="primary:#F0F0D7"
+                                delay="1000"
+                                style={{ width: '21px', height: '21px' }}
+                            />
+                        </span></label>
                         <span className='attach-attr attach-count poppins-regular' >&nbsp;{attachCount > 0 ? attachCount : ''}</span>
                         <span className='attach-attr clear-link poppins-regular' >&nbsp;{attachCount > 0 ? (<><a onClick={clearFiles}>X</a></>) : ''}</span>
                         <input type="file" name="attachment" id="attachment" onChange={onFileSelected} />
                     </div>
                     <div id="sendContainer">
-                        <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
-                        {(() => {
-                            const isButtonDisabled = !enableAskButton && !streamActive;
-                            return (
-                                <button className='button send-button pointer quicksand-light' onClick={handleButtonClick} disabled={isButtonDisabled}>
-                                    {streamActive ? (
-                                        <>
-                                            <span className='button-text'><ShinyText text="Stop" disabled={true} speed={3} className='custom-class' /></span>
-                                            &nbsp;<i className="fa-solid fa-circle-stop"></i>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class' /></span>
-                                            <i className="fa-regular fa-paper-plane"></i>
-                                        </>
-                                    )}
-                                </button>
-                            );
-                        })()}
+                        <ClickSpark sparkColor='#fff' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
+                            {(() => {
+                                const isButtonDisabled = !enableAskButton && !streamActive;
+                                return (
+                                    <button className='button send-button pointer quicksand-light' onClick={handleButtonClick} disabled={isButtonDisabled}>
+                                        {streamActive ? (
+                                            <>
+                                                <span className='button-text'><ShinyText text="Stop" disabled={true} speed={3} className='custom-class' /></span>
+                                                &nbsp;<i className="fa-solid fa-circle-stop"></i>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class' /></span>
+                                                <i className="fa-regular fa-paper-plane"></i>
+                                            </>
+                                        )}
+                                    </button>
+                                );
+                            })()}
                         </ClickSpark>
 
                     </div>
