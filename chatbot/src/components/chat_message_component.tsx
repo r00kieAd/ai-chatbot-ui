@@ -1,5 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useState, useRef } from 'react';
 import { marked } from 'marked';
+const LordIcon = 'lord-icon' as any;
+
+declare global {
+    interface Window {
+        hljs?: { highlightElement: (el: HTMLElement) => void };
+    }
+}
 
 marked.setOptions({
     breaks: true,
@@ -10,6 +17,7 @@ interface ChatMessageProps {
     userMessage: string;
     userTime: string;
     botMessage: string;
+    botImages?: { url: string; alt?: string }[];
     botTime: string;
     llmprovider?: string;
     llmModel?: string;
@@ -17,13 +25,29 @@ interface ChatMessageProps {
     isStreaming?: boolean;
 }
 
+const escapeHtml = (input: string): string =>
+    input
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+
 const convertMarkdownToHTML = (text: string): string => {
     if (!text || text.trim() === '') {
         return '';
     }
 
     try {
-        const htmlOutput = marked(text) as string;
+        const renderer = new marked.Renderer();
+        renderer.code = ({ text, lang }: { text: string; lang?: string }) => {
+            const language = (lang ?? '').trim().split(/\s+/)[0];
+            const langClass = language ? `language-${escapeHtml(language)}` : '';
+            const escapedCode = escapeHtml(text);
+            return `<div class="code-block"><button type="button" class="copy-code-btn" aria-label="Copy code"><i class="fa-regular fa-copy"></i></button><pre><code class="${langClass}">${escapedCode}</code></pre></div>`;
+        };
+
+        const htmlOutput = marked(text, { renderer }) as string;
         // console.log('Markdown conversion:', { input: text.substring(0, 100) + '...', output: htmlOutput.substring(0, 200) + '...' });
         return htmlOutput;
     } catch (error) {
@@ -32,12 +56,13 @@ const convertMarkdownToHTML = (text: string): string => {
     }
 };
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botTime, llmprovider, llmModel, isStreaming = false }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botImages, botTime, llmprovider, llmModel, isStreaming = false }) => {
     const [isNewMessage, setIsNewMessage] = useState(true);
     const [firstMessage, setFirstMessage] = useState(true);
     const userMessageDiv = useRef<HTMLDivElement>(null);
     const chatExchangeRef = useRef<HTMLDivElement>(null);
     const botMessageRef = useRef<HTMLDivElement>(null);
+    // isStreaming = true;
     // const [fixedPersonality] = useState(messagePersonality ?? globalPersonality ?? null);
     // const currentPersonality = fixedPersonality;
 
@@ -61,24 +86,60 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
     }, [firstMessage])
 
     useEffect(() => {
-        if (!userMessage && !botMessage) return;
+        const hasAnyContent = Boolean(userMessage) || Boolean(botMessage) || (botImages && botImages.length > 0);
+        if (!hasAnyContent) return;
         botMessageRef.current?.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
         });
-    }, [userMessage, botMessage]);
+    }, [userMessage, botMessage, botImages]);
 
-    const placeholderVisible = !botMessage;
-    const placeholderText = !isStreaming && placeholderVisible ? 'contemplating...' : '';
-    const placeholderIconClass = `fa-solid fa-burst${isStreaming ? ' fa-spin-pulse' : ''}`;
+    useLayoutEffect(() => {
+        const root = chatExchangeRef.current;
+        if (!root) return;
+
+        if (window.hljs?.highlightElement) {
+            const codeBlocks = Array.from(root.querySelectorAll('pre code')) as HTMLElement[];
+            for (const codeEl of codeBlocks) {
+                if (codeEl.classList.contains('hljs')) continue;
+                window.hljs.highlightElement(codeEl);
+            }
+        }
+    }, [userMessage, botMessage, botImages, isStreaming, isNewMessage]);
+
+    useEffect(() => {
+        const root = chatExchangeRef.current;
+        if (!root) return;
+
+        const handleClick = (ev: MouseEvent) => {
+            const target = ev.target as HTMLElement | null;
+            if (!target) return;
+
+            const btn = target.closest('.copy-code-btn') as HTMLElement | null;
+            if (!btn) return;
+
+            const wrapper = btn.closest('.code-block') as HTMLElement | null;
+            const codeEl = wrapper?.querySelector('pre code') as HTMLElement | null;
+            if (!codeEl) return;
+
+            triggerIconFade(btn);
+            writeToClipboard((codeEl.textContent ?? '').trimEnd()).catch(() => undefined);
+        };
+
+        root.addEventListener('click', handleClick);
+        return () => root.removeEventListener('click', handleClick);
+    }, []);
+
+    const placeholderVisible = !botMessage && !(botImages && botImages.length > 0);
+    const lordIconSrc = 'https://cdn.lordicon.com/wpequvda.json';
+    const lordIconTrigger = placeholderVisible || isStreaming ? 'loop' : 'in';
+    const lordIconState = 'loop-jab';
 
     const triggerIconFade = (container: HTMLElement) => {
         const icon = container.querySelector('i');
         if (!icon) return;
 
         icon.classList.remove('fa-beat');
-        // Force a reflow so repeated rapid clicks retrigger the animation.
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         icon.getBoundingClientRect().width;
         icon.classList.add('fa-beat');
         window.setTimeout(() => icon.classList.remove('fa-beat'), 600);
@@ -148,30 +209,60 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                 <div className="message-bubble poppins-regular bot-bubble">
                     {placeholderVisible ? (
                         <em className='bot-wait-placeholder'>
-                            {placeholderText}
-                            <i className={placeholderIconClass}></i>&nbsp;<span className='bot-wait-placeholder-text'>contemplating...</span>
+                            <span className='bot-streaming-spinner'>
+                                <LordIcon
+                                    key={lordIconTrigger}
+                                    src={lordIconSrc}
+                                    trigger={lordIconTrigger}
+                                    state={lordIconState}
+                                    style={{ width: '20px', height: '20px' }}
+                                />
+                            </span>
+                            <span className='bot-wait-placeholder-text'>contemplating...</span>
                         </em>
                     ) : (
                         <>
-                            {botMessage && (
-                                <>
-                                    <div className="parent-bot-bubble">
-                                        <span className='bot-streaming-spinner'><i className={placeholderIconClass}></i></span>
-                                        <div className="message-content">
-                                            {botMessage && !isStreaming && (
-                                                <div className="message-time montserrat-msg">
-                                                    from {
-                                                        llmprovider?.toLocaleLowerCase().includes("openai") ? <><i className="fa-brands fa-openai"></i></> :
-                                                            llmprovider?.toLocaleLowerCase().includes("google") ? <><i className="fa-brands fa-google"></i></> : <i className="fa-solid fa-circle-question"></i>}
-                                                    <span className='llm-model-name'>{` ${llmModel || 'unknown'}`} at {botTime}</span>
-                                                    <span className='copy-msg' onClick={handleCopyClick}>&nbsp;&nbsp;<i className="fa-regular fa-copy"></i></span>
-                                                </div>
-                                            )}
+                            <div className="parent-bot-bubble">
+                                <span className='bot-streaming-spinner'>
+                                    <LordIcon
+                                        key={lordIconTrigger}
+                                        src={lordIconSrc}
+                                        trigger={lordIconTrigger}
+                                        state={lordIconState}
+                                        style={{ width: '20px', height: '20px' }}
+                                    />
+                                </span>
+                                <div className="message-content">
+                                    {!isStreaming && (botMessage || (botImages && botImages.length > 0)) && (
+                                        <div className="message-time montserrat-msg">
+                                            from {
+                                                llmprovider?.toLocaleLowerCase().includes("openai") ? <><i className="fa-brands fa-openai"></i></> :
+                                                    llmprovider?.toLocaleLowerCase().includes("google") ? <><i className="fa-brands fa-google"></i></> : <i className="fa-solid fa-circle-question"></i>}
+                                            <span className='llm-model-name'>{` ${llmModel || 'unknown'}`} at {botTime}</span>
+                                            <span className='copy-msg' onClick={handleCopyClick}>&nbsp;&nbsp;<i className="fa-regular fa-copy"></i></span>
                                         </div>
-                                    </div>
-                                    <span className='bot-message-text' dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
-                                </>
-                            )}
+                                    )}
+                                </div>
+                            </div>
+                            {botMessage ? (
+                                <div className='bot-message-text' dangerouslySetInnerHTML={{ __html: convertMarkdownToHTML(botMessage) }} />
+                            ) : null}
+                            {botImages && botImages.length > 0 ? (
+                                <div className="bot-image-grid" aria-label="Generated images">
+                                    {botImages.map((img, idx) => (
+                                        <a
+                                            key={`${img.url}-${idx}`}
+                                            className="bot-image-link"
+                                            href={img.url}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            aria-label={img.alt || `Open image ${idx + 1}`}
+                                        >
+                                            <img className="bot-image" src={img.url} alt={img.alt || `Generated image ${idx + 1}`} loading="lazy" />
+                                        </a>
+                                    ))}
+                                </div>
+                            ) : null}
                         </>
                     )}
                 </div>

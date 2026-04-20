@@ -1142,6 +1142,9 @@ body {
   font-weight: 500;
   letter-spacing: 2px;
   color: #727D73;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 #parent #loginContainer #loginParent #containerOne #loginHeaders span.sec-head {
   width: inherit;
@@ -1413,14 +1416,16 @@ body {
   display: block;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-wait-placeholder {
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-wait-placeholder .bot-wait-placeholder-text {
-  font-size: 10px;
+  font-size: 12px;
   color: #6b7280;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-message-text {
-  display: inline;
+  display: block;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-streaming-spinner {
   display: inline-flex;
@@ -1488,9 +1493,106 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble pre code {
   background: none;
   padding: 0;
+  display: block;
   font-size: 13px;
   white-space: pre-wrap;
   word-break: break-all;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block {
+  position: relative;
+  margin: 10px 0;
+  border-radius: 12px;
+  background: #393E46;
+  padding: 14px;
+  overflow: hidden;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre {
+  margin: 0;
+  padding: 42px 16px 16px 16px;
+  border-radius: 10px;
+  background: transparent;
+  overflow-x: auto;
+  max-width: 100%;
+  white-space: pre;
+  word-break: normal;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre code {
+  background: transparent !important;
+  padding: 0;
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+  color: #C9D1D9;
+  text-shadow: none;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre code.hljs {
+  background: transparent !important;
+  color: #C9D1D9;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre code.hljs * {
+  background: transparent !important;
+  text-shadow: none;
+  box-shadow: none;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-keyword,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-built_in,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-literal,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-type {
+  color: #8FBCE6;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-title,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-title.class_,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-title.function_,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-function .hljs-title {
+  color: #9CDCFE;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-params,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-variable,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-template-variable,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-attr,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-attribute,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-property,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-number {
+  color: #B5CEA8;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-operator,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-punctuation {
+  color: #A7B0B8;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-string,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-regexp,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-symbol {
+  color: #CE9178;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-comment,
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre .hljs-quote {
+  color: #A7B0B8;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block .copy-code-btn {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  height: 28px;
+  width: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #9AA3AC;
+  background: #9AA3AC;
+  color: #2F3542;
+  cursor: pointer;
+  opacity: 0.9;
+  box-shadow: none;
+  transition: opacity 120ms ease;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block .copy-code-btn:hover {
+  opacity: 1;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block .copy-code-btn i {
+  pointer-events: none;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble ul,
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble ol {
@@ -1955,9 +2057,11 @@ body {
   display: flex;
   align-items: center;
 }
-#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer label .attach-img img {
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer label {
   margin-top: 3px;
-  width: 20px;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer label .attach-img {
+  z-index: 999;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer .attach-attr {
   cursor: default;

@@ -2,10 +2,16 @@ import { createContext, useState, useContext } from "react";
 import type { ReactNode } from "react";
 // import PROMPTS from '../configs/bot_prompts.json'
 
+export interface ChatImage {
+    url: string;
+    alt?: string;
+}
+
 interface ChatMessage {
     userMessage: string;
     userTime: string;
     botMessage: string;
+    botImages?: ChatImage[];
     botTime: string;
     llmprovider: string;
     llmModel?: string;
