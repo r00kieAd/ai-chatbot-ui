@@ -13,13 +13,17 @@ import ShinyText from './shiny_text';
 import uploadFile from '../services/file_service';
 import clearAttachments from '../services/clear_attachments';
 import Dropdown from './dropdown_d';
+import generateImage from '../services/image_service';
+import type { GeneratedImage } from '../services/image_service';
+import { parseImageToolCall } from '../utils/parse_image_tool_call';
 const LordIcon = 'lord-icon' as any;
 
 const isAskSuccessPayload = (value: AskResponsePayload | undefined): value is AskSuccessPayload => typeof value === 'object' && value !== null;
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels } = useGlobal();
+    const { setChatInitiated, currUser, authToken, chatHistory, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels } = useGlobal();
     const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, setTypingComplete } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
@@ -89,6 +93,104 @@ const InputBox: React.FC = () => {
         }
     }, [models]);
 
+    const normalizeImagesFromUnknown = (data: unknown): GeneratedImage[] => {
+        if (!data) return [];
+
+        if (typeof data === 'string') {
+            const url = data.trim();
+            return url ? [{ url }] : [];
+        }
+
+        if (Array.isArray(data)) {
+            return data
+                .map(item => normalizeImagesFromUnknown(item))
+                .flat()
+                .filter(img => typeof img.url === 'string' && img.url.trim().length > 0);
+        }
+
+        if (!isRecord(data)) return [];
+
+        if (typeof data.url === 'string' && data.url.trim()) return [{ url: data.url.trim() }];
+
+        if (Array.isArray(data.urls)) {
+            return (data.urls as unknown[])
+                .filter(v => typeof v === 'string')
+                .map(v => ({ url: (v as string).trim() }))
+                .filter(img => img.url);
+        }
+
+        if (Array.isArray(data.images)) {
+            return normalizeImagesFromUnknown(data.images);
+        }
+
+        if (Array.isArray(data.data)) {
+            return normalizeImagesFromUnknown(data.data);
+        }
+
+        if (typeof data.b64_json === 'string' && data.b64_json.trim()) {
+            return [{ url: `data:image/png;base64,${data.b64_json.trim()}` }];
+        }
+
+        return [];
+    };
+
+    const maybeGenerateImageFromToolCall = async (chatKey: string, message: string, botTime: string) => {
+        if (!currUser) return;
+        if ((chatHistory?.[chatKey]?.botImages?.length ?? 0) > 0) return;
+        const parsed = parseImageToolCall(message);
+        if (!parsed) return;
+
+        setChatHistory(prev => ({
+            ...prev,
+            [chatKey]: {
+                ...prev[chatKey],
+                botMessage: 'Generating image...',
+                botImages: [],
+                botTime,
+                isStreaming: false
+            }
+        }));
+
+	        const resp = await generateImage({
+	            username: currUser,
+	            token: authToken ? authToken : 'null',
+	            instruction: 'Generate the requested image and return image URLs (or base64) in JSON.',
+	            model: (selectedModel || 'auto').toLowerCase(),
+	            use_rag: false,
+	            action: parsed.action,
+	            prompt: parsed.prompt,
+	            action_input: parsed.params,
+	            tool_call_raw: message
+	        });
+
+        if (resp.status && resp.images && resp.images.length > 0) {
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    ...prev[chatKey],
+                    botMessage: `*Prompt:* ${parsed.prompt}`,
+                    botImages: resp.images,
+                    botTime,
+                    isStreaming: false
+                }
+            }));
+            return;
+        }
+
+        setChatHistory(prev => ({
+            ...prev,
+            [chatKey]: {
+                ...prev[chatKey],
+                botMessage: resp.status
+                    ? 'Image generation completed, but no images were returned.'
+                    : `Image generation failed: ${resp.resp || resp.statusCode || 'Unknown error'}`,
+                botImages: [],
+                botTime,
+                isStreaming: false
+            }
+        }));
+    };
+
     const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag) => {
         if (!currUser) return;
         stopRequestedRef.current = false;
@@ -103,6 +205,7 @@ const InputBox: React.FC = () => {
                 userMessage: curr_prompt,
                 userTime: userTime,
                 botMessage: '',
+                botImages: [],
                 botTime: '',
                 llmprovider: curr_client || 'Unknown',
                 llmModel: curr_model || 'Unknown',
@@ -255,6 +358,23 @@ const InputBox: React.FC = () => {
                                         console.warn('Metadata parse error', error);
                                     }
                                 }
+                            } else if (currentEvent === 'image' || currentEvent === 'images') {
+                                if (!combinedData) return;
+                                try {
+                                    const payload = JSON.parse(combinedData);
+                                    const images = normalizeImagesFromUnknown(payload);
+                                    if (images.length > 0) {
+                                        setChatHistory(prev => ({
+                                            ...prev,
+                                            [chatKey]: {
+                                                ...prev[chatKey],
+                                                botImages: [...(prev[chatKey]?.botImages ?? []), ...images]
+                                            }
+                                        }));
+                                    }
+                                } catch (error) {
+                                    console.warn('Image event parse error', error);
+                                }
                             } else if (currentEvent === 'completion') {
                                 return;
                             } else if (combinedData) {
@@ -305,6 +425,8 @@ const InputBox: React.FC = () => {
                                 }
                             };
                         });
+
+                        await maybeGenerateImageFromToolCall(chatKey, accumulated, botTime);
                     } else if (response.resp) {
                         const responsePayload = response.resp;
                         const payloadIsObject = isAskSuccessPayload(responsePayload);
@@ -315,17 +437,21 @@ const InputBox: React.FC = () => {
                                 : '';
                         const provider = payloadIsObject ? responsePayload.provider : undefined;
                         const modelUsed = payloadIsObject ? responsePayload.model_used : undefined;
+                        const imagesFromPayload = payloadIsObject ? normalizeImagesFromUnknown(responsePayload) : [];
                         setChatHistory(prev => ({
                             ...prev,
                             [chatKey]: {
                                 ...prev[chatKey],
                                 botMessage: message,
+                                botImages: imagesFromPayload.length > 0 ? imagesFromPayload : (prev[chatKey]?.botImages ?? []),
                                 botTime: botTime,
                                 llmprovider: provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
                                 llmModel: modelUsed || prev[chatKey]?.llmModel || curr_model || 'Unknown',
                                 isStreaming: false
                             }
                         }));
+
+                        await maybeGenerateImageFromToolCall(chatKey, message, botTime);
                     } else {
                         setChatHistory(prev => ({
                             ...prev,

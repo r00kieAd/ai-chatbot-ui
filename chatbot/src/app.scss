@@ -1629,6 +1629,37 @@ body {
                             display: block;
                         }
 
+                        .bot-message-text img,
+                        .user-bubble img {
+                            max-width: 100%;
+                            height: auto;
+                            display: block;
+                            margin: 10px 0;
+                            border-radius: 12px;
+                            box-shadow: rgba(0, 0, 0, 0.12) 0px 2px 8px;
+                        }
+
+                        .bot-image-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                            gap: 10px;
+                            margin: 10px 0 0 0;
+                            max-width: 100%;
+                        }
+
+                        .bot-image-link {
+                            display: block;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            background: rgba(0, 0, 0, 0.05);
+                        }
+
+                        .bot-image {
+                            width: 100%;
+                            height: auto;
+                            display: block;
+                        }
+
                         .bot-streaming-spinner {
                             display: inline-flex;
                             align-items: center;
