@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useGlobal } from './utils/global_context';
 import LoginComp from './components/login_components';
 import ChatBox from './components/chat_component';
@@ -12,10 +12,18 @@ import Loading from './components/loading_screen';
 import DisplayError from './components/display_error';
 import initiateLogout from './services/logout_service';
 import './app.css'
+import robot_svg from './assets/robot.svg';
+import WLCM from './configs/welcome_texts.json';
+
+const WELCOME_TEXTS = Object.values(WLCM as Record<string, string>);
+const RANDOM_WELCOME_TEXT =
+  WELCOME_TEXTS.length === 0
+    ? ''
+    : (WELCOME_TEXTS[Math.floor(Math.random() * WELCOME_TEXTS.length)] ?? '');
 
 function App() {
 
-  const { authorized, loggedOut, setAuthorized, setLoggedOut, chatInitiated, setChatInitiated, currUser, guestLogin, authToken, serverOnline, setServerOnline } = useGlobal();
+  const { authorized, loggedOut, setAuthorized, setLoggedOut, chatInitiated, setChatInitiated, currUser, authToken, serverOnline, setServerOnline } = useGlobal();
   const [serverOffline, setServerOffline] = useState(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [hasPreviousError, setHasPreviousError] = useState(false);
@@ -42,10 +50,10 @@ function App() {
       console.log('Screen width:', window.innerWidth, 'isMobile:', isMobile);
       setIsMobileScreen(isMobile);
     };
-    
+
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
-    
+
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
@@ -75,7 +83,7 @@ function App() {
         setChatInitiated(false);
         setLoggedOut(true);
         setTimeout(() => {
-            window.location.reload();
+          window.location.reload();
         }, 600);
       }
     };
@@ -164,9 +172,7 @@ function App() {
 
   }
 
-  const welcomeMessage = useMemo(() => {
-    return `こんにちは ${guestLogin ? 'Guest' : currUser}! What brings you here today?`;
-  }, [currUser]);
+  const welcomeMessage = RANDOM_WELCOME_TEXT;
 
   useEffect(() => {
     setAuthorized(sessionStorage.getItem(import.meta.env.VITE_SESSION_AUTH_VAR) === "true")
@@ -207,7 +213,6 @@ function App() {
 
   useEffect(() => {
     if (chatInitiated) {
-      // welcomeMessage = 
       if (mainContainer.current && inputBoxDiv.current && chatBoxDiv.current && innerContainer.current && wlcmDiv.current) {
         if (window.screen.availWidth <= 500) {
           mainContainer.current.style.width = "90%";
@@ -260,19 +265,26 @@ function App() {
                 <ChatBox />
               </div>
               <div id='welcomeMessage' className='poppins-regular' ref={wlcmDiv}>
-                {currUser && !isMobileScreen && !hasPreviousError && <SplitText
-                  text={welcomeMessage}
-                  className="text-2xl font-semibold text-center"
-                  delay={100}
-                  duration={0.6}
-                  ease="power3.out"
-                  splitType="chars"
-                  from={{ opacity: 0, y: 40 }}
-                  to={{ opacity: 1, y: 0 }}
-                  threshold={0.1}
-                  rootMargin="-100px"
-                  textAlign="center"
-                />}
+                <div className='wlcm_inner'>
+                  {/* <div className="img_attr inner_">
+                    <img src={robot_svg} alt="robot" />
+                  </div> */}
+                  <div className="text_attr inner_">
+                    {currUser && !isMobileScreen && !hasPreviousError && <SplitText
+                      text={welcomeMessage}
+                      className="text-2xl font-semibold text-center"
+                      delay={10}
+                      duration={0.6}
+                      ease="power3.out"
+                      splitType="chars"
+                      from={{ opacity: 0, y: 40 }}
+                      to={{ opacity: 1, y: 0 }}
+                      threshold={0.1}
+                      rootMargin="-100px"
+                      textAlign="center"
+                    />}
+                  </div>
+                </div>
               </div>
               <div id="inputContainer" ref={inputBoxDiv}>
                 <InputBox />

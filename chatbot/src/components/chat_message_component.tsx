@@ -215,7 +215,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                     src={lordIconSrc}
                                     trigger={lordIconTrigger}
                                     state={lordIconState}
-                                    style={{ width: '20px', height: '20px' }}
+                                    style={{ width: '25px', height: '25px' }}
                                 />
                             </span>
                             <span className='bot-wait-placeholder-text'>contemplating...</span>
@@ -229,7 +229,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                         src={lordIconSrc}
                                         trigger={lordIconTrigger}
                                         state={lordIconState}
-                                        style={{ width: '20px', height: '20px' }}
+                                        style={{ width: '25px', height: '25px' }}
                                     />
                                 </span>
                                 <div className="message-content">
@@ -237,7 +237,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                         <div className="message-time montserrat-msg">
                                             from {
                                                 llmprovider?.toLocaleLowerCase().includes("openai") ? <><i className="fa-brands fa-openai"></i></> :
-                                                    llmprovider?.toLocaleLowerCase().includes("google") ? <><i className="fa-brands fa-google"></i></> : <i className="fa-solid fa-circle-question"></i>}
+                                                    llmprovider?.toLocaleLowerCase().includes("google") ? <><i className="fa-brands fa-google"></i></> :
+                                                    llmprovider?.toLocaleLowerCase().includes("mistral") ? <i className="fa-solid fa-cat"></i> : <i className="fa-solid fa-circle-question"></i>}
                                             <span className='llm-model-name'>{` ${llmModel || 'unknown'}`} at {botTime}</span>
                                             <span className='copy-msg' onClick={handleCopyClick}>&nbsp;&nbsp;<i className="fa-regular fa-copy"></i></span>
                                         </div>

@@ -524,6 +524,9 @@ const InputBox: React.FC = () => {
             case "3":
                 allModels = availableModels.M2?.LIST?.map(e => e.model) ?? [];
                 break;
+            case "4":
+                allModels = availableModels.M3?.LIST?.map(e => e.model) ?? [];
+                break;
             default:
                 allModels = [];
                 break;
