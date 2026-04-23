@@ -12,7 +12,7 @@ import Loading from './components/loading_screen';
 import DisplayError from './components/display_error';
 import initiateLogout from './services/logout_service';
 import './app.css'
-import robot_svg from './assets/robot.svg';
+// import robot_svg from './assets/robot.svg';
 import WLCM from './configs/welcome_texts.json';
 
 const WELCOME_TEXTS = Object.values(WLCM as Record<string, string>);
