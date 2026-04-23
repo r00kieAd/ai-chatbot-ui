@@ -2094,13 +2094,24 @@ body {
 
             #welcomeMessage {
                 @include centerElement();
-                top: calc(42dvh - 5%);
+                top: calc(40dvh - 5%);
                 width: 100%;
                 position: fixed;
                 text-align: center;
                 font-size: 21px;
                 font-weight: 500;
                 color: $inputCOntainerWelcomeColor;
+
+                // .wlcm_inner {
+                //     justify-self: center;
+                //     @include flex-space-between(100%, row);
+                //     .inner_ {
+                //         img {
+                //             width: 50px;
+                //             height: auto;
+                //         }
+                //     }
+                // }
             }
 
             #inputContainer {
@@ -2189,12 +2200,17 @@ body {
                     border-radius: $mainBorderRadius;
 
                     #leftCompartment {
-                        @include flex-space-between(14rem);
-                        max-width: 14rem;
+                        @include flex-space-between(16.5rem);
+                        max-width: 16.5rem;
 
                         @media screen and (max-width: 500px) {
                             width: 10rem;
                             flex-wrap: wrap;
+                        }
+
+                        @media screen and (max-width: 700px) {
+                            @include flex-space-between(14rem);
+                            max-width: 14rem;
                         }
 
                         #modelDropContainer {
@@ -2340,6 +2356,18 @@ body {
                                 }
                             }
 
+                            .model-dropdown {
+                                width: 125px;
+                                min-width: 100px;
+                                max-width: 125px;
+
+                                @media screen and (max-width: 700px) {
+                                    width: 100px;
+                                    min-width: $dropdownMinWidth;
+                                    max-width: $dropDownMaxWidth;
+                                }
+                            }
+
                             @keyframes dropdownSlide {
                                 from {
                                     opacity: 0;
@@ -2371,6 +2399,7 @@ body {
 
                             label {
                                 margin-top: 3px;
+
                                 .attach-img {
                                     z-index: 999;
                                 }

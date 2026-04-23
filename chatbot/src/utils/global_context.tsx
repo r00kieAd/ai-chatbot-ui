@@ -40,6 +40,7 @@ interface AvailableModels {
     A: ModelClient;
     M1: ModelClient;
     M2: ModelClient;
+    M3: ModelClient;
     [key: string]: ModelClientID[] | ModelClient;
 }
 
