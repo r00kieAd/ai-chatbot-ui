@@ -238,7 +238,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                             from {
                                                 llmprovider?.toLocaleLowerCase().includes("openai") ? <><i className="fa-brands fa-openai"></i></> :
                                                     llmprovider?.toLocaleLowerCase().includes("google") ? <><i className="fa-brands fa-google"></i></> :
-                                                    llmprovider?.toLocaleLowerCase().includes("mistral") ? <i className="fa-solid fa-cat"></i> : <i className="fa-solid fa-circle-question"></i>}
+                                                    llmprovider?.toLocaleLowerCase().includes("mistral") ? <i className="fa-solid fa-cat"></i> :
+                                                    llmprovider?.toLocaleUpperCase().includes("chatbot") ? <i className="fa-solid fa-robot"></i> : <i className="fa-solid fa-circle-question"></i>}
                                             <span className='llm-model-name'>{` ${llmModel || 'unknown'}`} at {botTime}</span>
                                             <span className='copy-msg' onClick={handleCopyClick}>&nbsp;&nbsp;<i className="fa-regular fa-copy"></i></span>
                                         </div>

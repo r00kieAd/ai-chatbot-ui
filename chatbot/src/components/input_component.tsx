@@ -5,6 +5,7 @@ import { useGlobal } from '../utils/global_context';
 import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
 import initiateAsk from '../services/ask_service';
+import initiateChatReset from '../services/reset_chat';
 import type { AskResponsePayload, AskSuccessPayload } from '../services/ask_service';
 import stopStream from '../services/stop_service';
 import setLLMChoice from '../services/llm_choice';
@@ -23,8 +24,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, chatHistory, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels } = useGlobal();
-    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, setTypingComplete } = useGlobal();
+    const { setChatInitiated, currUser, authToken, chatHistory, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels, chatEmpty } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, setTypingComplete, setChatEmpty } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -45,6 +46,8 @@ const InputBox: React.FC = () => {
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
     const attachmentIconSrc = 'https://cdn.lordicon.com/kydcudfv.json';
     const attachmentIconTrigger = uploading ? 'loop' : 'loop-on-hover';
+    const [erasing, setErasing] = useState<string>("");
+    
 
     useEffect(() => {
         const handleAsk = async () => {
@@ -63,8 +66,10 @@ const InputBox: React.FC = () => {
                 };
                 if (curr_prompt_value && curr_client && curr_model) {
                     getAnswer(curr_prompt_value, curr_client, curr_model);
+                    setChatEmpty(false);
                 } else {
                     getAnswer(curr_prompt_value ? curr_prompt_value : "unparsable text", "Unknown", "Unknown", true);
+                    setChatEmpty(false);
                 }
             }
         };
@@ -151,17 +156,17 @@ const InputBox: React.FC = () => {
             }
         }));
 
-	        const resp = await generateImage({
-	            username: currUser,
-	            token: authToken ? authToken : 'null',
-	            instruction: 'Generate the requested image and return image URLs (or base64) in JSON.',
-	            model: (selectedModel || 'auto').toLowerCase(),
-	            use_rag: false,
-	            action: parsed.action,
-	            prompt: parsed.prompt,
-	            action_input: parsed.params,
-	            tool_call_raw: message
-	        });
+        const resp = await generateImage({
+            username: currUser,
+            token: authToken ? authToken : 'null',
+            instruction: 'Generate the requested image and return image URLs (or base64) in JSON.',
+            model: (selectedModel || 'auto').toLowerCase(),
+            use_rag: false,
+            action: parsed.action,
+            prompt: parsed.prompt,
+            action_input: parsed.params,
+            tool_call_raw: message
+        });
 
         if (resp.status && resp.images && resp.images.length > 0) {
             setChatHistory(prev => ({
@@ -191,6 +196,66 @@ const InputBox: React.FC = () => {
         }));
     };
 
+    const resetChat = async () => {
+        try {
+            setErasing("fa-beat-fade");
+            const chatKey = Date.now().toString();
+            const userTime = new Date().toLocaleTimeString();
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    userMessage: "Clear memory",
+                    userTime: userTime,
+                    botMessage: '',
+                    botImages: [],
+                    botTime: '',
+                    llmprovider: 'chatbot',
+                    llmModel: 'chatbot',
+                    personality: personality,
+                    isStreaming: true,
+                    streamId: undefined
+                }
+            }));
+            const response = await initiateChatReset({
+                username: currUser ? currUser : "NA"
+            });
+            setErasing("");
+            const initiatedBotTime = new Date().toLocaleTimeString();
+            if (response && response.status) {
+                setChatHistory({});
+                setChatEmpty(true);
+            } else {
+                setChatHistory(prev => ({
+                    ...prev,
+                    [chatKey]: {
+                        ...prev[chatKey],
+                        botMessage: `Error clearing memory: ${response.resp}`,
+                        botTime: initiatedBotTime,
+                        llmprovider: 'chatbot',
+                        isStreaming: false,
+                        streamId: undefined
+                    }
+                }));
+            }
+        } catch (error) {
+            setErasing("");
+            const chatKey = Date.now().toString();
+            const initiatedBotTime = new Date().toLocaleTimeString();
+            setChatHistory(prev => ({
+                ...prev,
+                [chatKey]: {
+                    ...prev[chatKey],
+                    botMessage: `Unknown error clearing memory.`,
+                    botTime: initiatedBotTime,
+                    llmprovider: 'chatbot',
+                    isStreaming: false,
+                    streamId: undefined
+                }
+            }));
+        }
+
+    }
+
     const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag) => {
         if (!currUser) return;
         stopRequestedRef.current = false;
@@ -217,7 +282,7 @@ const InputBox: React.FC = () => {
 
         try {
             const initiatedBotTime = new Date().toLocaleTimeString();
-            if (guestPromptCount >= 2 && guestLogin) {
+            if (guestPromptCount >= 3 && guestLogin) {
                 setChatHistory(prev => ({
                     ...prev,
                     [chatKey]: {
@@ -659,6 +724,9 @@ const InputBox: React.FC = () => {
                     </div>
                 </div>
                 <div id="rightCompartment">
+                    <div id="resetChat" className={!chatEmpty ? "show" : ""}>
+                        <button onClick={resetChat}><i className={"fa-solid fa-eraser " + erasing}></i></button>
+                    </div>
                     <div id="fileContainer">
                         <label htmlFor="attachment" className='pointer'><span className={'attach-img' + (uploading ? ' bounceAnimation' : '')}>
                             <LordIcon
