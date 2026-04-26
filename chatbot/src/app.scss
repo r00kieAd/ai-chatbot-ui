@@ -1564,6 +1564,22 @@ body {
                     padding: 20px;
                     min-height: calc(100% - 40px);
                     justify-content: flex-start;
+
+                    #chatSVG_bg {
+                        visibility: hidden;
+                        opacity: 0;
+                        @include centerElement();
+
+                        img {
+                            width: 320px;
+                            height: auto;
+                            opacity: 0.1;
+                        }
+
+                        &.show {
+                            @include reveal();
+                        }
+                    }
                 }
 
                 .chat-exchange {
@@ -1620,7 +1636,7 @@ body {
                             align-items: center;
 
                             .bot-wait-placeholder-text {
-                                font-size: 12px;
+                                font-size: 12.5px;
                                 color: #6b7280;
                             }
                         }
@@ -1664,7 +1680,7 @@ body {
                             display: inline-flex;
                             align-items: center;
                             margin-right: 8px;
-                            font-size: 0.9rem;
+                            font-size: 15px;
                             color: $botMessageColor;
                         }
 
@@ -1950,7 +1966,7 @@ body {
                         }
 
                         .message-time {
-                            font-size: 10px;
+                            font-size: 12.5px;
                             color: #6b7280;
                             margin-left: 3px;
                             opacity: 0.8;
@@ -2033,7 +2049,7 @@ body {
                             align-self: flex-start;
                             // background-color: $botMessageBg;
                             background: transparent;
-                            max-width: 70rem;
+                            max-width: 80rem;
                             color: $botMessageColor;
                             border-bottom-left-radius: 4px;
                             // box-shadow: $box-shadow;
@@ -2074,6 +2090,7 @@ body {
                                 display: flex;
                                 flex-direction: column;
                                 align-items: flex-start;
+                                justify-content: center;
                                 height: fit-content;
                                 min-height: unset;
 
@@ -2384,8 +2401,9 @@ body {
                     }
 
                     #rightCompartment {
-                        @include flex-space-between(8rem);
-                        max-width: 8rem;
+                        @include flex-space-between(10rem);
+                        max-width: 10rem;
+                        transition: all 0.5s ease;
 
                         @media screen and (max-width: 500px) {
                             width: 7rem;
@@ -2443,6 +2461,26 @@ body {
 
                             #attachment {
                                 display: none;
+                            }
+                        }
+
+                        #resetChat {
+                            visibility: hidden;
+                            opacity: 0;
+                            transition: all 0.5s ease-in-out;
+
+                            &.show {
+                                @include reveal();
+                            }
+
+                            button {
+                                @include button(transparent);
+                                width: auto;
+                                cursor: pointer;
+
+                                :hover {
+                                    color: $errorColor;
+                                }
                             }
                         }
 

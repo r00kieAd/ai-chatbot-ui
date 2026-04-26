@@ -1372,6 +1372,23 @@ body {
   min-height: calc(100% - 40px);
   justify-content: flex-start;
 }
+#parent #mainContainer #innerContainer #chatContainer .chat-box #chatSVG_bg {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-box #chatSVG_bg img {
+  width: 320px;
+  height: auto;
+  opacity: 0.1;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-box #chatSVG_bg.show {
+  opacity: 1;
+  visibility: visible;
+}
 #parent #mainContainer #innerContainer #chatContainer .chat-exchange {
   margin-bottom: 20px;
   width: 100%;
@@ -1421,7 +1438,7 @@ body {
   align-items: center;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-wait-placeholder .bot-wait-placeholder-text {
-  font-size: 12px;
+  font-size: 12.5px;
   color: #6b7280;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .bot-message-text {
@@ -1458,7 +1475,7 @@ body {
   display: inline-flex;
   align-items: center;
   margin-right: 8px;
-  font-size: 0.9rem;
+  font-size: 15px;
   color: #4A4947;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble h1,
@@ -1705,7 +1722,7 @@ body {
   cursor: pointer;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-content .message-time {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #6b7280;
   margin-left: 3px;
   opacity: 0.8;
@@ -1775,7 +1792,7 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message.bot-message .message-bubble {
   align-self: flex-start;
   background: transparent;
-  max-width: 70rem;
+  max-width: 80rem;
   color: #4A4947;
   border-bottom-left-radius: 4px;
   overflow: hidden;
@@ -1809,6 +1826,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: center;
   height: -moz-fit-content;
   height: fit-content;
   min-height: unset;
@@ -2093,8 +2111,9 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 8rem;
-  max-width: 8rem;
+  width: 10rem;
+  max-width: 10rem;
+  transition: all 0.5s ease;
 }
 @media screen and (max-width: 500px) {
   #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment {
@@ -2144,6 +2163,33 @@ body {
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #fileContainer #attachment {
   display: none;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.5s ease-in-out;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat.show {
+  opacity: 1;
+  visibility: visible;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat button {
+  width: 70px;
+  height: sendButtonHeight;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  cursor: pointer;
+  width: auto;
+  cursor: pointer;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat button :hover {
+  color: #660B05;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer button {
   width: 70px;

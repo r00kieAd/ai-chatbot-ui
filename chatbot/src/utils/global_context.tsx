@@ -85,6 +85,8 @@ interface GlobalState {
     setAvailableModels: (value: AvailableModels | null | ((prev: AvailableModels | null) => AvailableModels | null)) => void;
     typingComplete: boolean;
     setTypingComplete: (value: boolean) => void;
+    chatEmpty: boolean;
+    setChatEmpty: (value: boolean) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -110,6 +112,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [updatingLLMConfig, setUpdatingLLMConfig] = useState<boolean>(false);
     const [availableModels, setAvailableModels] = useState<AvailableModels | null>(null);
     const [typingComplete, setTypingComplete] = useState(false);
+    const [chatEmpty, setChatEmpty] = useState<boolean>(true);
 
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
@@ -131,7 +134,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         personality, setPersonality,
         updatingLLMConfig, setUpdatingLLMConfig,
         availableModels, setAvailableModels,
-        typingComplete, setTypingComplete
+        typingComplete, setTypingComplete,
+        chatEmpty, setChatEmpty
     }}>
         {children}
     </GlobalContext.Provider>
