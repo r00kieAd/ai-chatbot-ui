@@ -23,6 +23,7 @@ interface ChatMessageProps {
     llmModel?: string;
     personality?: string;
     isStreaming?: boolean;
+    isStopped?: boolean;
 }
 
 const escapeHtml = (input: string): string =>
@@ -56,7 +57,7 @@ const convertMarkdownToHTML = (text: string): string => {
     }
 };
 
-const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botImages, botTime, llmprovider, llmModel, isStreaming = false }) => {
+const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMessage, botImages, botTime, llmprovider, llmModel, isStreaming = false, isStopped = false }) => {
     const [isNewMessage, setIsNewMessage] = useState(true);
     const [firstMessage, setFirstMessage] = useState(true);
     const userMessageDiv = useRef<HTMLDivElement>(null);
@@ -132,8 +133,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
 
     const placeholderVisible = !botMessage && !(botImages && botImages.length > 0);
     const lordIconSrc = 'https://cdn.lordicon.com/wpequvda.json';
-    const lordIconTrigger = placeholderVisible || isStreaming ? 'loop' : 'in';
+    const lordIconTrigger = !isStopped && (placeholderVisible || isStreaming) ? 'loop' : 'in';
     const lordIconState = 'loop-jab';
+    const placeholderText = isStopped ? 'stopped' : 'contemplating...';
 
     const triggerIconFade = (container: HTMLElement) => {
         const icon = container.querySelector('i');
@@ -209,16 +211,18 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                 <div className="message-bubble poppins-regular bot-bubble">
                     {placeholderVisible ? (
                         <em className='bot-wait-placeholder'>
-                            <span className='bot-streaming-spinner'>
-                                <LordIcon
-                                    key={lordIconTrigger}
-                                    src={lordIconSrc}
-                                    trigger={lordIconTrigger}
-                                    state={lordIconState}
-                                    style={{ width: '25px', height: '25px' }}
-                                />
-                            </span>
-                            <span className='bot-wait-placeholder-text'>contemplating...</span>
+                            {!isStopped ? (
+                                <span className='bot-streaming-spinner'>
+                                    <LordIcon
+                                        key={lordIconTrigger}
+                                        src={lordIconSrc}
+                                        trigger={lordIconTrigger}
+                                        state={lordIconState}
+                                        style={{ width: '25px', height: '25px' }}
+                                    />
+                                </span>
+                            ) : null}
+                            <span className='bot-wait-placeholder-text'>{placeholderText}</span>
                         </em>
                     ) : (
                         <>
@@ -238,7 +242,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ userMessage, userTime, botMes
                                             from {
                                                 llmprovider?.toLocaleLowerCase().includes("openai") ? <><i className="fa-brands fa-openai"></i></> :
                                                     llmprovider?.toLocaleLowerCase().includes("google") ? <><i className="fa-brands fa-google"></i></> :
-                                                    llmprovider?.toLocaleLowerCase().includes("mistral") ? <i className="fa-solid fa-cat"></i> :
+                                                    llmprovider?.toLocaleLowerCase().includes("mistral") ? <i className="mistral-icon"></i> :
                                                     llmprovider?.toLocaleUpperCase().includes("chatbot") ? <i className="fa-solid fa-robot"></i> : <i className="fa-solid fa-circle-question"></i>}
                                             <span className='llm-model-name'>{` ${llmModel || 'unknown'}`} at {botTime}</span>
                                             <span className='copy-msg' onClick={handleCopyClick}>&nbsp;&nbsp;<i className="fa-regular fa-copy"></i></span>

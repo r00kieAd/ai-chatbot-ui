@@ -7,6 +7,7 @@ interface Params {
     model: string;
     use_rag: boolean;
     token: string;
+    signal?: AbortSignal;
 }
 
 export interface AskSuccessPayload {
@@ -26,9 +27,10 @@ interface AskServiceResponse {
     resp?: AskResponsePayload;
     reader?: ReadableStreamDefaultReader<Uint8Array>;
     headers?: Headers;
+    aborted?: boolean;
 }
 
-async function initiateAsk({ username, prompt, instruction, model, use_rag, token }: Params): Promise<AskServiceResponse> {
+async function initiateAsk({ username, prompt, instruction, model, use_rag, token, signal }: Params): Promise<AskServiceResponse> {
     const base = import.meta.env.VITE_API_BASE_URL;
     const payload = JSON.stringify({
         username,
@@ -46,7 +48,8 @@ async function initiateAsk({ username, prompt, instruction, model, use_rag, toke
                 accept: '*/*',
                 authorization: `Bearer ${token}`
             },
-            body: payload
+            body: payload,
+            signal
         });
 
         if (!response.ok) {
@@ -85,6 +88,14 @@ async function initiateAsk({ username, prompt, instruction, model, use_rag, toke
             }
         };
     } catch (error) {
+        if (error instanceof DOMException && error.name === 'AbortError') {
+            return {
+                status: false,
+                statusCode: 499,
+                resp: 'aborted',
+                aborted: true
+            };
+        }
         const message = error instanceof Error ? error.message : 'Something went wrong';
         return {
             status: false,
