@@ -264,7 +264,7 @@ const LoginComp: React.FC = () => {
                     <div className="compartment-1 compartment">
                         <div className="guestPanel poppins-regular">
                             <h3>Don&apos;t have an account?</h3>
-                            <p>Try the app with guest access — no signup required.</p>
+                            <p>Try the app with guest access and 3 prompts/day — no signup required.</p>
                             <ClickSpark sparkColor='#000' sparkSize={10} sparkRadius={15} sparkCount={8} duration={400}>
                                 <button type="button" onClick={checkGuestUser} disabled={!enableInput} className='poppins-regular guestButton'>
                                     CONTINUE AS GUEST

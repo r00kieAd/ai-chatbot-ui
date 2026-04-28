@@ -23,6 +23,7 @@ const ChatBox: React.FC = () => {
                     llmprovider={chat.llmprovider}
                     llmModel={chat.llmModel}
                     isStreaming={chat.isStreaming}
+                    isStopped={chat.isStopped}
                     personality={chat.personality}
                 />
             ))}

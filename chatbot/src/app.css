@@ -4,6 +4,30 @@
   --textAreaMaxHeight: 100px;
 }
 
+.mistral-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background: url("./assets/m-black.png") no-repeat center/contain;
+  vertical-align: -0.2em;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  height: 1px;
+  background: currentColor;
+  width: 10rem;
+}
+
 .poppins-regular {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
@@ -475,6 +499,10 @@ body {
   transition: all 0.3s ease-in-out;
   overflow-x: hidden;
   overflow-y: hidden;
+  scrollbar-width: none;
+}
+#parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer::-webkit-scrollbar {
+  display: none;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer.show {
   opacity: 1;
@@ -486,8 +514,6 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #D0DDD0 transparent;
 }
 #parent #navbarContainer #navbarController #innerNavbarContainer #settingsContainer .setting-loading-mask {
   position: relative;
@@ -1523,6 +1549,11 @@ body {
   border-radius: 3px;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 13px;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble code::-webkit-scrollbar {
+  display: none;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble pre {
   background-color: rgba(0, 0, 0, 0.05);
@@ -1541,6 +1572,11 @@ body {
   font-size: 13px;
   white-space: pre-wrap;
   word-break: break-all;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble pre code::-webkit-scrollbar {
+  display: none;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block {
   position: relative;
@@ -1570,6 +1606,11 @@ body {
   overflow-wrap: normal;
   color: #C9D1D9;
   text-shadow: none;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre code::-webkit-scrollbar {
+  display: none;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message .message-bubble .code-block pre code.hljs {
   background: transparent !important;
@@ -1754,6 +1795,11 @@ body {
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble code {
   background-color: rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.95);
+  overflow: scroll;
+  scrollbar-width: none;
+}
+#parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble code::-webkit-scrollbar {
+  display: none;
 }
 #parent #mainContainer #innerContainer #chatContainer .chat-message.user-message .message-bubble pre {
   background-color: rgba(255, 255, 255, 0.15);
@@ -2111,8 +2157,8 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 10rem;
-  max-width: 10rem;
+  width: 15rem;
+  max-width: 14rem;
   transition: all 0.5s ease;
 }
 @media screen and (max-width: 500px) {
@@ -2167,7 +2213,11 @@ body {
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat {
   visibility: hidden;
   opacity: 0;
-  transition: all 0.5s ease-in-out;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat.show {
   opacity: 1;
@@ -2185,11 +2235,36 @@ body {
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   width: auto;
+  color: #F0F0D7;
+  font-size: 15px;
+  margin-top: 0.2em;
+  transition: color 0.2s ease-out;
   cursor: pointer;
 }
-#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat button :hover {
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat button:hover {
   color: #660B05;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat .reset_text {
+  margin-top: 0.2em;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  font-size: 15px;
+  color: #660B05;
+}
+@media screen and (max-width: 500px) {
+  #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat .reset_text {
+    display: none;
+  }
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #resetChat button:hover + .reset_text {
+  visibility: visible;
+  opacity: 1;
 }
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer button {
   width: 70px;

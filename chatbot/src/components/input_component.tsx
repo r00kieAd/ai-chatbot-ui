@@ -40,14 +40,16 @@ const InputBox: React.FC = () => {
     const [showModels, setShowModels] = useState<boolean>(false);
     const [streamActive, setStreamActive] = useState(false);
     const [activeStreamId, setActiveStreamId] = useState<string | undefined>(undefined);
+    const [activeChatKey, setActiveChatKey] = useState<string | undefined>(undefined);
     const stopRequestedRef = useRef(false);
     const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
     const attachmentIconSrc = 'https://cdn.lordicon.com/kydcudfv.json';
     const attachmentIconTrigger = uploading ? 'loop' : 'loop-on-hover';
     const [erasing, setErasing] = useState<string>("");
-    
+
 
     useEffect(() => {
         const handleAsk = async () => {
@@ -199,23 +201,6 @@ const InputBox: React.FC = () => {
     const resetChat = async () => {
         try {
             setErasing("fa-beat-fade");
-            const chatKey = Date.now().toString();
-            const userTime = new Date().toLocaleTimeString();
-            setChatHistory(prev => ({
-                ...prev,
-                [chatKey]: {
-                    userMessage: "Clear memory",
-                    userTime: userTime,
-                    botMessage: '',
-                    botImages: [],
-                    botTime: '',
-                    llmprovider: 'chatbot',
-                    llmModel: 'chatbot',
-                    personality: personality,
-                    isStreaming: true,
-                    streamId: undefined
-                }
-            }));
             const response = await initiateChatReset({
                 username: currUser ? currUser : "NA"
             });
@@ -225,6 +210,23 @@ const InputBox: React.FC = () => {
                 setChatHistory({});
                 setChatEmpty(true);
             } else {
+                const chatKey = Date.now().toString();
+                const userTime = new Date().toLocaleTimeString();
+                setChatHistory(prev => ({
+                    ...prev,
+                    [chatKey]: {
+                        userMessage: "Clear memory",
+                        userTime: userTime,
+                        botMessage: '',
+                        botImages: [],
+                        botTime: '',
+                        llmprovider: 'chatbot',
+                        llmModel: 'chatbot',
+                        personality: personality,
+                        isStreaming: true,
+                        streamId: undefined
+                    }
+                }));
                 setChatHistory(prev => ({
                     ...prev,
                     [chatKey]: {
@@ -259,9 +261,11 @@ const InputBox: React.FC = () => {
     const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag) => {
         if (!currUser) return;
         stopRequestedRef.current = false;
+        abortControllerRef.current = new AbortController();
         setEnableAskButton(false);
         setTypingComplete(false);
         const chatKey = Date.now().toString();
+        setActiveChatKey(chatKey);
         const userTime = new Date().toLocaleTimeString();
 
         setChatHistory(prev => ({
@@ -276,6 +280,7 @@ const InputBox: React.FC = () => {
                 llmModel: curr_model || 'Unknown',
                 personality: personality,
                 isStreaming: true,
+                isStopped: false,
                 streamId: undefined
             }
         }));
@@ -334,10 +339,28 @@ const InputBox: React.FC = () => {
                     instruction: personality_instruction,
                     model: curr_model.toLowerCase(),
                     use_rag: curr_use_rag,
-                    token: authToken ? authToken : 'null'
+                    token: authToken ? authToken : 'null',
+                    signal: abortControllerRef.current?.signal
                 });
 
                 const botTime = new Date().toLocaleTimeString();
+                if (stopRequestedRef.current || response.aborted) {
+                    setChatHistory(prev => {
+                        const existing = prev[chatKey];
+                        if (!existing) return prev;
+                        return {
+                            ...prev,
+                            [chatKey]: {
+                                ...existing,
+                                botMessage: existing.botMessage || '',
+                                botTime,
+                                isStreaming: false,
+                                isStopped: true
+                            }
+                        };
+                    });
+                    return;
+                }
 
                 if (response && response.status) {
                     const reader = response.reader;
@@ -359,12 +382,14 @@ const InputBox: React.FC = () => {
                             setChatHistory(prev => {
                                 const existing = prev[chatKey];
                                 if (!existing) return prev;
+                                const stopped = Boolean(existing.isStopped) || stopRequestedRef.current;
                                 return {
                                     ...prev,
                                     [chatKey]: {
                                         ...existing,
                                         botMessage: accumulated,
-                                        isStreaming: true
+                                        isStreaming: !stopped,
+                                        isStopped: existing.isStopped
                                     }
                                 };
                             });
@@ -486,7 +511,8 @@ const InputBox: React.FC = () => {
                                     ...existing,
                                     botMessage: accumulated,
                                     botTime: botTime,
-                                    isStreaming: false
+                                    isStreaming: false,
+                                    isStopped: Boolean(existing.isStopped) || stopRequestedRef.current
                                 }
                             };
                         });
@@ -556,6 +582,8 @@ const InputBox: React.FC = () => {
             setStreamActive(false);
             stopRequestedRef.current = false;
             setActiveStreamId(undefined);
+            setActiveChatKey(undefined);
+            abortControllerRef.current = null;
         }
     }
 
@@ -636,24 +664,43 @@ const InputBox: React.FC = () => {
     }
 
     const handleStopClick = async () => {
-        if (!activeStreamId) return;
         stopRequestedRef.current = true;
+        abortControllerRef.current?.abort();
         readerRef.current?.cancel();
+        if (activeChatKey) {
+            const stoppedAt = new Date().toLocaleTimeString();
+            setChatHistory(prev => {
+                const existing = prev[activeChatKey];
+                if (!existing) return prev;
+                return {
+                    ...prev,
+                    [activeChatKey]: {
+                        ...existing,
+                        botTime: existing.botTime || stoppedAt,
+                        isStreaming: false,
+                        isStopped: true
+                    }
+                };
+            });
+        }
         try {
-            const resp = await stopStream(activeStreamId);
-            if (!resp.status) {
-                console.warn('Stop request failed', resp.resp);
+            if (activeStreamId) {
+                const resp = await stopStream(activeStreamId);
+                if (!resp.status) {
+                    console.warn('Stop request failed', resp.resp);
+                }
             }
         } catch (error) {
             console.warn('Stop request error', error);
         } finally {
             setStreamActive(false);
             setActiveStreamId(undefined);
+            setActiveChatKey(undefined);
         }
     };
 
     const handleButtonClick = () => {
-        if (streamActive && activeStreamId) {
+        if (streamActive) {
             void handleStopClick();
         } else {
             triggerSend();
@@ -726,6 +773,7 @@ const InputBox: React.FC = () => {
                 <div id="rightCompartment">
                     <div id="resetChat" className={!chatEmpty ? "show" : ""}>
                         <button onClick={resetChat}><i className={"fa-solid fa-eraser " + erasing}></i></button>
+                        <span className='reset_text poppins-regular'>clear&nbsp;</span>
                     </div>
                     <div id="fileContainer">
                         <label htmlFor="attachment" className='pointer'><span className={'attach-img' + (uploading ? ' bounceAnimation' : '')}>
@@ -756,8 +804,8 @@ const InputBox: React.FC = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <span className='button-text'><ShinyText text="Ask" disabled={false} speed={3} className='custom-class' /></span>
-                                                <i className="fa-regular fa-paper-plane"></i>
+                                                <span className='button-text'><ShinyText text="ask" disabled={false} speed={3} className='custom-class' /></span>
+                                                <i className="fa-solid fa-wave-square"></i>
                                             </>
                                         )}
                                     </button>

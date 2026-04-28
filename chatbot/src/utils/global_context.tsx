@@ -17,6 +17,7 @@ interface ChatMessage {
     llmModel?: string;
     personality?: string;
     isStreaming?: boolean;
+    isStopped?: boolean;
     streamId?: string;
 }
 

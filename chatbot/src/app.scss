@@ -50,6 +50,33 @@ $sendButtonWidth: 70px;
 $sendButtonHeight: 25px;
 $navbarPadding: 5px 8px;
 
+.mistral-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+
+    background: url('./assets/m-black.png') no-repeat center / contain;
+
+    vertical-align: -0.2em;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    //   flex: 0;
+    height: 1px;
+    background: currentColor;
+    width: 10rem;
+}
+
 .poppins-regular {
     font-family: "Poppins", sans-serif;
     font-weight: 400;
@@ -656,6 +683,12 @@ body {
                     transition: all 0.3s ease-in-out;
                     overflow-x: hidden;
                     overflow-y: hidden;
+                    scrollbar-width: none;
+
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
+
 
 
                     &.show {
@@ -667,8 +700,8 @@ body {
                         overflow-y: auto;
                         -webkit-overflow-scrolling: touch;
                         overscroll-behavior: contain;
-                        scrollbar-width: thin;
-                        scrollbar-color: $navbarborder transparent;
+                        // scrollbar-width: thin;
+                        // scrollbar-color: $navbarborder transparent;
                     }
 
                     .setting-loading-mask {
@@ -1739,6 +1772,12 @@ body {
                             border-radius: 3px;
                             font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
                             font-size: 13px;
+                            overflow: scroll;
+                            scrollbar-width: none;
+                        }
+
+                        code::-webkit-scrollbar {
+                            display: none;
                         }
 
                         pre {
@@ -1758,6 +1797,12 @@ body {
                                 font-size: 13px;
                                 white-space: pre-wrap;
                                 word-break: break-all;
+                                overflow: scroll;
+                                scrollbar-width: none;
+                            }
+
+                            code::-webkit-scrollbar {
+                                display: none;
                             }
                         }
 
@@ -1789,6 +1834,12 @@ body {
                                     overflow-wrap: normal;
                                     color: #C9D1D9;
                                     text-shadow: none;
+                                    overflow: scroll;
+                                    scrollbar-width: none;
+                                }
+
+                                code::-webkit-scrollbar {
+                                    display: none;
                                 }
 
                                 code.hljs {
@@ -1999,6 +2050,12 @@ body {
                             code {
                                 background-color: rgba(255, 255, 255, 0.2);
                                 color: rgba(255, 255, 255, 0.95);
+                                overflow: scroll;
+                                scrollbar-width: none;
+                            }
+
+                            code::-webkit-scrollbar {
+                                display: none;
                             }
 
                             pre {
@@ -2401,8 +2458,8 @@ body {
                     }
 
                     #rightCompartment {
-                        @include flex-space-between(10rem);
-                        max-width: 10rem;
+                        @include flex-space-between(15rem);
+                        max-width: 14rem;
                         transition: all 0.5s ease;
 
                         @media screen and (max-width: 500px) {
@@ -2467,7 +2524,8 @@ body {
                         #resetChat {
                             visibility: hidden;
                             opacity: 0;
-                            transition: all 0.5s ease-in-out;
+
+                            @include flex-space-between(auto, row-reverse);
 
                             &.show {
                                 @include reveal();
@@ -2475,14 +2533,41 @@ body {
 
                             button {
                                 @include button(transparent);
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding: 0;
                                 width: auto;
+                                color: $inputContainerSecondaryColor;
+                                font-size: $textAreaFontSize;
+                                margin-top: .2em;
+                                transition: color 0.2s ease-out;
                                 cursor: pointer;
 
-                                :hover {
+                                &:hover {
                                     color: $errorColor;
                                 }
                             }
+
+                            .reset_text {
+                                margin-top: .2em;
+                                visibility: hidden;
+                                opacity: 0;
+                                transition: opacity 0.15s ease, visibility 0.15s ease;
+                                font-size: $textAreaFontSize;
+                                color: $errorColor;
+
+                                @media screen and (max-width: 500px) {
+                                    display: none;
+                                }
+                            }
+
+                            button:hover+.reset_text {
+                                visibility: visible;
+                                opacity: 1;
+                            }
                         }
+
 
                         #sendContainer {
                             button {

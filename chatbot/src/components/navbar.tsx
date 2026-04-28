@@ -305,6 +305,8 @@ const NavbarComp: React.FC = () => {
                                 <input type="number" id="presence_penalty" name="presence_penalty" placeholder={currPresencePenalty ? currPresencePenalty.toString(): ""} onBlur={changePresencePenalty} />
                             </div>
                         </div>
+                        <br />
+                        <span className="divider quicksand-light">Traits</span>
                         <div id="promptSettings">
                             <div className="setting-prompt-div">
                                 <div id="promptOpt1" className="prompt-opt">
