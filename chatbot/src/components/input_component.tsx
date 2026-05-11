@@ -24,8 +24,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, chatHistory, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels, chatEmpty } = useGlobal();
-    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, setTypingComplete, setChatEmpty } = useGlobal();
+    const { setChatInitiated, currUser, authToken, chatHistory, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels, chatEmpty, webSearch } = useGlobal();
+    const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, setTypingComplete, setChatEmpty, setWebSearch } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
     const [useRag, setUseRag] = useState<boolean>(false);
@@ -44,6 +44,7 @@ const InputBox: React.FC = () => {
     const stopRequestedRef = useRef(false);
     const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
+    const webSearchRef = useRef(webSearch);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
     const attachmentIconSrc = 'https://cdn.lordicon.com/kydcudfv.json';
@@ -66,11 +67,12 @@ const InputBox: React.FC = () => {
                     currentTextarea.value = "";
                     currentTextarea.style.height = textareaHeight;
                 };
+                const curr_use_web = webSearchRef.current;
                 if (curr_prompt_value && curr_client && curr_model) {
-                    getAnswer(curr_prompt_value, curr_client, curr_model);
+                    getAnswer(curr_prompt_value, curr_client, curr_model, false, useRag, curr_use_web);
                     setChatEmpty(false);
                 } else {
-                    getAnswer(curr_prompt_value ? curr_prompt_value : "unparsable text", "Unknown", "Unknown", true);
+                    getAnswer(curr_prompt_value ? curr_prompt_value : "unparsable text", "Unknown", "Unknown", true, useRag, curr_use_web);
                     setChatEmpty(false);
                 }
             }
@@ -78,6 +80,10 @@ const InputBox: React.FC = () => {
 
         handleAsk();
     }, [asked]);
+
+    useEffect(() => {
+        webSearchRef.current = webSearch;
+    }, [webSearch]);
 
     useEffect(() => {
         const allLLMs = availableModels?.ALL?.map(e => e.name) ?? [];
@@ -258,7 +264,7 @@ const InputBox: React.FC = () => {
 
     }
 
-    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag) => {
+    const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag, curr_use_web = webSearch) => {
         if (!currUser) return;
         stopRequestedRef.current = false;
         abortControllerRef.current = new AbortController();
@@ -340,7 +346,8 @@ const InputBox: React.FC = () => {
                     model: curr_model.toLowerCase(),
                     use_rag: curr_use_rag,
                     token: authToken ? authToken : 'null',
-                    signal: abortControllerRef.current?.signal
+                    signal: abortControllerRef.current?.signal,
+                    use_web: curr_use_web
                 });
 
                 const botTime = new Date().toLocaleTimeString();
@@ -741,6 +748,14 @@ const InputBox: React.FC = () => {
         }
     }
 
+    const activateWebSearch = () => {
+        setWebSearch(prev => {
+            const next = !prev;
+            webSearchRef.current = next;
+            return next;
+        });
+    }
+
     return (
         <>
 
@@ -774,6 +789,9 @@ const InputBox: React.FC = () => {
                     <div id="resetChat" className={!chatEmpty ? "show" : ""}>
                         <button onClick={resetChat}><i className={"fa-solid fa-eraser " + erasing}></i></button>
                         <span className='reset_text poppins-regular'>clear&nbsp;</span>
+                    </div>
+                    <div id="webSearch" className={webSearch ? "active" : ""} onClick={activateWebSearch}>
+                        <span className="web_search_flag"><i className="fa-solid fa-globe"></i></span>
                     </div>
                     <div id="fileContainer">
                         <label htmlFor="attachment" className='pointer'><span className={'attach-img' + (uploading ? ' bounceAnimation' : '')}>
