@@ -2266,6 +2266,27 @@ body {
   visibility: visible;
   opacity: 1;
 }
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #webSearch {
+  display: flex;
+  width: 25px;
+  height: auto;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  text-align: center;
+  padding: 2px;
+  color: #F0F0D7;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #webSearch.active {
+  background-color: #3B7597;
+}
+#parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #webSearch span {
+  position: relative;
+  align-self: center;
+}
 #parent #mainContainer #innerContainer #inputContainer #toolBox #rightCompartment #sendContainer button {
   width: 70px;
   height: sendButtonHeight;

@@ -1,5 +1,5 @@
 import { createContext, useState, useContext } from "react";
-import type { ReactNode } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 // import PROMPTS from '../configs/bot_prompts.json'
 
 export interface ChatImage {
@@ -88,6 +88,8 @@ interface GlobalState {
     setTypingComplete: (value: boolean) => void;
     chatEmpty: boolean;
     setChatEmpty: (value: boolean) => void;
+    webSearch: boolean;
+    setWebSearch: Dispatch<SetStateAction<boolean>>;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -114,6 +116,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [availableModels, setAvailableModels] = useState<AvailableModels | null>(null);
     const [typingComplete, setTypingComplete] = useState(false);
     const [chatEmpty, setChatEmpty] = useState<boolean>(true);
+    const [webSearch, setWebSearch] = useState<boolean>(false);
 
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
@@ -136,7 +139,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         updatingLLMConfig, setUpdatingLLMConfig,
         availableModels, setAvailableModels,
         typingComplete, setTypingComplete,
-        chatEmpty, setChatEmpty
+        chatEmpty, setChatEmpty,
+        webSearch, setWebSearch
     }}>
         {children}
     </GlobalContext.Provider>

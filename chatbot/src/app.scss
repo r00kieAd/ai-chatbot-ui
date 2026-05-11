@@ -2568,6 +2568,30 @@ body {
                             }
                         }
 
+                        #webSearch {
+                            display: flex;
+                            width: 25px;
+                            height: auto;
+                            border: 1px solid transparent;
+                            border-radius: 5px;
+                            text-align: center;
+                            padding: 2px;
+                            color: $inputContainerButtonBg;
+                            cursor: pointer;
+                            align-items: center;
+                            justify-content: center;
+                            transition: all 0.3s ease-in-out;
+
+                            &.active {
+                                background-color: #3B7597;
+                            }
+
+                            span {
+                                position: relative;
+                                align-self: center;
+                            }
+                        }
+
 
                         #sendContainer {
                             button {

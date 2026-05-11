@@ -8,6 +8,7 @@ interface Params {
     use_rag: boolean;
     token: string;
     signal?: AbortSignal;
+    use_web: boolean;
 }
 
 export interface AskSuccessPayload {
@@ -30,14 +31,15 @@ interface AskServiceResponse {
     aborted?: boolean;
 }
 
-async function initiateAsk({ username, prompt, instruction, model, use_rag, token, signal }: Params): Promise<AskServiceResponse> {
+async function initiateAsk({ username, prompt, instruction, model, use_rag, token, signal, use_web }: Params): Promise<AskServiceResponse> {
     const base = import.meta.env.VITE_API_BASE_URL;
     const payload = JSON.stringify({
         username,
         prompt,
         instruction,
         model,
-        use_rag
+        use_rag,
+        use_web
     });
 
     try {
