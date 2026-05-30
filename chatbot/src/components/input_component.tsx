@@ -4,10 +4,7 @@ import { useGlobal } from '../utils/global_context';
 // import LLMs from '../configs/available_llm_models.json';
 import INSTRUCTIONS from '../configs/bot_prompts.json'
 import TextAreaHeight from '../utils/textarea_css_data';
-import initiateAsk from '../services/ask_service';
 import initiateChatReset from '../services/reset_chat';
-import type { AskResponsePayload, AskSuccessPayload } from '../services/ask_service';
-import stopStream from '../services/stop_service';
 import setLLMChoice from '../services/llm_choice';
 import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
@@ -17,14 +14,15 @@ import Dropdown from './dropdown_d';
 import generateImage from '../services/image_service';
 import type { GeneratedImage } from '../services/image_service';
 import { parseImageToolCall } from '../utils/parse_image_tool_call';
+import { startLLMStream } from '../services/llm_stream_service';
+import type { LLMStreamConnectionState, LLMStreamSubscription } from '../services/llm_stream_types';
 const LordIcon = 'lord-icon' as any;
 
-const isAskSuccessPayload = (value: AskResponsePayload | undefined): value is AskSuccessPayload => typeof value === 'object' && value !== null;
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
 const InputBox: React.FC = () => {
 
-    const { setChatInitiated, currUser, authToken, chatHistory, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels, chatEmpty, webSearch } = useGlobal();
+    const { setChatInitiated, currUser, authToken, chatHistory, setChatHistory, guestLogin, guestPromptCount, setGuestPromptCount, personality, availableModels, chatEmpty, webSearch, setNotification } = useGlobal();
     const { setTemperature, setTop_p, setTop_k, setMaxOutputToken, setFrequencyPenalty, setPresencePenalty, setUpdatingLLMConfig, setTypingComplete, setChatEmpty, setWebSearch } = useGlobal();
     const [inputVal, setInputVal] = useState<string | undefined>(undefined);
     const [asked, setAsked] = useState<boolean>(false);
@@ -39,18 +37,17 @@ const InputBox: React.FC = () => {
     const [selectedModel, setSelectedModel] = useState<string>("");
     const [showModels, setShowModels] = useState<boolean>(false);
     const [streamActive, setStreamActive] = useState(false);
-    const [activeStreamId, setActiveStreamId] = useState<string | undefined>(undefined);
     const [activeChatKey, setActiveChatKey] = useState<string | undefined>(undefined);
+    const [streamConnectionState, setStreamConnectionState] = useState<LLMStreamConnectionState>('idle');
     const stopRequestedRef = useRef(false);
-    const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null);
-    const abortControllerRef = useRef<AbortController | null>(null);
+    const streamSubscriptionRef = useRef<LLMStreamSubscription | null>(null);
+    const streamFinishRef = useRef<((success: boolean) => void) | null>(null);
     const webSearchRef = useRef(webSearch);
     const txtHeightStyle = new TextAreaHeight();
     const { textareaHeight, textareaMaxHeight } = txtHeightStyle.getHeightValues();
     const attachmentIconSrc = 'https://cdn.lordicon.com/kydcudfv.json';
     const attachmentIconTrigger = uploading ? 'loop' : 'loop-on-hover';
     const [erasing, setErasing] = useState<string>("");
-
 
     useEffect(() => {
         const handleAsk = async () => {
@@ -84,6 +81,15 @@ const InputBox: React.FC = () => {
     useEffect(() => {
         webSearchRef.current = webSearch;
     }, [webSearch]);
+
+    useEffect(() => {
+        return () => {
+            streamFinishRef.current?.(false);
+            streamFinishRef.current = null;
+            streamSubscriptionRef.current?.cleanup();
+            streamSubscriptionRef.current = null;
+        };
+    }, []);
 
     useEffect(() => {
         const allLLMs = availableModels?.ALL?.map(e => e.name) ?? [];
@@ -245,7 +251,7 @@ const InputBox: React.FC = () => {
                     }
                 }));
             }
-        } catch (error) {
+        } catch {
             setErasing("");
             const chatKey = Date.now().toString();
             const initiatedBotTime = new Date().toLocaleTimeString();
@@ -267,7 +273,6 @@ const InputBox: React.FC = () => {
     const getAnswer = async (curr_prompt: string, curr_client: string, curr_model: string, dispErrMsg = false, curr_use_rag = useRag, curr_use_web = webSearch) => {
         if (!currUser) return;
         stopRequestedRef.current = false;
-        abortControllerRef.current = new AbortController();
         setEnableAskButton(false);
         setTypingComplete(false);
         const chatKey = Date.now().toString();
@@ -338,20 +343,30 @@ const InputBox: React.FC = () => {
 
                 }
                 setStreamActive(true);
-                setActiveStreamId(undefined);
-                const response = await initiateAsk({
-                    username: currUser,
-                    prompt: curr_prompt,
-                    instruction: personality_instruction,
-                    model: curr_model.toLowerCase(),
-                    use_rag: curr_use_rag,
-                    token: authToken ? authToken : 'null',
-                    signal: abortControllerRef.current?.signal,
-                    use_web: curr_use_web
-                });
+                setStreamConnectionState('connecting');
 
-                const botTime = new Date().toLocaleTimeString();
-                if (stopRequestedRef.current || response.aborted) {
+                let accumulated = '';
+                let terminalMessage = '';
+                let terminalBotTime = new Date().toLocaleTimeString();
+                let terminalStopped = false;
+                let lastSequence = -1;
+                const seenEventIds = new Set<string>();
+
+                const isDuplicateEvent = (eventId?: string, sequence?: number) => {
+                    if (eventId) {
+                        if (seenEventIds.has(eventId)) return true;
+                        seenEventIds.add(eventId);
+                    }
+                    if (typeof sequence === 'number') {
+                        if (sequence <= lastSequence) return true;
+                        lastSequence = sequence;
+                    }
+                    return false;
+                };
+
+                const pushMessageChunk = (text: string) => {
+                    if (!text) return;
+                    accumulated += text;
                     setChatHistory(prev => {
                         const existing = prev[chatKey];
                         if (!existing) return prev;
@@ -359,228 +374,179 @@ const InputBox: React.FC = () => {
                             ...prev,
                             [chatKey]: {
                                 ...existing,
-                                botMessage: existing.botMessage || '',
-                                botTime,
-                                isStreaming: false,
-                                isStopped: true
+                                botMessage: accumulated,
+                                isStreaming: !stopRequestedRef.current,
+                                isStopped: existing.isStopped
                             }
                         };
                     });
-                    return;
-                }
+                };
 
-                if (response && response.status) {
-                    const reader = response.reader;
-                    if (reader) {
-                        readerRef.current = reader;
-                        const decoder = new TextDecoder();
-                        let accumulated = '';
-                        let eventBuffer = '';
-                        let chunkCount = 0;
-                        const streamLog = (label: string, detail = '') => {
-                            if (!import.meta.env.DEV) return;
-                            const stamp = new Date().toISOString();
-                            console.debug(`[sse ${stamp}] ${label}${detail ? ` ${detail}` : ''}`);
-                        };
+                const streamCompleted = await new Promise<boolean>(resolve => {
+                    let resolved = false;
+                    const finish = (success: boolean) => {
+                        if (resolved) return;
+                        resolved = true;
+                        streamFinishRef.current = null;
+                        terminalBotTime = new Date().toLocaleTimeString();
+                        resolve(success);
+                    };
+                    streamFinishRef.current = finish;
 
-                        const pushMessageChunk = (text: string) => {
-                            if (!text) return;
-                            accumulated += text;
-                            setChatHistory(prev => {
-                                const existing = prev[chatKey];
-                                if (!existing) return prev;
-                                const stopped = Boolean(existing.isStopped) || stopRequestedRef.current;
-                                return {
-                                    ...prev,
-                                    [chatKey]: {
-                                        ...existing,
-                                        botMessage: accumulated,
-                                        isStreaming: !stopped,
-                                        isStopped: existing.isStopped
-                                    }
-                                };
-                            });
-                            streamLog('append', `chunkLen=${text.length} totalLen=${accumulated.length}`);
-                        };
-
-                        const processBlock = (block: string) => {
-                            if (!block.trim()) return;
-                            const lines = block.split(/\r?\n/);
-                            let currentEvent = 'message';
-                            const dataLines: string[] = [];
-                            for (const rawLine of lines) {
-                                if (!rawLine) continue;
-                                if (rawLine.startsWith('event:')) {
-                                    currentEvent = rawLine.slice(6).trim();
-                                    continue;
+                    streamSubscriptionRef.current = startLLMStream({
+                        username: currUser,
+                        prompt: curr_prompt,
+                        instruction: personality_instruction,
+                        model: curr_model.toLowerCase(),
+                        use_rag: curr_use_rag,
+                        use_web: curr_use_web,
+                        token: authToken ? authToken : 'null',
+                        handlers: {
+                            onConnectionState: state => {
+                                setStreamConnectionState(state);
+                            },
+                            onReconnect: attempt => {
+                                if (import.meta.env.DEV) {
+                                    console.debug(`LLM stream reconnect attempt ${attempt}`);
                                 }
-                                if (rawLine.startsWith('data:')) {
-                                    let payload = rawLine.slice(5);
-                                    if (payload.startsWith(' ') && payload.length > 1) {
-                                        payload = payload.slice(1);
-                                    }
-                                    dataLines.push(payload);
-                                }
-                            }
-
-                            const combinedData = dataLines.join('\n');
-                            streamLog('event', `${currentEvent} dataLen=${combinedData.length}`);
-                            if (currentEvent === 'stream_id') {
-                                const streamId = combinedData.trim();
-                                if (streamId) {
-                                    setActiveStreamId(streamId);
+                            },
+                            onStart: event => {
+                                if (event.stream_id) {
                                     setChatHistory(prev => ({
                                         ...prev,
                                         [chatKey]: {
                                             ...prev[chatKey],
-                                            streamId: streamId
+                                            streamId: event.stream_id,
+                                            llmprovider: event.provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
+                                            llmModel: event.model_used || prev[chatKey]?.llmModel || curr_model || 'Unknown'
                                         }
                                     }));
                                 }
-                            } else if (currentEvent === 'metadata') {
-                                if (combinedData) {
-                                    try {
-                                        const metadata = JSON.parse(combinedData);
-                                        const provider = typeof metadata.provider === 'string' ? metadata.provider : undefined;
-                                        const modelUsed = typeof metadata.model_used === 'string' ? metadata.model_used : undefined;
-                                        setChatHistory(prev => ({
-                                            ...prev,
-                                            [chatKey]: {
-                                                ...prev[chatKey],
-                                                llmprovider: provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
-                                                llmModel: modelUsed || prev[chatKey]?.llmModel || curr_model || 'Unknown'
-                                            }
-                                        }));
-                                    } catch (error) {
-                                        console.warn('Metadata parse error', error);
-                                    }
+                            },
+                            onToken: event => {
+                                if (stopRequestedRef.current || isDuplicateEvent(event.event_id, event.sequence)) return;
+                                pushMessageChunk(event.token ?? event.delta ?? event.text ?? '');
+                            },
+                            onToolCall: event => {
+                                if (import.meta.env.DEV) {
+                                    console.debug('LLM tool call', event.name, event.arguments ?? event.raw);
                                 }
-                            } else if (currentEvent === 'image' || currentEvent === 'images') {
-                                if (!combinedData) return;
-                                try {
-                                    const payload = JSON.parse(combinedData);
-                                    const images = normalizeImagesFromUnknown(payload);
-                                    if (images.length > 0) {
-                                        setChatHistory(prev => ({
-                                            ...prev,
-                                            [chatKey]: {
-                                                ...prev[chatKey],
-                                                botImages: [...(prev[chatKey]?.botImages ?? []), ...images]
-                                            }
-                                        }));
-                                    }
-                                } catch (error) {
-                                    console.warn('Image event parse error', error);
+                            },
+                            onToolResult: event => {
+                                if (import.meta.env.DEV) {
+                                    console.debug('LLM tool result', event.name, event.result ?? event.raw);
                                 }
-                            } else if (currentEvent === 'completion') {
-                                return;
-                            } else if (combinedData) {
-                                pushMessageChunk(combinedData);
+                            },
+                            onProgress: event => {
+                                if (!accumulated && event.message) {
+                                    setChatHistory(prev => ({
+                                        ...prev,
+                                        [chatKey]: {
+                                            ...prev[chatKey],
+                                            botMessage: event.message ?? '',
+                                            isStreaming: true
+                                        }
+                                    }));
+                                }
+                            },
+                            onMetadata: event => {
+                                setChatHistory(prev => ({
+                                    ...prev,
+                                    [chatKey]: {
+                                        ...prev[chatKey],
+                                        llmprovider: event.provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
+                                        llmModel: event.model_used || prev[chatKey]?.llmModel || curr_model || 'Unknown'
+                                    }
+                                }));
+                            },
+                            onImages: event => {
+                                const images = normalizeImagesFromUnknown(event);
+                                if (images.length === 0) return;
+                                setChatHistory(prev => ({
+                                    ...prev,
+                                    [chatKey]: {
+                                        ...prev[chatKey],
+                                        botImages: [...(prev[chatKey]?.botImages ?? []), ...images]
+                                    }
+                                }));
+                            },
+                            onError: event => {
+                                terminalMessage = event.message || 'Streaming failed';
+                                setNotification({ 
+                                    message: `Error: ${terminalMessage}`, 
+                                    type: 'error' 
+                                });
+                                setChatHistory(prev => ({
+                                    ...prev,
+                                    [chatKey]: {
+                                        ...prev[chatKey],
+                                        botMessage: accumulated || `Error: ${terminalMessage}`,
+                                        botTime: new Date().toLocaleTimeString(),
+                                        isStreaming: false
+                                    }
+                                }));
+                                finish(false);
+                            },
+                            onEnd: event => {
+                                if (event.response && event.response !== accumulated) {
+                                    accumulated = event.response;
+                                }
+                                const images = normalizeImagesFromUnknown(event.images);
+                                setChatHistory(prev => ({
+                                    ...prev,
+                                    [chatKey]: {
+                                        ...prev[chatKey],
+                                        botMessage: accumulated,
+                                        botImages: images.length > 0 ? images : (prev[chatKey]?.botImages ?? []),
+                                        botTime: new Date().toLocaleTimeString(),
+                                        llmprovider: event.provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
+                                        llmModel: event.model_used || prev[chatKey]?.llmModel || curr_model || 'Unknown',
+                                        isStreaming: false,
+                                        isStopped: false
+                                    }
+                                }));
+                                finish(true);
+                            },
+                            onCancelled: event => {
+                                terminalStopped = true;
+                                terminalMessage = event.reason || '';
+                                setChatHistory(prev => ({
+                                    ...prev,
+                                    [chatKey]: {
+                                        ...prev[chatKey],
+                                        botMessage: accumulated || prev[chatKey]?.botMessage || '',
+                                        botTime: new Date().toLocaleTimeString(),
+                                        isStreaming: false,
+                                        isStopped: true
+                                    }
+                                }));
+                                finish(false);
                             }
-                        };
-
-                        try {
-                            while (true) {
-                                if (stopRequestedRef.current) break;
-                                const { value, done } = await reader.read();
-                                if (stopRequestedRef.current || done) break;
-                                if (!value) continue;
-                                const chunkText = decoder.decode(value, { stream: true });
-                                chunkCount += 1;
-                                streamLog('chunk', `#${chunkCount} bytes=${value.byteLength} chars=${chunkText.length}`);
-                                eventBuffer += chunkText;
-                                const segments = eventBuffer.split(/\r?\n\r?\n/);
-                                eventBuffer = segments.pop() ?? '';
-                                segments.forEach(processBlock);
-                            }
-                            const finalChunk = decoder.decode();
-                            if (finalChunk) {
-                                chunkCount += 1;
-                                streamLog('decoder-flush', `#${chunkCount} chars=${finalChunk.length}`);
-                                eventBuffer += finalChunk;
-                            }
-                            if (eventBuffer) {
-                                streamLog('tail-buffer', `len=${eventBuffer.length}`);
-                                processBlock(eventBuffer);
-                                eventBuffer = '';
-                            }
-                        } finally {
-                            reader.releaseLock();
-                            readerRef.current = null;
                         }
+                    });
+                });
 
-                        setChatHistory(prev => {
-                            const existing = prev[chatKey];
-                            if (!existing) return prev;
-                            return {
-                                ...prev,
-                                [chatKey]: {
-                                    ...existing,
-                                    botMessage: accumulated,
-                                    botTime: botTime,
-                                    isStreaming: false,
-                                    isStopped: Boolean(existing.isStopped) || stopRequestedRef.current
-                                }
-                            };
-                        });
+                streamSubscriptionRef.current?.cleanup();
+                streamSubscriptionRef.current = null;
+                streamFinishRef.current = null;
 
-                        await maybeGenerateImageFromToolCall(chatKey, accumulated, botTime);
-                    } else if (response.resp) {
-                        const responsePayload = response.resp;
-                        const payloadIsObject = isAskSuccessPayload(responsePayload);
-                        const message = typeof responsePayload === 'string'
-                            ? responsePayload
-                            : payloadIsObject
-                                ? responsePayload.response ?? ''
-                                : '';
-                        const provider = payloadIsObject ? responsePayload.provider : undefined;
-                        const modelUsed = payloadIsObject ? responsePayload.model_used : undefined;
-                        const imagesFromPayload = payloadIsObject ? normalizeImagesFromUnknown(responsePayload) : [];
-                        setChatHistory(prev => ({
-                            ...prev,
-                            [chatKey]: {
-                                ...prev[chatKey],
-                                botMessage: message,
-                                botImages: imagesFromPayload.length > 0 ? imagesFromPayload : (prev[chatKey]?.botImages ?? []),
-                                botTime: botTime,
-                                llmprovider: provider || prev[chatKey]?.llmprovider || curr_client || 'Unknown',
-                                llmModel: modelUsed || prev[chatKey]?.llmModel || curr_model || 'Unknown',
-                                isStreaming: false
-                            }
-                        }));
-
-                        await maybeGenerateImageFromToolCall(chatKey, message, botTime);
-                    } else {
-                        setChatHistory(prev => ({
-                            ...prev,
-                            [chatKey]: {
-                                ...prev[chatKey],
-                                botMessage: '',
-                                botTime: botTime,
-                                isStreaming: false
-                            }
-                        }));
-                    }
-                } else if (response && response.statusCode && response.statusCode < 500) {
-                    setChatHistory(prev => ({
+                setChatHistory(prev => {
+                    const existing = prev[chatKey];
+                    if (!existing) return prev;
+                    return {
                         ...prev,
                         [chatKey]: {
-                            ...prev[chatKey],
-                            botMessage: `Error ${response.statusCode}: ${response.resp}`,
-                            botTime: botTime,
-                            isStreaming: false
+                            ...existing,
+                            botMessage: accumulated || existing.botMessage || (terminalMessage ? `Error: ${terminalMessage}` : ''),
+                            botTime: existing.botTime || terminalBotTime,
+                            isStreaming: false,
+                            isStopped: terminalStopped || Boolean(existing.isStopped) || stopRequestedRef.current
                         }
-                    }));
-                } else {
-                    setChatHistory(prev => ({
-                        ...prev,
-                        [chatKey]: {
-                            ...prev[chatKey],
-                            botMessage: `Server Error ${response?.statusCode}: ${response?.resp || 'Unknown error'}`,
-                            botTime: botTime,
-                            isStreaming: false
-                        }
-                    }));
+                    };
+                });
+
+                if (streamCompleted) {
+                    await maybeGenerateImageFromToolCall(chatKey, accumulated, terminalBotTime);
                 }
             }
         } finally {
@@ -588,9 +554,9 @@ const InputBox: React.FC = () => {
             setTypingComplete(true);
             setStreamActive(false);
             stopRequestedRef.current = false;
-            setActiveStreamId(undefined);
             setActiveChatKey(undefined);
-            abortControllerRef.current = null;
+            setStreamConnectionState('idle');
+            streamFinishRef.current = null;
         }
     }
 
@@ -672,8 +638,8 @@ const InputBox: React.FC = () => {
 
     const handleStopClick = async () => {
         stopRequestedRef.current = true;
-        abortControllerRef.current?.abort();
-        readerRef.current?.cancel();
+        streamSubscriptionRef.current?.cancel();
+        streamFinishRef.current?.(false);
         if (activeChatKey) {
             const stoppedAt = new Date().toLocaleTimeString();
             setChatHistory(prev => {
@@ -690,20 +656,12 @@ const InputBox: React.FC = () => {
                 };
             });
         }
-        try {
-            if (activeStreamId) {
-                const resp = await stopStream(activeStreamId);
-                if (!resp.status) {
-                    console.warn('Stop request failed', resp.resp);
-                }
-            }
-        } catch (error) {
-            console.warn('Stop request error', error);
-        } finally {
-            setStreamActive(false);
-            setActiveStreamId(undefined);
-            setActiveChatKey(undefined);
-        }
+        streamSubscriptionRef.current?.cleanup();
+        streamSubscriptionRef.current = null;
+        streamFinishRef.current = null;
+        setStreamActive(false);
+        setActiveChatKey(undefined);
+        setStreamConnectionState('idle');
     };
 
     const handleButtonClick = () => {
@@ -713,6 +671,8 @@ const InputBox: React.FC = () => {
             triggerSend();
         }
     };
+
+    const streamingButtonText = streamConnectionState === 'reconnecting' ? 'Retrying' : 'Stop';
 
     const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setUploading(true);
@@ -817,7 +777,7 @@ const InputBox: React.FC = () => {
                                     <button className='button send-button pointer quicksand-light' onClick={handleButtonClick} disabled={isButtonDisabled}>
                                         {streamActive ? (
                                             <>
-                                                <span className='button-text'><ShinyText text="Stop" disabled={true} speed={3} className='custom-class' /></span>
+                                                <span className='button-text'><ShinyText text={streamingButtonText} disabled={true} speed={3} className='custom-class' /></span>
                                                 &nbsp;<i className="fa-solid fa-circle-stop"></i>
                                             </>
                                         ) : (
