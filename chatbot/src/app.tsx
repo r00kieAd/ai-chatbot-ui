@@ -4,6 +4,7 @@ import LoginComp from './components/login_components';
 import ChatBox from './components/chat_component';
 import InputBox from './components/input_component';
 import NavbarComp from './components/navbar';
+import Notification from './components/notification';
 import SplitText from './components/split_text';
 import ping from './services/ping_server';
 // import Silk from './components/silk_bg';
@@ -256,6 +257,7 @@ function App() {
               <NavbarComp />
             </div>
           </div>
+          <Notification />
           <div id='loginContainer' ref={loginContainer}>
             <LoginComp />
           </div>

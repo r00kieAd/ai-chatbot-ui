@@ -90,6 +90,8 @@ interface GlobalState {
     setChatEmpty: (value: boolean) => void;
     webSearch: boolean;
     setWebSearch: Dispatch<SetStateAction<boolean>>;
+    notification: { message: string; type: 'error' | 'success' | 'info' } | null;
+    setNotification: (value: { message: string; type: 'error' | 'success' | 'info' } | null) => void;
 }
 
 const GlobalContext = createContext<GlobalState | undefined>(undefined);
@@ -117,6 +119,7 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
     const [typingComplete, setTypingComplete] = useState(false);
     const [chatEmpty, setChatEmpty] = useState<boolean>(true);
     const [webSearch, setWebSearch] = useState<boolean>(false);
+    const [notification, setNotification] = useState<{ message: string; type: 'error' | 'success' | 'info' } | null>(null);
 
     return <GlobalContext.Provider value={{ 
         serverOnline, setServerOnline,
@@ -140,7 +143,8 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
         availableModels, setAvailableModels,
         typingComplete, setTypingComplete,
         chatEmpty, setChatEmpty,
-        webSearch, setWebSearch
+        webSearch, setWebSearch,
+        notification, setNotification
     }}>
         {children}
     </GlobalContext.Provider>
