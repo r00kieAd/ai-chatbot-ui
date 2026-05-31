@@ -3,6 +3,7 @@ import { useGlobal } from '../utils/global_context';
 import authorizationProcess from '../services/authorization_service';
 import getAllModels from '../services/get_models';
 import setLLMChoice from '../services/llm_choice';
+import { connectLLMStreamClient } from '../services/llm_stream_service';
 import ClickSpark from './click_spark';
 import ShinyText from './shiny_text';
 const LordIcon = 'lord-icon' as any;
@@ -158,6 +159,7 @@ const LoginComp: React.FC = () => {
         setCurrUser(username);
         setErrorMessage(undefined);
         setStatusMessage("Logging in...");
+        connectLLMStreamClient(token, username);
         await defaultLLMChoice(username, "OpenAI", token);
         await getAllAvailableModels(username, token);
         setAuthorized(true);

@@ -1,7 +1,6 @@
 import type {
     LLMStreamClientMessage,
     LLMStreamConnectionState,
-    LLMStreamResumeMessage,
     LLMStreamServerEvent
 } from './llm_stream_types';
 
@@ -44,12 +43,9 @@ export class ReconnectingLLMWebSocket {
     private heartbeatTimer: number | undefined;
     private staleTimer: number | undefined;
     private reconnectTimer: number | undefined;
-    private ackTimer: number | undefined;
-    private idleCloseTimer: number | undefined;
     private reconnectAttempt = 0;
     private manualClose = false;
     private acknowledged = false;
-    private resumeAfterAck = false;
     private outboundQueue: LLMStreamClientMessage[] = [];
     private subscriptions = new Map<string, SubscriptionState>();
     private lastSeenAt = Date.now();
@@ -103,10 +99,6 @@ export class ReconnectingLLMWebSocket {
     }
 
     subscribe(subscription: SubscriptionState) {
-        if (this.idleCloseTimer !== undefined) {
-            window.clearTimeout(this.idleCloseTimer);
-            this.idleCloseTimer = undefined;
-        }
         this.subscriptions.set(subscription.requestId, subscription);
         this.connect();
     }
@@ -114,9 +106,6 @@ export class ReconnectingLLMWebSocket {
     unsubscribe(requestId: string) {
         this.subscriptions.delete(requestId);
         this.outboundQueue = this.outboundQueue.filter(message => !('request_id' in message) || message.request_id !== requestId);
-        if (this.subscriptions.size === 0) {
-            this.scheduleIdleClose();
-        }
     }
 
     close() {
@@ -124,7 +113,6 @@ export class ReconnectingLLMWebSocket {
         this.clearTimers();
         this.outboundQueue = [];
         this.acknowledged = false;
-        this.resumeAfterAck = false;
         this.socket?.close(1000, 'client_closed');
         this.socket = null;
         this.setState('closed');
@@ -133,7 +121,6 @@ export class ReconnectingLLMWebSocket {
     private handleOpen = () => {
         this.lastSeenAt = Date.now();
         this.setState('open');
-        this.startAckFallback();
     };
 
     private handleMessage = (message: MessageEvent<string>) => {
@@ -142,6 +129,10 @@ export class ReconnectingLLMWebSocket {
         if (!event) return;
         if (event.type === 'connection_ack') {
             this.handleConnectionAck();
+            return;
+        }
+        if (event.type === 'ping') {
+            this.sendNow({ type: 'pong', request_id: event.request_id });
             return;
         }
         if (event.type === 'pong') return;
@@ -170,15 +161,26 @@ export class ReconnectingLLMWebSocket {
         this.setState('error');
     };
 
-    private handleClose = () => {
+    private handleClose = (event: CloseEvent) => {
         this.clearTimers();
         this.socket = null;
         this.acknowledged = false;
-        if (this.manualClose || this.subscriptions.size === 0) {
+        if (this.manualClose) {
             this.setState('closed');
             return;
         }
-        this.resumeAfterAck = true;
+        const isReconnectableClose = event.code === 1001 || event.code === 1006;
+        if (!isReconnectableClose) {
+            if (this.subscriptions.size > 0) {
+                this.notifyActiveStreamsDisconnected('The response stream closed unexpectedly. Please retry the prompt.');
+            }
+            this.setState('closed');
+            return;
+        }
+        this.outboundQueue = this.outboundQueue.filter(message => message.type !== 'start_generation');
+        if (this.subscriptions.size > 0) {
+            this.notifyActiveStreamsDisconnected('The response stream disconnected. Reconnect is in progress; retry the prompt if needed.');
+        }
         this.scheduleReconnect();
     };
 
@@ -205,41 +207,24 @@ export class ReconnectingLLMWebSocket {
         queued.forEach(message => this.sendNow(message));
     }
 
-    private resumeActiveStreams() {
-        this.subscriptions.forEach(subscription => {
-            const resumeMessage: LLMStreamResumeMessage = {
-                type: 'resume',
+    private notifyActiveStreamsDisconnected(message: string) {
+        const activeSubscriptions = [...this.subscriptions.values()];
+        activeSubscriptions.forEach(subscription => {
+            subscription.onEvent({
+                type: 'error',
                 request_id: subscription.requestId,
                 session_id: subscription.sessionId,
-                last_event_id: subscription.lastEventId,
-                last_sequence: subscription.lastSequence
-            };
-            this.sendNow(resumeMessage);
+                message,
+                retryable: true
+            });
         });
     }
 
     private handleConnectionAck() {
         this.acknowledged = true;
         this.reconnectAttempt = 0;
-        if (this.ackTimer !== undefined) {
-            window.clearTimeout(this.ackTimer);
-            this.ackTimer = undefined;
-        }
-        if (this.resumeAfterAck) {
-            this.resumeAfterAck = false;
-            this.resumeActiveStreams();
-        }
         this.flushQueue();
         this.startHeartbeat();
-    }
-
-    private startAckFallback() {
-        if (this.ackTimer !== undefined) window.clearTimeout(this.ackTimer);
-        this.ackTimer = window.setTimeout(() => {
-            if (this.acknowledged || this.socket?.readyState !== WebSocket.OPEN) return;
-            console.warn('WebSocket connection_ack not received; proceeding with queued stream messages');
-            this.handleConnectionAck();
-        }, 3000);
     }
 
     private startHeartbeat() {
@@ -268,21 +253,9 @@ export class ReconnectingLLMWebSocket {
         if (this.heartbeatTimer !== undefined) window.clearInterval(this.heartbeatTimer);
         if (this.staleTimer !== undefined) window.clearInterval(this.staleTimer);
         if (this.reconnectTimer !== undefined) window.clearTimeout(this.reconnectTimer);
-        if (this.ackTimer !== undefined) window.clearTimeout(this.ackTimer);
-        if (this.idleCloseTimer !== undefined) window.clearTimeout(this.idleCloseTimer);
         this.heartbeatTimer = undefined;
         this.staleTimer = undefined;
         this.reconnectTimer = undefined;
-        this.ackTimer = undefined;
-        this.idleCloseTimer = undefined;
-    }
-
-    private scheduleIdleClose() {
-        if (this.idleCloseTimer !== undefined) window.clearTimeout(this.idleCloseTimer);
-        this.idleCloseTimer = window.setTimeout(() => {
-            if (this.subscriptions.size > 0) return;
-            this.close();
-        }, 30000);
     }
 
     private setState(nextState: LLMStreamConnectionState) {

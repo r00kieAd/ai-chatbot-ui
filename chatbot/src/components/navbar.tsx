@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useGlobal } from '../utils/global_context';
 import initiateLogout from '../services/logout_service';
+import { disconnectLLMStreamClient } from '../services/llm_stream_service';
 import llmConfig from '../services/llm_config';
 import clearAttachments from '../services/clear_attachments';
 import SettingInfoCard from './settings_info_card';
@@ -51,6 +52,7 @@ const NavbarComp: React.FC = () => {
         sessionStorage.removeItem(import.meta.env.VITE_SESSION_AUTH_VAR);
         let info = "not authorized";
         if (currUser && authToken) {
+            disconnectLLMStreamClient();
 
             try {
                 const response = await clearAttachments({ username: currUser, token: authToken });
