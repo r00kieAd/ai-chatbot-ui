@@ -23,7 +23,7 @@ export interface LLMStreamStartMessage {
 }
 
 export interface LLMStreamCancelMessage {
-    type: 'cancel';
+    type: 'cancel_generation';
     request_id: string;
     session_id: string;
 }
