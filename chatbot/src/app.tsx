@@ -12,6 +12,7 @@ import ping from './services/ping_server';
 import Loading from './components/loading_screen';
 import DisplayError from './components/display_error';
 import initiateLogout from './services/logout_service';
+import { disconnectLLMStreamClient } from './services/llm_stream_service';
 import './app.css'
 // import robot_svg from './assets/robot.svg';
 import WLCM from './configs/welcome_texts.json';
@@ -72,6 +73,7 @@ function App() {
       if (isLoggingOut) return;
       isLoggingOut = true;
       try {
+        disconnectLLMStreamClient();
         if (currUser && authToken) {
           await initiateLogout({ username: currUser, token: authToken });
         }

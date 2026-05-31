@@ -15,7 +15,7 @@ import generateImage from '../services/image_service';
 import type { GeneratedImage } from '../services/image_service';
 import { parseImageToolCall } from '../utils/parse_image_tool_call';
 import { startLLMStream } from '../services/llm_stream_service';
-import type { LLMStreamConnectionState, LLMStreamSubscription } from '../services/llm_stream_types';
+import type { LLMStreamSubscription } from '../services/llm_stream_types';
 const LordIcon = 'lord-icon' as any;
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
@@ -38,7 +38,6 @@ const InputBox: React.FC = () => {
     const [showModels, setShowModels] = useState<boolean>(false);
     const [streamActive, setStreamActive] = useState(false);
     const [activeChatKey, setActiveChatKey] = useState<string | undefined>(undefined);
-    const [streamConnectionState, setStreamConnectionState] = useState<LLMStreamConnectionState>('idle');
     const stopRequestedRef = useRef(false);
     const streamSubscriptionRef = useRef<LLMStreamSubscription | null>(null);
     const streamFinishRef = useRef<((success: boolean) => void) | null>(null);
@@ -343,7 +342,6 @@ const InputBox: React.FC = () => {
 
                 }
                 setStreamActive(true);
-                setStreamConnectionState('connecting');
 
                 let accumulated = '';
                 let terminalMessage = '';
@@ -403,9 +401,23 @@ const InputBox: React.FC = () => {
                         token: authToken ? authToken : 'null',
                         handlers: {
                             onConnectionState: state => {
-                                setStreamConnectionState(state);
+                                if (state === 'reconnecting') {
+                                    setNotification({
+                                        message: 'Connection dropped. Reconnecting to the response stream...',
+                                        type: 'info'
+                                    });
+                                } else if (state === 'error') {
+                                    setNotification({
+                                        message: 'Response stream connection issue. Retrying automatically...',
+                                        type: 'error'
+                                    });
+                                }
                             },
                             onReconnect: attempt => {
+                                setNotification({
+                                    message: `Reconnecting to the response stream. Attempt ${attempt}.`,
+                                    type: 'info'
+                                });
                                 if (import.meta.env.DEV) {
                                     console.debug(`LLM stream reconnect attempt ${attempt}`);
                                 }
@@ -555,7 +567,6 @@ const InputBox: React.FC = () => {
             setStreamActive(false);
             stopRequestedRef.current = false;
             setActiveChatKey(undefined);
-            setStreamConnectionState('idle');
             streamFinishRef.current = null;
         }
     }
@@ -661,7 +672,6 @@ const InputBox: React.FC = () => {
         streamFinishRef.current = null;
         setStreamActive(false);
         setActiveChatKey(undefined);
-        setStreamConnectionState('idle');
     };
 
     const handleButtonClick = () => {
@@ -671,8 +681,6 @@ const InputBox: React.FC = () => {
             triggerSend();
         }
     };
-
-    const streamingButtonText = streamConnectionState === 'reconnecting' ? 'Retrying' : 'Stop';
 
     const onFileSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setUploading(true);
@@ -777,7 +785,7 @@ const InputBox: React.FC = () => {
                                     <button className='button send-button pointer quicksand-light' onClick={handleButtonClick} disabled={isButtonDisabled}>
                                         {streamActive ? (
                                             <>
-                                                <span className='button-text'><ShinyText text={streamingButtonText} disabled={true} speed={3} className='custom-class' /></span>
+                                                <span className='button-text'><ShinyText text="Stop" disabled={true} speed={3} className='custom-class' /></span>
                                                 &nbsp;<i className="fa-solid fa-circle-stop"></i>
                                             </>
                                         ) : (

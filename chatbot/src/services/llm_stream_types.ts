@@ -41,6 +41,11 @@ export interface LLMStreamPingMessage {
     sent_at: number;
 }
 
+export interface LLMStreamPongMessage {
+    type: 'pong';
+    request_id?: string;
+}
+
 export interface LLMConnectionAckEvent {
     type: 'connection_ack';
     message?: string;
@@ -50,7 +55,8 @@ export type LLMStreamClientMessage =
     | LLMStreamStartMessage
     | LLMStreamCancelMessage
     | LLMStreamResumeMessage
-    | LLMStreamPingMessage;
+    | LLMStreamPingMessage
+    | LLMStreamPongMessage;
 
 export interface LLMStreamBaseEvent {
     type: string;
@@ -120,6 +126,11 @@ export interface LLMStreamPongEvent {
     sent_at?: number;
 }
 
+export interface LLMStreamPingEvent {
+    type: 'ping';
+    request_id?: string;
+}
+
 export interface LLMStreamMetadataEvent extends LLMStreamBaseEvent {
     type: 'metadata';
     provider?: string;
@@ -145,6 +156,7 @@ export type LLMStreamServerEvent =
     | LLMStreamCancelledEvent
     | LLMConnectionAckEvent
     | LLMStreamPongEvent
+    | LLMStreamPingEvent
     | LLMStreamMetadataEvent
     | LLMStreamImagesEvent
     | (LLMStreamBaseEvent & Record<string, unknown>);

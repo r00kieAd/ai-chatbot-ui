@@ -9,6 +9,7 @@
     "UPDATECONFIG": "/update_llm_settings",
     "ALL_MODELS": "/all_models",
     "STOP": "/stop",
-    "WS_ASK": "/ws/chat",
+    "WS_CHAT": "/ws/chat",
+    "WS_ASK": "/ws/ask",
     "CLEAR_CHAT": "/clear_chat"
 }

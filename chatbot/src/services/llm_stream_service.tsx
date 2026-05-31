@@ -32,7 +32,7 @@ let connectionStateHandler: ((state: LLMStreamConnectionState) => void) | undefi
 let reconnectHandler: ((attempt: number) => void) | undefined;
 
 const isLocalHost = (host: string) => ['localhost', '127.0.0.1', '0.0.0.0'].includes(host);
-const DEFAULT_WS_BASE_URL = 'http://127.0.0.1:8000';
+const getCurrentOrigin = () => (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000');
 
 const normalizeBaseUrl = (value: string) => {
     const trimmed = value.trim().replace(/^['"]|['"]$/g, '');
@@ -40,6 +40,20 @@ const normalizeBaseUrl = (value: string) => {
         return trimmed;
     }
     return `https://${trimmed}`;
+};
+
+const getConfiguredBaseUrl = () => {
+    const configuredBase = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_WS_BASE_URL || getCurrentOrigin()) as string;
+    const normalized = new URL(normalizeBaseUrl(configuredBase));
+
+    if (typeof window !== 'undefined') {
+        const pageHost = window.location.hostname;
+        if (!isLocalHost(pageHost) && isLocalHost(normalized.hostname)) {
+            normalized.hostname = pageHost;
+        }
+    }
+
+    return normalized;
 };
 
 const appendEndpointIfNeeded = (url: URL, endpoint: string) => {
@@ -52,12 +66,14 @@ const appendEndpointIfNeeded = (url: URL, endpoint: string) => {
 };
 
 const getWebSocketUrl = () => {
-    const configuredBase = (import.meta.env.VITE_WS_BASE_URL || import.meta.env.VITE_API_BASE_URL || DEFAULT_WS_BASE_URL) as string;
-    const endpoint = ENDPOINTS.WS_ASK || '/ws/chat';
+    const endpoint = ENDPOINTS.WS_CHAT || '/ws/chat';
+    const url = getConfiguredBaseUrl();
 
-    const url = new URL(normalizeBaseUrl(configuredBase));
     if (url.protocol !== 'ws:' && url.protocol !== 'wss:') {
         url.protocol = isLocalHost(url.hostname) ? 'ws:' : 'wss:';
+    }
+    if (typeof window !== 'undefined' && window.location.protocol === 'https:') {
+        url.protocol = 'wss:';
     }
     if (isLocalHost(url.hostname) && url.protocol === 'wss:') {
         url.protocol = 'ws:';
@@ -118,6 +134,9 @@ const dispatchEvent = (event: LLMStreamServerEvent, handlers: LLMStreamHandlers)
         case 'stream_end':
             handlers.onEnd?.(event as LLMStreamEndEvent);
             break;
+        case 'completion':
+            handlers.onEnd?.(event as LLMStreamEndEvent);
+            break;
         case 'cancelled':
             handlers.onCancelled?.(event as LLMStreamCancelledEvent);
             break;
@@ -135,6 +154,11 @@ const dispatchEvent = (event: LLMStreamServerEvent, handlers: LLMStreamHandlers)
             break;
     }
 };
+
+export function connectLLMStreamClient(token: string, username: string, handlers: LLMStreamHandlers = {}) {
+    const wsClient = ensureClient(token, username, handlers);
+    wsClient.connect();
+}
 
 export function startLLMStream({
     token,
