@@ -19,13 +19,16 @@ interface ReconnectingWebSocketOptions {
     heartbeatMs?: number;
     staleMs?: number;
     maxReconnectDelayMs?: number;
+    maxFailedConnects?: number;
     onStateChange?: (state: LLMStreamConnectionState) => void;
     onReconnect?: (attempt: number) => void;
+    onUnavailable?: () => void;
 }
 
 const DEFAULT_HEARTBEAT_MS = 25000;
 const DEFAULT_STALE_MS = 65000;
 const DEFAULT_MAX_RECONNECT_DELAY_MS = 30000;
+const DEFAULT_MAX_FAILED_CONNECTS = 2;
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 
@@ -36,16 +39,21 @@ export class ReconnectingLLMWebSocket {
     private readonly heartbeatMs: number;
     private readonly staleMs: number;
     private readonly maxReconnectDelayMs: number;
+    private readonly maxFailedConnects: number;
     private readonly onStateChange?: (state: LLMStreamConnectionState) => void;
     private readonly onReconnect?: (attempt: number) => void;
+    private readonly onUnavailable?: () => void;
     private socket: WebSocket | null = null;
     private state: LLMStreamConnectionState = 'idle';
     private heartbeatTimer: number | undefined;
     private staleTimer: number | undefined;
     private reconnectTimer: number | undefined;
     private reconnectAttempt = 0;
+    private failedConnects = 0;
     private manualClose = false;
     private acknowledged = false;
+    private openedCurrentSocket = false;
+    private hasEverOpened = false;
     private outboundQueue: LLMStreamClientMessage[] = [];
     private subscriptions = new Map<string, SubscriptionState>();
     private lastSeenAt = Date.now();
@@ -57,8 +65,10 @@ export class ReconnectingLLMWebSocket {
         this.heartbeatMs = options.heartbeatMs ?? DEFAULT_HEARTBEAT_MS;
         this.staleMs = options.staleMs ?? DEFAULT_STALE_MS;
         this.maxReconnectDelayMs = options.maxReconnectDelayMs ?? DEFAULT_MAX_RECONNECT_DELAY_MS;
+        this.maxFailedConnects = options.maxFailedConnects ?? DEFAULT_MAX_FAILED_CONNECTS;
         this.onStateChange = options.onStateChange;
         this.onReconnect = options.onReconnect;
+        this.onUnavailable = options.onUnavailable;
     }
 
     get connectionState() {
@@ -72,6 +82,7 @@ export class ReconnectingLLMWebSocket {
 
         this.manualClose = false;
         this.acknowledged = false;
+        this.openedCurrentSocket = false;
         this.setState(this.reconnectAttempt > 0 ? 'reconnecting' : 'connecting');
         const wsUrl = new URL(this.url);
         wsUrl.searchParams.set("username", this.username);
@@ -120,6 +131,9 @@ export class ReconnectingLLMWebSocket {
 
     private handleOpen = () => {
         this.lastSeenAt = Date.now();
+        this.openedCurrentSocket = true;
+        this.hasEverOpened = true;
+        this.failedConnects = 0;
         this.setState('open');
     };
 
@@ -165,9 +179,19 @@ export class ReconnectingLLMWebSocket {
         this.clearTimers();
         this.socket = null;
         this.acknowledged = false;
+        const failedBeforeOpen = !this.openedCurrentSocket;
+        this.openedCurrentSocket = false;
         if (this.manualClose) {
             this.setState('closed');
             return;
+        }
+        if (failedBeforeOpen) {
+            this.failedConnects += 1;
+            const initialUpgradeFailure = !this.hasEverOpened && (event.code === 426 || event.code === 1006);
+            if (initialUpgradeFailure || this.failedConnects >= this.maxFailedConnects) {
+                this.markUnavailable();
+                return;
+            }
         }
         const isReconnectableClose = event.code === 1001 || event.code === 1006;
         if (!isReconnectableClose) {
@@ -247,6 +271,16 @@ export class ReconnectingLLMWebSocket {
         this.setState('reconnecting');
         this.onReconnect?.(this.reconnectAttempt);
         this.reconnectTimer = window.setTimeout(() => this.connect(), delay);
+    }
+
+    private markUnavailable() {
+        this.clearTimers();
+        this.outboundQueue = this.outboundQueue.filter(message => message.type !== 'start_generation');
+        if (this.subscriptions.size > 0) {
+            this.notifyActiveStreamsDisconnected('WebSocket is unavailable on this network. Please retry; REST streaming fallback will be used.');
+        }
+        this.setState('closed');
+        this.onUnavailable?.();
     }
 
     private clearTimers() {
